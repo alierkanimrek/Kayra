@@ -6,15 +6,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: voidlinux/voidlinux:latest
-      options: --privileged
 
     steps:
-      - name: Setup Dependencies
+      - name: Install host build dependencies
         run: |
-          xbps-install -Syu -y
-          xbps-install -y git qemu-user-static-binfmt xbps
+          sudo apt-get update
+          sudo apt-get install -y \
+            git make gcc \
+            xorriso squashfs-tools syslinux syslinux-utils \
+            dosfstools parted mtools liblz4-tool wget
+
+      - name: Bootstrap static xbps tools
+        run: |
+          wget https://repo-default.voidlinux.org/static/xbps-static-latest.x86_64-musl.tar.xz
+          mkdir -p "$HOME/XBPS"
+          tar xf xbps-static-latest.x86_64-musl.tar.xz -C "$HOME/XBPS"
+          echo "$HOME/XBPS/usr/bin" >> "$GITHUB_PATH"
 
       - name: Clone void-mklive
         run: |
@@ -36,7 +43,7 @@ jobs:
       - name: Build Kayra OS ISO
         run: |
           cd void-mklive
-          ./mklive.sh -a x86_64 -p "sway xorg-server-xwayland alacritty fuzzel waybar greetd polkit-gnome elogind NetworkManager mesa-dri flatpak xdg-desktop-portal-wlr cliphist wl-clipboard wireplumber network-manager-applet pavucontrol"
+          sudo -E env "PATH=$PATH" ./mklive.sh -a x86_64 -p "sway xorg-server-xwayland alacritty fuzzel waybar greetd polkit-gnome elogind NetworkManager mesa-dri flatpak xdg-desktop-portal-wlr cliphist wl-clipboard wireplumber network-manager-applet pavucontrol"
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
