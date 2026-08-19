@@ -1,41 +1,45 @@
-name: Kayra OS ISO Build 
+name: Kayra OS ISO Build
 
-on: workflow_dispatch 
+on:
+  workflow_dispatch:
 
 jobs:
-build:
-runs-on: ubuntu-latest
-container:
-image: voidlinux/voidlinux:latest
-options: --privileged 
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: voidlinux/voidlinux:latest
+      options: --privileged
 
-steps:
+    steps:
+      - name: Setup Dependencies
+        run: |
+          xbps-install -Syu -y
+          xbps-install -y git qemu-user-static-binfmt xbps
 
-* name: Setup Dependencies
-run: |
-xbps-install -Syu -y
-xbps-install -y git qemu-user-static-binfmt xbps
-* name: Clone void-mklive
-run: |
-git clone --depth=1 [https://github.com/void-linux/void-mklive.git](https://github.com/void-linux/void-mklive.git)
-cd void-mklive
-make
-* name: Prepare Kayra OS Customizations
-run: |
-cd void-mklive
-mkdir -p dracut.new.root/etc/skel/.config/sway
-mkdir -p dracut.new.root/etc/skel/.config/waybar
-mkdir -p dracut.new.root/etc/skel/.config/xdg-desktop-portal
-mkdir -p dracut.new.root/etc/rc.local.d
-echo "flatpak remote-add --if-not-exists flathub [https://dl.flathub.org/repo/flathub.flatpakrepo](https://dl.flathub.org/repo/flathub.flatpakrepo)" > dracut.new.root/etc/rc.local.d/flatpak.sh
-chmod +x dracut.new.root/etc/rc.local.d/flatpak.sh
-echo "Kayra OS (Void Linux Based)" > dracut.new.root/etc/issue
-* name: Build Kayra OS ISO
-run: |
-cd void-mklive
-./mklive.sh -a x86_64 -p "sway xorg-server-xwayland alacritty fuzzel waybar greetd polkit-gnome elogind NetworkManager mesa-dri flatpak xdg-desktop-portal-wlr cliphist wl-clipboard wireplumber network-manager-applet pavucontrol"
-* name: Upload ISO Artifact
-uses: actions/upload-artifact@v4
-with:
-name: Kayra-OS-Live-ISO
-path: void-mklive/*.iso
+      - name: Clone void-mklive
+        run: |
+          git clone --depth=1 https://github.com/void-linux/void-mklive.git
+          cd void-mklive
+          make
+
+      - name: Prepare Kayra OS Customizations
+        run: |
+          cd void-mklive
+          mkdir -p dracut.new.root/etc/skel/.config/sway
+          mkdir -p dracut.new.root/etc/skel/.config/waybar
+          mkdir -p dracut.new.root/etc/skel/.config/xdg-desktop-portal
+          mkdir -p dracut.new.root/etc/rc.local.d
+          echo "flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo" > dracut.new.root/etc/rc.local.d/flatpak.sh
+          chmod +x dracut.new.root/etc/rc.local.d/flatpak.sh
+          echo "Kayra OS (Void Linux Based)" > dracut.new.root/etc/issue
+
+      - name: Build Kayra OS ISO
+        run: |
+          cd void-mklive
+          ./mklive.sh -a x86_64 -p "sway xorg-server-xwayland alacritty fuzzel waybar greetd polkit-gnome elogind NetworkManager mesa-dri flatpak xdg-desktop-portal-wlr cliphist wl-clipboard wireplumber network-manager-applet pavucontrol"
+
+      - name: Upload ISO Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kayra-OS-Live-ISO
+          path: void-mklive/*.iso
