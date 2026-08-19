@@ -1,0 +1,56 @@
+name: Kayra OS ISO Build 
+
+on:
+workflow_dispatch: # GitHub arayüzünden el ile (manuel) başlatmayı sağlar 
+
+jobs:
+build:
+runs-on: ubuntu-latest
+container:
+image: voidlinux/voidlinux:latest
+options: --privileged # ISO derlemek için root yetkileri zorunludur 
+
+steps:
+
+* name: Bağımlılıkları ve Void Araçlarını Kur
+run: |
+xbps-install -Syu -y
+xbps-install -y git qemu-user-static-binfmt xbps
+* name: void-mklive Deposunu Çek
+run: |
+git clone --depth=1 [https://github.com/void-linux/void-mklive.git](https://github.com/void-linux/void-mklive.git)
+cd void-mklive
+make
+* name: Kayra OS Özelleştirmelerini ve Ayarlarını Hazırla
+run: |
+cd void-mklive
+
+### Canlı sistem için gerekli klasör yapılarını oluşturuyoruz
+
+mkdir -p dracut.new.root/etc/skel/.config/sway
+mkdir -p dracut.new.root/etc/skel/.config/waybar
+mkdir -p dracut.new.root/etc/skel/.config/xdg-desktop-portal
+mkdir -p dracut.new.root/etc/rc.local.d 
+
+### 1. Flathub Deposu Otomatik Aktivasyon Scripti
+
+echo "flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo" > dracut.new.root/etc/rc.local.d/flatpak.sh
+chmod +x dracut.new.root/etc/rc.local.d/flatpak.sh 
+
+# 2. Kayra OS Dağıtım İsmi Güncellemesi (Sistem Bilgisi)
+
+echo "Kayra OS (Void Linux Based)" > dracut.new.root/etc/issue
+
+* name: Kayra OS ISO İmajını Derle
+run: |
+cd void-mklive
+
+# İstediğiniz tüm paketlerle x86_64 mimarisinde ISO basıyoruz
+
+./mklive.sh -a x86_64 -p "sway xorg-server-xwayland alacritty fuzzel waybar greetd polkit-gnome elogind NetworkManager mesa-dri flatpak xdg-desktop-portal-wlr cliphist wl-clipboard wireplumber network-manager-applet pavucontrol"
+
+* name: ISO Dosyasını GitHub Artifact Olarak Yükle
+uses: actions/upload-artifact@v4
+with:
+name: Kayra-OS-Live-ISO
+path: void-mklive/*.iso
