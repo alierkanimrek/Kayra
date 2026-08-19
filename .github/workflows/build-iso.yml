@@ -43,7 +43,7 @@ jobs:
       - name: Build Kayra OS ISO
         run: |
           cd void-mklive
-          sudo -E env "PATH=$PATH" ./mklive.sh -a x86_64 -p "sway xorg-server-xwayland alacritty fuzzel waybar greetd polkit-gnome elogind NetworkManager mesa-dri flatpak xdg-desktop-portal-wlr cliphist wl-clipboard wireplumber network-manager-applet pavucontrol"
+          sudo -E env "PATH=$PATH" ./mklive.sh -a x86_64 -p "sway xorg-server-xwayland alacritty fuzzel Waybar greetd polkit-gnome elogind NetworkManager mesa-dri flatpak xdg-desktop-portal-wlr cliphist wl-clipboard wireplumber network-manager-applet pavucontrol"
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
