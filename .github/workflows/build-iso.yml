@@ -53,7 +53,7 @@ jobs:
           cd void-mklive
           sudo -E env "PATH=$PATH" ./mklive.sh -a x86_64 \
             -I installer-include \
-            -p "sway xorg-server-xwayland alacritty fuzzel Waybar greetd polkit-gnome elogind NetworkManager mesa-dri flatpak xdg-desktop-portal-wlr cliphist wl-clipboard wireplumber network-manager-applet pavucontrol dialog cryptsetup lvm2"
+            -p "sway xorg-server-xwayland alacritty fuzzel Waybar greetd polkit-gnome elogind NetworkManager mesa-dri flatpak xdg-desktop-portal-wlr cliphist wl-clipboard wireplumber network-manager-applet pavucontrol dialog cryptsetup lvm2 grub grub-x86_64-efi"
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
