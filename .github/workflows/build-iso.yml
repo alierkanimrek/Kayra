@@ -40,13 +40,13 @@ jobs:
           chmod +x dracut.new.root/etc/rc.local.d/flatpak.sh
           echo "Kayra OS (Void Linux Based)" > dracut.new.root/etc/issue
 
-          cat > dracut.new.root/etc/skel/.bash_profile << 'PROFILE'
-if [ -z "$INSTALLER_STARTED" ] && [ "$(tty)" = "/dev/tty1" ]; then
-    export INSTALLER_STARTED=1
-    clear
-    sudo void-installer
-fi
-PROFILE
+          printf '%s\n' \
+            'if [ -z "$INSTALLER_STARTED" ] && [ "$(tty)" = "/dev/tty1" ]; then' \
+            '    export INSTALLER_STARTED=1' \
+            '    clear' \
+            '    sudo void-installer' \
+            'fi' \
+            > dracut.new.root/etc/skel/.bash_profile
 
       - name: Prepare void-installer
         run: |
