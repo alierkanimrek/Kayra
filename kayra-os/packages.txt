@@ -1,0 +1,29 @@
+# Kayra OS package list
+# One package per line. Lines starting with # and blank lines are ignored.
+
+sway
+xorg-server-xwayland
+alacritty
+nano
+fuzzel
+Waybar
+greetd
+elogind
+NetworkManager
+mesa-dri
+flatpak
+xdg-desktop-portal-wlr
+cliphist
+wl-clipboard
+wireplumber
+network-manager-applet
+pavucontrol
+dialog
+cryptsetup
+lvm2
+grub
+grub-x86_64-efi
+foot
+wmenu
+lxqt-policykit
+nm-connection-editor
