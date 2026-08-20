@@ -26,4 +26,3 @@ grub-x86_64-efi
 foot
 wmenu
 lxqt-policykit
-nm-connection-editor
