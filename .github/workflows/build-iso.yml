@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Install host build dependencies
         run: |
           sudo apt-get update
@@ -29,24 +32,11 @@ jobs:
           cd void-mklive
           make
 
-      - name: Prepare Kayra OS Customizations
+      - name: Apply Kayra OS customizations
         run: |
-          cd void-mklive
-          mkdir -p dracut.new.root/etc/skel/.config/sway
-          mkdir -p dracut.new.root/etc/skel/.config/waybar
-          mkdir -p dracut.new.root/etc/skel/.config/xdg-desktop-portal
-          mkdir -p dracut.new.root/etc/rc.local.d
-          echo "flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo" > dracut.new.root/etc/rc.local.d/flatpak.sh
-          chmod +x dracut.new.root/etc/rc.local.d/flatpak.sh
-          echo "Kayra OS (Void Linux Based)" > dracut.new.root/etc/issue
-
-          printf '%s\n' \
-            'if [ -z "$INSTALLER_STARTED" ] && [ "$(tty)" = "/dev/tty1" ]; then' \
-            '    export INSTALLER_STARTED=1' \
-            '    clear' \
-            '    sudo void-installer' \
-            'fi' \
-            > dracut.new.root/etc/skel/.bash_profile
+          mkdir -p void-mklive/dracut.new.root
+          cp -r kayra-os/rootfs/. void-mklive/dracut.new.root/
+          chmod +x void-mklive/dracut.new.root/etc/rc.local.d/*.sh
 
       - name: Prepare void-installer
         run: |
@@ -59,10 +49,12 @@ jobs:
       - name: Build Kayra OS ISO
         run: |
           cd void-mklive
+          PKGS=$(grep -v '^\s*#' ../kayra-os/packages.txt | grep -v '^\s*$' | tr '\n' ' ')
+          echo "Packages: $PKGS"
           sudo -E env "PATH=$PATH" ./mklive.sh -a x86_64 \
             -I installer-include \
             -C "live.autologin" \
-            -p "sway xorg-server-xwayland alacritty fuzzel Waybar greetd polkit-gnome elogind NetworkManager mesa-dri flatpak xdg-desktop-portal-wlr cliphist wl-clipboard wireplumber network-manager-applet pavucontrol dialog cryptsetup lvm2 grub grub-x86_64-efi"
+            -p "$PKGS"
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
