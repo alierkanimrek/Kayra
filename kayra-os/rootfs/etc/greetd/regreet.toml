@@ -1,0 +1,16 @@
+[background]
+# Giriş ekranında görünmesini istediğiniz duvar kağıdının tam yolu
+path = "/usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png"
+fit = "Cover"
+
+[GTK]
+# Tercih ettiğiniz GTK ve İkon temaları (Sistemde kurulu olmalıdır)
+theme = "Arc-Dark"
+icon_theme = "Arc"
+cursor_theme = "capitaine-cursors"
+font_name = "DejaVu Sans 11"
+
+[commands]
+# elogind aracılığıyla şifresiz ve root yetkisiz güvenli kapatma/yeniden başlatma
+reboot = [ "loginctl", "reboot" ]
+poweroff = [ "loginctl", "poweroff" ]
