@@ -26,3 +26,8 @@ grub-x86_64-efi
 foot
 wmenu
 lxqt-policykit
+# Greetings 
+ReGreet
+arc-theme
+arc-icon-theme
+
