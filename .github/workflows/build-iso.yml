@@ -52,6 +52,7 @@ jobs:
           PKGS=$(grep -v '^\s*#' ../kayra-os/packages.txt | grep -v '^\s*$' | tr '\n' ' ')
           echo "Packages: $PKGS"
           sudo -E env "PATH=$PATH" ./mklive.sh -a x86_64 \
+            -I dracut.new.root \
             -I installer-include \
             -C "live.autologin" \
             -p "$PKGS"
