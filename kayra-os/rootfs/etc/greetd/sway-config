@@ -1,0 +1,9 @@
+# ReGreet ekranını tam ekran başlatır ve oturum açıldığında Sway sunucusunu kapatır
+   input type:keyboard {
+       xkb_layout "tr"
+       xkb_variant "f"
+   }
+
+
+exec "regreet; swaymsg exit"
+include /etc/sway/config.d/*
