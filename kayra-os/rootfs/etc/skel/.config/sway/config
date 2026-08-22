@@ -166,6 +166,9 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
     # Move focus to the parent container
     bindsym $mod+a focus parent
+
+    workspace_layout tabbed
+
 #
 # Scratchpad:
 #
