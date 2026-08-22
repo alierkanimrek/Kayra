@@ -28,6 +28,7 @@ wmenu
 lxqt-policykit
 nwg-launchers
 nwg-look
+SwayNotificationCenter
 # Greetings 
 ReGreet
 arc-theme
