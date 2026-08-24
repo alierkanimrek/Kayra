@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Lock screen",
+    "exec": "swaylock -f -c 000000",
+    "label": "Kilitle",
+    "icon": "/usr/share/nwg-bar/images/system-lock-screen.svg"
+  },
+  {
+    "name": "Logout",
+    "exec": "swaymsg exit",
+    "label": "Oturumu Kapat",
+    "icon": "/usr/share/nwg-bar/images/system-log-out.svg"
+  },
+  {
+    "name": "Reboot",
+    "exec": "loginctl reboot",
+    "label": "Yeniden Başlat",
+    "icon": "/usr/share/nwg-bar/images/system-reboot.svg"
+  },
+  {
+    "name": "Shutdown",
+    "exec": "loginctl poweroff",
+    "label": "Kapat",
+    "icon": "/usr/share/nwg-bar/images/system-shutdown.svg"
+  },
+  {
+    "name": "Suspend",
+    "exec": "zzz",
+    "label": "Askıya Al",
+    "icon": "/usr/share/nwg-bar/images/system-suspend.svg"
+  }
+]
