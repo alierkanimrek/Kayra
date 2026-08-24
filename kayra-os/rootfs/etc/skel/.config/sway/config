@@ -89,7 +89,7 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
     bindsym $mod+Shift+c reload
 
     # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec nwg-bar
+    bindsym $mod+Shift+e exec nwgbar
 #
 # Moving around:
 #
