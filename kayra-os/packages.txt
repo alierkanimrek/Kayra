@@ -32,6 +32,7 @@ nano
 
 # Sistem Servisleri ve Ağ Yönetimi
 elogind
+accountsservice
 NetworkManager
 network-manager-applet
 
