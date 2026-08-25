@@ -1,32 +1,52 @@
 # Kayra OS package list
 # One package per line. Lines starting with # and blank lines are ignored.
 
+# Temel Sistem
+base-system
+
+# Masaüstü Ortamı ve Wayland
 sway
 xorg-server-xwayland
-alacritty
-nano
-fuzzel
-Waybar
+
+# Giriş Ekranı (Display Manager)
 greetd
+ReGreet
+
+# Durum Çubuğu, Bildirim ve Menüler
+Waybar
+SwayNotificationCenter
+fuzzel
+wmenu
+nwg-launchers
+
+# Terminal Emülatörleri ve Editör
+alacritty
+foot
+nano
+
+# Sistem Servisleri ve Ağ Yönetimi
 elogind
 NetworkManager
+network-manager-applet
+
+# Yetkilendirme ve Portallar
 xdg-desktop-portal-wlr
+lxqt-policykit
+
+# Panoya Kopyalama Araçları
 cliphist
 wl-clipboard
+
+# Ses Yönetimi
 wireplumber
-network-manager-applet
 pavucontrol
+
+# Kurulum ve Boot Yükleyicileri
 dialog
 grub
 grub-x86_64-efi
-foot
-wmenu
-lxqt-policykit
-nwg-launchers
-nwg-look
-SwayNotificationCenter
-# Greetings 
-ReGreet
-arc-theme
-arc-icon-theme
 
+# Görünüm ve Temalar
+nwg-look
+#arc-theme
+#arc-icon-theme
