@@ -5,5 +5,5 @@
    }
 
 
-exec "env XDG_DATA_DIRS=/etc/greetd regreet --log-level debug; swaymsg exit"
+exec "env XDG_DATA_DIRS=/etc/greetd:/usr/share regreet --log-level debug; swaymsg exit"
 include /etc/sway/config.d/*
