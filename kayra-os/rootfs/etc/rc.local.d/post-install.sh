@@ -19,6 +19,7 @@ mkdir -p "$(dirname "$MARKER")"
 
 # Fix 
 chown -R _greeter:_greeter /var/log/regreet
+chown -R _greeter:_greeter /var/lib/regreet
 # Add any other one-time setup tasks below this line.
 
 
