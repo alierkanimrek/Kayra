@@ -14,6 +14,3 @@ font_name = "DejaVu Sans 11"
 # elogind aracılığıyla şifresiz ve root yetkisiz güvenli kapatma/yeniden başlatma
 reboot = [ "loginctl", "reboot" ]
 poweroff = [ "loginctl", "poweroff" ]
-
-[env]
-SESSION_DIRS="/etc/greetd/wayland-sessions"
