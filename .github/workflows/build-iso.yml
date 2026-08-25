@@ -53,11 +53,11 @@ jobs:
           echo "Packages: $PKGS"
           sudo -E env "PATH=$PATH" ./mklive.sh -a x86_64 \
             -s xz \
-            -b linux-firmware \
+            -b "linux-firmware linux-firmware-intel linux-firmware-amd linux-firmware-nvidia linux-firmware-network sof-firmware alsa-firmware" \
             -I dracut.new.root \
             -I installer-include \
             -C "live.autologin" \
-            -p "$PKGS"
+            -p "base-system $PKGS"
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
