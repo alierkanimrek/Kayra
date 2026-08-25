@@ -10,8 +10,6 @@ Waybar
 greetd
 elogind
 NetworkManager
-mesa-dri
-flatpak
 xdg-desktop-portal-wlr
 cliphist
 wl-clipboard
@@ -19,8 +17,6 @@ wireplumber
 network-manager-applet
 pavucontrol
 dialog
-cryptsetup
-lvm2
 grub
 grub-x86_64-efi
 foot
