@@ -3,6 +3,12 @@
 
 # Temel Sistem
 base-system
+mesa-dri
+
+# Sanal İstemci
+spice-vdagent
+virtualbox-ose-guest
+virtualbox-ose-guest-dkms
 
 # Masaüstü Ortamı ve Wayland
 sway
