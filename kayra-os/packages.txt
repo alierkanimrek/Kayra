@@ -46,6 +46,7 @@ cliphist
 wl-clipboard
 
 # Ses Yönetimi
+pipewire
 wireplumber
 pavucontrol
 
