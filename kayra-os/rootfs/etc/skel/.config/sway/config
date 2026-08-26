@@ -6,6 +6,7 @@
 
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 exec dbus-update-activation-environment --all
+exec pipewire
 
 
 ### Variables
@@ -233,17 +234,18 @@ bindsym $mod+r mode "resize"
 #
 # Read `man 5 sway-bar` for more information about this section.
 bar {
-    position top
+    #position top
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
     status_command while date +'%Y-%m-%d %X'; do sleep 1; done
 
-    colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
-    }
+    #colors {
+    #    statusline #ffffff
+    #    background #323232
+    #    inactive_workspace #32323200 #32323200 #5c5c5c
+    #}
+
 }
 
 include /etc/sway/config.d/*
@@ -253,3 +255,5 @@ exec nm-applet --indicator
 exec swaync
 # Toggle control center
 bindsym $mod+Shift+n exec swaync-client -t -sw
+#Waybar
+exec_always --no-startup-id pkill waybar; waybar
