@@ -9,6 +9,7 @@ mesa-dri
 spice-vdagent
 virtualbox-ose-guest
 virtualbox-ose-guest-dkms
+linux-headers
 
 # Masaüstü Ortamı ve Wayland
 sway
@@ -55,5 +56,5 @@ grub-x86_64-efi
 
 # Görünüm ve Temalar
 nwg-look
-#arc-theme
-#arc-icon-theme
+plata-theme
+papirus-icon-theme
