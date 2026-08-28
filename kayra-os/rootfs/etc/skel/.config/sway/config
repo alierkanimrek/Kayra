@@ -256,4 +256,4 @@ exec swaync
 # Toggle control center
 bindsym $mod+Shift+n exec swaync-client -t -sw
 #Waybar
-exec_always --no-startup-id pkill waybar; waybar
+exec_always "pkill waybar || true; waybar"
