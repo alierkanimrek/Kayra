@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Sway
 Comment=An i3-compatible Wayland compositor
-Exec=dbus-run-session sway
+Exec=/etc/greetd/wayland-sessions/sway.wrapper
 Type=Application
 DesktopNames=sway;wlroots
