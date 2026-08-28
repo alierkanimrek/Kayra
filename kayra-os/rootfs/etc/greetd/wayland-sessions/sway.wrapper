@@ -1,0 +1,9 @@
+#!/bin/sh
+# Çevre değişkenlerini garantiye alalım
+export XDG_SESSION_TYPE=wayland
+export XDG_CURRENT_DESKTOP=sway
+mkdir -p $HOME/.local/var/log
+rm $HOME/.local/var/log/sway.log
+
+# Sway'i dbus ile başlatıp logları yazdıralım (Sway -d parametresini artık sorunsuz alır)
+exec dbus-run-session sway -d > "$HOME/.local/var/log/sway.log" 2>&1
