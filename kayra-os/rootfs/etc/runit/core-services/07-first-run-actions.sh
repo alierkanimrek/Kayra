@@ -7,12 +7,12 @@ MARKER="/var/lib/kayra-firstboot-done"
 
 # We are still in the live/installer session — do nothing.
 if [ -d /run/initramfs/live ]; then
-    exit 0
+    return 0
 fi
 
 # Already ran on this installed system — do nothing.
 if [ -e "$MARKER" ]; then
-    exit 0
+    return 0
 fi
 
 mkdir -p "$(dirname "$MARKER")"
