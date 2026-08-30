@@ -13,6 +13,9 @@ linux-headers
 
 # Masaüstü Ortamı ve Wayland
 sway
+swaylock
+swaykbdd
+SwayOSD
 xorg-server-xwayland
 
 # Giriş Ekranı (Display Manager)
@@ -21,6 +24,7 @@ ReGreet
 
 # Durum Çubuğu, Bildirim ve Menüler
 Waybar
+font-awesome6
 SwayNotificationCenter
 fuzzel
 wmenu
@@ -60,3 +64,7 @@ grub-x86_64-efi
 nwg-look
 plata-theme
 papirus-icon-theme
+
+# Genel Masaüstü
+liberation-fonts-ttf
+
