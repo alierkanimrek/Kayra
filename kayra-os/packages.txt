@@ -14,8 +14,6 @@ linux-headers
 # Masaüstü Ortamı ve Wayland
 sway
 swaylock
-swaykbdd
-SwayOSD
 xorg-server-xwayland
 
 # Giriş Ekranı (Display Manager)
