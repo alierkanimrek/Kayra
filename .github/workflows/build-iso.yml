@@ -36,7 +36,7 @@ jobs:
         run: |
           mkdir -p void-mklive/dracut.new.root
           cp -r kayra-os/rootfs/. void-mklive/dracut.new.root/
-          chmod +x void-mklive/dracut.new.root/etc/rc.local.d/*.sh
+          chmod +x void-mklive/dracut.new.root/etc/runit/core-services/*.sh
 
       - name: Prepare void-installer
         run: |
