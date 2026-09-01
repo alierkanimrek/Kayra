@@ -60,9 +60,12 @@ grub-x86_64-efi
 
 # Görünüm ve Temalar
 nwg-look
-plata-theme
-papirus-icon-theme
+adwaita-plus
+adwaita-qt6
 
 # Genel Masaüstü
-liberation-fonts-ttf
+dejavu-fonts-ttf
+xorg-fonts
+nerd-fonts
+adwaita-fonts
 
