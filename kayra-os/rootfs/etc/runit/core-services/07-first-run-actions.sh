@@ -20,6 +20,7 @@ mkdir -p "$(dirname "$MARKER")"
 # Regreet 
 chown -R _greeter:_greeter /var/log/regreet
 chown -R _greeter:_greeter /var/lib/regreet
+chmod +x /etc/greetd/wayland-sessions/sway.wrapper
 # Add any other one-time setup tasks below this line.
 
 #Pipewire
