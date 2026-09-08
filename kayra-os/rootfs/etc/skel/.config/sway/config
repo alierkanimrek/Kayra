@@ -22,6 +22,7 @@ set $right l
 set $term alacritty
 # Your preferred application launcher
 set $menu nwggrid
+set $filemanager thunar
 
 ### Output configuration
 #
@@ -257,3 +258,6 @@ exec swaync
 bindsym $mod+Shift+n exec swaync-client -t -sw
 #Waybar
 exec_always "pkill waybar || true; waybar"
+#Apps
+bindsym $mod+Ctrl+Return exec chromium
+bindsym $mod+Shift+Return exec $filemanager
