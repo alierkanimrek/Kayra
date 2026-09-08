@@ -204,7 +204,7 @@
         "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
         // "exec": "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" // Filter player based on name
     },
-    /*"custom/power": {
+/*    "custom/power": {
         "format" : "⏻ ",
 		"tooltip": false,
 		"menu": "on-click",
@@ -212,10 +212,12 @@
 		"menu-actions": {
 			"shutdown": "loginctl poweroff",
 			"reboot": "loginctl reboot",
-			"suspend": "zzz",
+			"suspend": "loginctl suspend",
+                        "hibernate": "loginctl hibernate",
 			"lock": "swaylock -f -c 000000"
 		}
-    }*/
+    },
+*/
     // Define the custom power module
     "custom/power": {
         "format": "⏻",
@@ -224,3 +226,4 @@
     }
 
 }
+
