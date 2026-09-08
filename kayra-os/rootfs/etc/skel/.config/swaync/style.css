@@ -1,0 +1,213 @@
+/*
+ * Kayra OS — SwayNotificationCenter "Buz Neon" tema
+ * Waybar ve Alacritty ile aynı palet ve font.
+ */
+
+* {
+    font-family: "DejaVu Sans", "Font Awesome 6 Free", "Font Awesome 6 Brands", sans-serif;
+    font-weight: 400;
+}
+
+@define-color ice #48e0ff;
+@define-color ice-glow rgba(72, 224, 255, 0.75);
+@define-color ice-dim rgba(72, 224, 255, 0.25);
+@define-color bg-base #1b1e21;
+@define-color bg-raised #202428;
+@define-color bg-hover #262b2f;
+@define-color text-main #cfeffa;
+@define-color text-muted #7d8892;
+
+/* Kontrol merkezinin arkasındaki karartma katmanı */
+.blank-window {
+    background-color: rgba(0, 0, 0, 0.35);
+}
+
+/* Kontrol merkezi paneli */
+window#control-center {
+    background-color: @bg-base;
+    border: 1px solid @ice;
+    border-radius: 10px;
+    box-shadow: 0 0 12px 0 @ice-dim;
+    color: @text-main;
+    padding: 6px;
+}
+
+.control-center-list {
+    background: transparent;
+}
+
+.control-center-list-placeholder {
+    color: @text-muted;
+    font-size: 13px;
+}
+
+/* Üst şerit: "Notifications" başlığı + Clear all */
+.widget-title {
+    color: @text-main;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 8px 6px;
+}
+
+.widget-title > button {
+    font-family: "DejaVu Sans", "Font Awesome 6 Free", sans-serif;
+    font-weight: 900;
+    color: @ice;
+    background-color: @bg-raised;
+    border: 1px solid @ice-dim;
+    border-radius: 6px;
+    padding: 4px 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+.widget-title > button:hover {
+    background-color: @bg-hover;
+    border-color: @ice;
+    box-shadow: 0 0 8px 0 @ice-glow;
+}
+
+/* Rahatsız Etme (Do Not Disturb) */
+.widget-dnd {
+    color: @text-main;
+    font-size: 13px;
+    padding: 6px;
+}
+
+.widget-dnd > switch {
+    font-family: "DejaVu Sans", "Font Awesome 6 Free", sans-serif;
+    font-weight: 900;
+    background-color: @bg-raised;
+    border: 1px solid @ice-dim;
+    border-radius: 10px;
+}
+
+.widget-dnd > switch:checked {
+    background-color: @ice;
+    box-shadow: 0 0 8px 0 @ice-glow;
+}
+
+.widget-dnd > switch slider {
+    background-color: @text-main;
+    border-radius: 999px;
+}
+
+/* Hızlı erişim düğme grid'i (varsa) */
+.widget-buttons-grid > flowbox > flowboxchild > button {
+    font-family: "DejaVu Sans", "Font Awesome 6 Free", sans-serif;
+    font-weight: 900;
+    color: @ice;
+    background-color: @bg-raised;
+    border: 1px solid @ice-dim;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+    background-color: @bg-hover;
+    border-color: @ice;
+    box-shadow: 0 0 8px 0 @ice-glow;
+}
+
+/* Medya kontrol widget'ı (varsa) */
+.widget-mpris {
+    background-color: @bg-raised;
+    border: 1px solid @ice-dim;
+    border-radius: 8px;
+    color: @text-main;
+    padding: 6px;
+}
+
+.widget-mpris > button {
+    font-family: "DejaVu Sans", "Font Awesome 6 Free", sans-serif;
+    font-weight: 900;
+    color: @ice;
+}
+
+/* Bildirim kartları */
+.notification-row {
+    outline: none;
+    margin: 4px 2px;
+}
+
+.notification-row:hover {
+    background: transparent;
+}
+
+.notification {
+    background-color: @bg-raised;
+    border: 1px solid @ice-dim;
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+.notification:hover {
+    border-color: @ice;
+    box-shadow: 0 0 10px 0 @ice-glow;
+}
+
+.notification-content {
+    padding: 8px;
+}
+
+.notification .summary {
+    color: @text-main;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.notification .time {
+    color: @text-muted;
+    font-size: 11px;
+}
+
+.notification .body {
+    color: @text-main;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.notification .image {
+    border-radius: 6px;
+}
+
+.close-button {
+    font-family: "DejaVu Sans", "Font Awesome 6 Free", sans-serif;
+    font-weight: 900;
+    color: @text-muted;
+    background-color: transparent;
+    border-radius: 999px;
+    min-width: 22px;
+    min-height: 22px;
+}
+
+.close-button:hover {
+    color: @bg-base;
+    background-color: @ice;
+    box-shadow: 0 0 8px 0 @ice-glow;
+}
+
+/* Bildirim içindeki eylem düğmeleri (Reply, Dismiss vb.) */
+.notification-action {
+    font-family: "DejaVu Sans", "Font Awesome 6 Free", sans-serif;
+    font-weight: 700;
+    color: @ice;
+    background-color: @bg-base;
+    border: 1px solid @ice-dim;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+.notification-action:hover {
+    background-color: @bg-hover;
+    border-color: @ice;
+    box-shadow: 0 0 8px 0 @ice-glow;
+}
+
+/* Bildirim üzerine tıklanabilir varsayılan alan */
+.notification-default-action {
+    background-color: transparent;
+}
+
+.notification-default-action:hover {
+    background-color: rgba(72, 224, 255, 0.06);
+}
