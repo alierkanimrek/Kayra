@@ -66,6 +66,8 @@ adwaita-qt6
 # Genel Masaüstü
 dejavu-fonts-ttf
 xorg-fonts
-nerd-fonts
 adwaita-fonts
+Thunar
+mousepad
+chromium
 
