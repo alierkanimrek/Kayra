@@ -1,37 +1,63 @@
-# It is not obvious how it translates to TOML. But it is extremely straightforward.
-
-# example: WINDOW, COLORS, etc. are tables, and should be represented as [window], [colors], respectively.
-# specifics of variables go under them. e.g.- look under "dynamic_padding" under-
-# https://github.com/alacritty/alacritty/blob/master/extra/man/alacritty.5.scd#window
-# write `dynamic_padding = true` (without backticks -`) under the table [window]
-# for variables with multiple values, use "dotted keys". Like setting `padding.x = 5` under [window].
-# This is simple. If not clear, do several trials and errors.
-
-# Below is my initial set-up. The TOML homepage (https://toml.io/en/v1.0.0) was very helpful in figuring this out.
-# I put the file alacritty.toml in $HOME/.config/alacritty. However it can be kept anywhere among the places mentioned in
-# https://github.com/alacritty/alacritty/tree/master#configuration
+# Kayra OS — Alacritty "Buz Neon" tema
 
 [window]
-
-opacity = 0.9
-
-padding.x = 10
-padding.y = 10
-
-decorations = "Full"
-decorations_theme_variant = "Dark"
+opacity = 0.95
+decorations = "None"
+padding = { x = 10, y = 8 }
 
 [font]
+size = 12.0
+offset = { x = 0, y = 1 }
 
-normal.family = "DejaVuSansMono"
-bold.family = "DejaVuSans-Bold"
-italic.family = "DejaVuSans-Oblique"
-bold_italic.family = "DejaVuSans-BoldOblique"
+[font.normal]
+family = "DejaVu Sans Mono"
+style = "Book"
 
-size = 14.0
+[font.bold]
+family = "DejaVu Sans Mono"
+style = "Bold"
 
-# Tip: for inspiration, look for values in the source code files of your favorite VS Code themes, and use the color picker in
-# Google to test colors before setting a value, or simply using an editor such as VS Code where colors are displayed in a
-# small box when a HEX is detected by the editor.
+[font.italic]
+family = "DejaVu Sans Mono"
+style = "Oblique"
 
-offset = { x = 1, y = 3 }
+[font.bold_italic]
+family = "DejaVu Sans Mono"
+style = "Bold Oblique"
+
+[cursor]
+style = { shape = "Block", blinking = "On" }
+blink_interval = 600
+unfocused_hollow = true
+
+[colors.primary]
+background = "#1b1e21"
+foreground = "#cfeffa"
+
+[colors.cursor]
+text = "#1b1e21"
+cursor = "#48e0ff"
+
+[colors.selection]
+text = "#1b1e21"
+background = "#48e0ff"
+
+[colors.normal]
+black   = "#2a2e33"
+red     = "#ff6b81"
+green   = "#6cf2c0"
+yellow  = "#ffe08a"
+blue    = "#5ab8ff"
+magenta = "#b48cff"
+cyan    = "#48e0ff"
+white   = "#cfeffa"
+
+[colors.bright]
+black   = "#4a4f56"
+red     = "#ff8fa3"
+green   = "#8ef9d4"
+yellow  = "#ffe9b3"
+blue    = "#7dcaff"
+magenta = "#cbb0ff"
+cyan    = "#7df6ff"
+white   = "#ffffff"
