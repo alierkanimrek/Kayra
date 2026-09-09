@@ -1,170 +1,128 @@
 /*
- * Kayra OS — Waybar "Buz Neon" tema
- * Koyu gri zemin, tüm modüller tek bir buz-neon mavi/cyan tonda,
- * üzerine gelince hafif parlama, barın altında ince neon bir şerit.
+ * Kayra OS — Waybar (%15 Parlatılmış Renkler)
  */
 
 * {
-    font-family: "DejaVu Sans", "Font Awesome 6 Free", "Font Awesome 6 Brands", monospace;
+    font-family: "Material Design Icons", "Material Design Icons Desktop", "DejaVu Sans Mono", monospace;
     font-size: 13px;
-    font-weight: 900;
+    font-weight: bold;
     min-height: 0;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Tek buz-neon vurgu rengi */
-@define-color ice #48e0ff;
-@define-color ice-glow rgba(72, 224, 255, 0.75);
-@define-color ice-dim rgba(72, 224, 255, 0.25);
+/* GTK Karanlık Zemin & Renk Tanımları (%15 Parlatılmış) */
+@define-color gtk-dark-bg #343842;
+@define-color gtk-dark-surface #2a2e37;
+@define-color ice-matte #a8c8d9;               /* %15 parlatılmış soft mavi-gri */
+@define-color ice-matte-hover #ffffff;         /* Net beyaz */
+@define-color ice-glow rgba(255, 255, 255, 0.98); /* %15 artırılmış ışık efekti */
+@define-color bg-hover-glow rgba(168, 200, 217, 0.50); /* %15 parlatılmış arka plan parlaması */
 
-/* Bar zemini + alt neon şerit */
+/* Bar zemini */
 window#waybar {
-    background-color: #1b1e21;
-    color: @ice;
-    border-bottom: 1px solid @ice;
-    box-shadow: 0 1px 8px 0 @ice-dim;
+    background-color: @gtk-dark-bg;
+    color: @ice-matte;
+    border-bottom: 1px solid rgba(168, 200, 217, 0.20);
 }
 
 window#waybar tooltip {
-    background-color: #202428;
-    border: 1px solid @ice;
+    background-color: @gtk-dark-surface;
+    border: 1px solid rgba(168, 200, 217, 0.25);
     border-radius: 6px;
 }
 
 window#waybar tooltip label {
-    color: @ice;
+    font-family: "DejaVu Sans Mono", monospace;
+    color: @ice-matte;
 }
 
-/* Ortak modül kabuğu — hepsi aynı renk */
+/* Base Modül Tanımları */
 #workspaces,
 #mode,
 #scratchpad,
 #custom-media,
 #window,
-#mpd,
-#idle_inhibitor,
-#pulseaudio,
-#network,
-#power-profiles-daemon,
-#cpu,
-#memory,
-#temperature,
-#backlight,
-#keyboard-state,
-#language,
-#battery,
-#clock,
 #tray,
 #custom-power {
-    color: @ice;
-    padding: 0 10px;
-    margin: 4px 2px;
-    border-radius: 8px;
-    background-color: #202428;
-    border: 1px solid @ice-dim;
-    transition: all 0.2s ease-in-out;
+    color: @ice-matte;
+    padding: 0 8px;
+    margin: 2px 0;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
 }
 
-/* Fare üzerine gelince hafif parlama — tüm modüller için ortak */
-#workspaces:hover,
+/* HOVER TÜR 1: Sadece Ön Renk / Yazı Parlaması (Power, Window, Media vb.) */
 #mode:hover,
 #scratchpad:hover,
 #custom-media:hover,
-#mpd:hover,
-#idle_inhibitor:hover,
-#pulseaudio:hover,
-#network:hover,
-#power-profiles-daemon:hover,
-#cpu:hover,
-#memory:hover,
-#temperature:hover,
-#backlight:hover,
-#keyboard-state:hover,
-#language:hover,
-#battery:hover,
-#clock:hover,
-#tray:hover,
 #custom-power:hover {
-    background-color: #262b2f;
-    border-color: @ice;
-    box-shadow: 0 0 8px 0 @ice-glow;
+    background-color: transparent;
+    box-shadow: none;
+    color: @ice-matte-hover;
+    text-shadow: 0 0 8px @ice-glow, 0 0 14px @ice-glow;
 }
 
-/* sway/workspaces */
+/* HOVER TÜR 2: Arka Plan + Ön Renk Birlikte Parlak (Workspaces için) */
+#workspaces {
+    padding: 0 2px;
+}
+
+/* Varsayılan GTK buton stillerini sıfırlama */
 #workspaces button {
-    padding: 0 6px;
-    color: @ice;
-    background: transparent;
+    background: none;
     border: none;
-    border-radius: 6px;
+    padding: 0 8px;
+    margin: 0 2px;
+    text-shadow: none;
+    box-shadow: none;
+    transition: none;
+    -gtk-icon-shadow: none;
+    -gtk-icon-effect: none;
+
+    font-family: "DejaVu Sans Mono", monospace;
+    color: @ice-matte;
+    background-color: rgba(168, 200, 217, 0.12);
+    border-radius: 4px;
 }
 
-#workspaces button.focused {
-    color: #1b1e21;
-    background-color: @ice;
-    box-shadow: 0 0 8px 1px @ice-glow;
+/* Pasif Workspace üzerine gelindiğinde */
+#workspaces button:hover {
+    background-color: @bg-hover-glow;
+    color: @ice-matte-hover;
+    text-shadow: 0 0 10px @ice-glow;
+    box-shadow: 0 0 8px rgba(168, 200, 217, 0.35);
+}
+
+/* Aktif Workspace (Varsayılan ve Hover Durumu) */
+#workspaces button.focused,
+#workspaces button.focused:hover {
+    color: @gtk-dark-bg;
+    background-color: @ice-matte;
+    box-shadow: none;
+    text-shadow: none;
 }
 
 #workspaces button.urgent {
     color: #ffffff;
-    background-color: #ff4d6d;
+    background-color: #d9534f;
 }
 
-#workspaces button:hover {
-    background-color: @ice-dim;
-}
-
-/* sway/window (ortadaki başlık) — kutu çerçevesi yok, sade */
+/* sway/window */
 #window {
+    font-family: "DejaVu Sans Mono", monospace;
     background-color: transparent;
     border: none;
 }
 
-/* Fonksiyonel durum renkleri (tema dışı, bilgi amaçlı korunuyor) */
-#mpd.disconnected,
-#pulseaudio.muted {
-    color: #5a6066;
-}
-
-#network.disconnected {
-    color: #ff4d6d;
-}
-
-#temperature.critical,
-#battery.critical {
-    color: #ffffff;
-    background-color: #ff4d6d;
-}
-
-#battery.warning {
-    color: #ffd54f;
-}
-
-#battery.charging {
-    box-shadow: 0 0 8px 1px @ice-glow;
-}
-
-#idle_inhibitor.activated {
-    color: #1b1e21;
-    background-color: @ice;
-    box-shadow: 0 0 8px 1px @ice-glow;
-}
-
-/* clock biraz daha belirgin dursun diye kalın kalsın (renk aynı) */
-#clock {
-    font-weight: 900;
-}
-
-/* tray */
-#tray > .passive {
-    opacity: 0.55;
-}
-
-#tray > .needs-attention {
-    box-shadow: 0 0 8px 1px rgba(255, 77, 109, 0.8);
+/* TRAY MODÜLÜ */
+#tray {
+    padding: 0 6px;
 }
 
 /* custom/power */
-#custom-power:hover {
-    background-color: @ice-dim;
-    box-shadow: 0 0 10px 1px @ice-glow;
+#custom-power {
+    font-size: 16px;
 }
