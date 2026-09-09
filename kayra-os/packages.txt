@@ -65,9 +65,9 @@ adwaita-qt6
 
 # Genel Masaüstü
 dejavu-fonts-ttf
+ttf-material-icons
 xorg-fonts
 adwaita-fonts
 Thunar
 mousepad
 chromium
-
