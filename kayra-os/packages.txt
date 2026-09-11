@@ -4,6 +4,7 @@
 # Temel Sistem
 base-system
 mesa-dri
+socklog-void
 
 # Sanal İstemci
 spice-vdagent
