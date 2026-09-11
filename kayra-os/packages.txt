@@ -27,7 +27,6 @@ font-awesome6
 SwayNotificationCenter
 fuzzel
 wmenu
-nwg-launchers
 
 # Terminal Emülatörleri ve Editör
 alacritty
