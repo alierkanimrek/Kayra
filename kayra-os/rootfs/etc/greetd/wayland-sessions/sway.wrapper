@@ -6,4 +6,4 @@ mkdir -p $HOME/.local/var/log
 rm $HOME/.local/var/log/sway.log
 
 # Sway'i dbus ile başlatıp logları yazdıralım (Sway -d parametresini artık sorunsuz alır)
-exec dbus-run-session sway -d > "$HOME/.local/var/log/sway.log" 2>&1
+exec dbus-run-session sway > "$HOME/.local/var/log/sway.log" 2>&1
