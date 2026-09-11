@@ -31,4 +31,10 @@ mkdir -p /etc/alsa/conf.d
 ln -s /usr/share/alsa/alsa.conf.d/50-pipewire.conf /etc/alsa/conf.d
 ln -s /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d
 
+#Services
+ln -s /etc/sv/socklog-unix /var/service
+ln -s /etc/sv/nanoklogd /var/service
+sv start socklog-unix
+sv start nanoklogd
+
 touch "$MARKER"
