@@ -13,14 +13,79 @@
     ],
     "modules-right": [
         "tray",
-        "custom/power"
+		"custom/notification",
+        "group/power-drawer"
     ],
     "tray": {
         "spacing": 10
     },
-    "custom/power": {
-        "format": "󰐥",
-        "on-click": "nwgbar",
-        "tooltip": false
-    }
+
+    // Grup tanımı
+"group/power-drawer": {
+    "orientation": "horizontal",
+    "drawer": {
+        "transition-duration": 0,
+        "transition-left-to-right": false
+    },
+    "modules": [
+        "custom/power-trigger",
+        "custom/lock",
+        "custom/logout",
+        "custom/reboot",
+        "custom/shutdown"
+    ]
+},
+    // Alt modül tanımları
+"custom/power-trigger": {
+    "format": "\ue5d4", // drag-vertical / tutamaç
+    "tooltip": false
+},
+
+"custom/lock": {
+    "format": "󰌾", // lock
+    "tooltip": true,
+    "tooltip-format": "Kilitle",
+    "on-click": "loginctl lock-session"
+},
+
+"custom/logout": {
+    "format": "󰍃", // logout
+    "tooltip": true,
+    "tooltip-format": "Oturumu Kapat",
+    "on-click": "loginctl terminate-user $USER"
+},
+
+"custom/reboot": {
+    "format": "󰜉", // reload / reboot
+    "tooltip": true,
+    "tooltip-format": "Yeniden Başlat",
+    "on-click": "loginctl reboot"
+},
+
+"custom/shutdown": {
+    "format": "󰐥", // power
+    "tooltip": true,
+    "tooltip-format": "Kapat",
+    "on-click": "loginctl poweroff"
+},
+
+// SwayNotificationCenter Bildirim Modülü
+    "custom/notification": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "\ue7f7",
+            "none": "",
+            "dnd-notification": "\ue7f7",
+            "dnd-none": "",
+            "inhibited-notification": "\ue7f7",
+            "inhibited-none": ""
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
 }
