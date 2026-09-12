@@ -8,6 +8,9 @@ exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DE
 exec dbus-update-activation-environment --all
 exec pipewire
 
+exec chmod +x .local/bin/check-groups.sh
+exec chmod +x .local/bin/fix-groups.sh
+exec chmod +x .local/bin/syslog-notify.sh
 
 ### Variables
 #
