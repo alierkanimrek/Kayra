@@ -5,6 +5,7 @@
 base-system
 mesa-dri
 socklog-void
+daemontools
 
 # Sanal İstemci
 spice-vdagent
@@ -23,14 +24,12 @@ ReGreet
 
 # Durum Çubuğu, Bildirim ve Menüler
 Waybar
-font-awesome6
 SwayNotificationCenter
 fuzzel
 wmenu
 
 # Terminal Emülatörleri ve Editör
 alacritty
-foot
 nano
 
 # Sistem Servisleri ve Ağ Yönetimi
@@ -70,4 +69,3 @@ xorg-fonts
 adwaita-fonts
 Thunar
 mousepad
-chromium
