@@ -257,7 +257,7 @@ exec swaync
 # Toggle control center
 bindsym $mod+Shift+n exec swaync-client -t -sw
 #Waybar
-exec_always "pkill waybar || true; waybar $HOME/.local/var/log/waybar.log 2>&1"
+exec_always "pkill waybar || true; waybar > $HOME/.local/var/log/waybar.log 2>&1"
 #Apps
 bindsym $mod+Ctrl+Return exec chromium
 bindsym $mod+Shift+Return exec $filemanager
