@@ -6,6 +6,7 @@ base-system
 mesa-dri
 socklog-void
 daemontools
+polkit-gnome
 
 # Sanal İstemci
 spice-vdagent
