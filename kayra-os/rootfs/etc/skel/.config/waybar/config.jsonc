@@ -42,28 +42,28 @@
 },
 
 "custom/lock": {
-    "format": "󰌾", // lock
+    "format": "\ue897", // lock
     "tooltip": true,
     "tooltip-format": "Kilitle",
     "on-click": "loginctl lock-session"
 },
 
 "custom/logout": {
-    "format": "󰍃", // logout
+    "format": "\ue9ba", // logout
     "tooltip": true,
     "tooltip-format": "Oturumu Kapat",
     "on-click": "loginctl terminate-user $USER"
 },
 
 "custom/reboot": {
-    "format": "󰜉", // reload / reboot
+    "format": "\ue042", // reload / reboot
     "tooltip": true,
     "tooltip-format": "Yeniden Başlat",
     "on-click": "loginctl reboot"
 },
 
 "custom/shutdown": {
-    "format": "󰐥", // power
+    "format": "\ue8ac", // power
     "tooltip": true,
     "tooltip-format": "Kapat",
     "on-click": "loginctl poweroff"
