@@ -14,7 +14,7 @@ set -euo pipefail
 # --- Files to modify (add your own file paths here) ---
 FILES=(
     "$HOME/.config/waybar/style.css"
-    "$HOME/.config/allacritty/allacritty.toml"
+    "$HOME/.config/alacritty/alacritty.toml"
     "$HOME/.config/fuzzel/fuzzel.ini"
     "$HOME/.config/swaync/style.css"
 )
