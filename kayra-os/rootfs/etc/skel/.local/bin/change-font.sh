@@ -13,9 +13,10 @@ set -euo pipefail
 
 # --- Files to modify (add your own file paths here) ---
 FILES=(
-    "$HOME/.config/waybar/config"
-    "$HOME/.config/kitty/kitty.conf"
-    "$HOME/.config/wofi/style.css"
+    "$HOME/.config/waybar/style.css"
+    "$HOME/.config/allacritty/allacritty.toml"
+    "$HOME/.config/fuzzel/fuzzel.ini"
+    "$HOME/.config/swaync/style.css"
 )
 
 WAYFONT_FILE="$HOME/.config/.wayfont"
