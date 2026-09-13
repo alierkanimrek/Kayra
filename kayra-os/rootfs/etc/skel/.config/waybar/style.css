@@ -3,7 +3,7 @@
  */
 
 * {
-    font-family: "Material Design Icons", "Ubuntu", monospace;
+    font-family: "Ubuntu Mono", "Material Design Icons", monospace;
     font-size: 13px;
     font-weight: bold;
     min-height: 0;
@@ -34,7 +34,7 @@ window#waybar tooltip {
 }
 
 window#waybar tooltip label {
-    font-family: "Ubuntu", monospace;
+    font-family: "Ubuntu Mono", monospace;
     color: @ice-matte;
 }
 
@@ -80,7 +80,7 @@ window#waybar tooltip label {
     -gtk-icon-shadow: none;
     -gtk-icon-effect: none;
 
-    font-family: "Ubuntu", monospace;
+    font-family: "Ubuntu Mono", monospace;
     color: @ice-matte;
     background-color: rgba(168, 200, 217, 0.12);
     border-radius: 4px;
@@ -110,7 +110,7 @@ window#waybar tooltip label {
 
 /* sway/window */
 #window {
-    font-family: "Ubuntu", monospace;
+    font-family: "Ubuntu Mono", monospace;
     background-color: transparent;
     border: none;
 }
