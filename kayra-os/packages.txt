@@ -62,6 +62,7 @@ grub-x86_64-efi
 nwg-look
 adwaita-plus
 adwaita-qt6
+yaru
 
 # Genel Masaüstü
 dejavu-fonts-ttf
