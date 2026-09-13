@@ -26,7 +26,7 @@ ReGreet
 # Durum Çubuğu, Bildirim ve Menüler
 Waybar
 SwayNotificationCenter
-wofi
+fuzzel
 
 # Terminal Emülatörleri ve Editör
 alacritty
