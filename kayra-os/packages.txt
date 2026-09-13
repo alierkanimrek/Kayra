@@ -26,8 +26,7 @@ ReGreet
 # Durum Çubuğu, Bildirim ve Menüler
 Waybar
 SwayNotificationCenter
-fuzzel
-wmenu
+wofi
 
 # Terminal Emülatörleri ve Editör
 alacritty
@@ -60,14 +59,12 @@ grub-x86_64-efi
 
 # Görünüm ve Temalar
 nwg-look
-adwaita-plus
-adwaita-qt6
 yaru
+yaru-plus
 
 # Genel Masaüstü
 dejavu-fonts-ttf
 ttf-material-icons
 xorg-fonts
-adwaita-fonts
 Thunar
 mousepad
