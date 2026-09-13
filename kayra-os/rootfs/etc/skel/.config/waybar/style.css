@@ -34,7 +34,7 @@ window#waybar tooltip {
 }
 
 window#waybar tooltip label {
-    font-family: "DejaVu Sans Mono", monospace;
+    font-family: "Ubuntu", monospace;
     color: @ice-matte;
 }
 
@@ -80,7 +80,7 @@ window#waybar tooltip label {
     -gtk-icon-shadow: none;
     -gtk-icon-effect: none;
 
-    font-family: "DejaVu Sans Mono", monospace;
+    font-family: "Ubuntu", monospace;
     color: @ice-matte;
     background-color: rgba(168, 200, 217, 0.12);
     border-radius: 4px;
@@ -110,7 +110,7 @@ window#waybar tooltip label {
 
 /* sway/window */
 #window {
-    font-family: "DejaVu Sans Mono", monospace;
+    font-family: "Ubuntu", monospace;
     background-color: transparent;
     border: none;
 }
