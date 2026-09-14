@@ -7,9 +7,6 @@
     font-size: 13px;
     font-weight: bold;
     min-height: 0;
-
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 /* GTK Karanlık Zemin & Renk Tanımları (%15 Parlatılmış) */
@@ -24,7 +21,7 @@
 window#waybar {
     background-color: @gtk-dark-bg;
     color: @ice-matte;
-    border-bottom: 1px solid rgba(168, 200, 217, 0.20);
+    border-bottom: 1px solid @ice-matte;
 }
 
 window#waybar tooltip {
@@ -83,7 +80,7 @@ window#waybar tooltip label {
     font-family: "Ubuntu Mono", monospace;
     color: @ice-matte;
     background-color: rgba(168, 200, 217, 0.12);
-    border-radius: 4px;
+    border-radius: 15px 15px 0px 0px;
 }
 
 /* Pasif Workspace üzerine gelindiğinde */
