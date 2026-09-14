@@ -13,6 +13,7 @@
     ],
     "modules-right": [
         "tray",
+		"custom/clipboard",
 		"custom/notification",
         "group/power-drawer"
     ],
@@ -70,22 +71,29 @@
 },
 
 // SwayNotificationCenter Bildirim Modülü
-    "custom/notification": {
-        "tooltip": false,
-        "format": "{icon}",
-        "format-icons": {
-            "notification": "\ue7f7",
-            "none": "",
-            "dnd-notification": "\ue7f7",
-            "dnd-none": "",
-            "inhibited-notification": "\ue7f7",
-            "inhibited-none": ""
-        },
-        "return-type": "json",
-        "exec-if": "which swaync-client",
-        "exec": "swaync-client -swb",
-        "on-click": "swaync-client -t -sw",
-        "on-click-right": "swaync-client -d -sw",
-        "escape": true
-    },
+"custom/notification": {
+	"tooltip": false,
+	"format": "{icon}",
+	"format-icons": {
+		"notification": "\ue7f7",
+		"none": "",
+		"dnd-notification": "\ue7f7",
+		"dnd-none": "",
+		"inhibited-notification": "\ue7f7",
+		"inhibited-none": ""
+	},
+	"return-type": "json",
+	"exec-if": "which swaync-client",
+	"exec": "swaync-client -swb",
+	"on-click": "swaync-client -t -sw",
+	"on-click-right": "swaync-client -d -sw",
+	"escape": true
+},
+"custom/clipboard": {
+	"format": "\ue14f",
+	"on-click": "cliphist list | fuzzel --dmenu --anchor=top-right --log-no-syslog | cliphist decode | wl-copy",
+	"on-click-right": "cliphist wipe",
+	"tooltip": true,
+	"tooltip-format": "Sol tık: Pano Geçmişi\nSağ tık: Geçmişi Temizle"
+}
 }
