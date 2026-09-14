@@ -1,6 +1,6 @@
 #!/bin/sh
 # ~/.local/bin/check-groups.sh
-REQUIRED="audio video input socklog"
+REQUIRED="users audio video input socklog"
 MISSING=""
 
 for g in $REQUIRED; do
