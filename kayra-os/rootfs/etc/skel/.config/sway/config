@@ -271,3 +271,9 @@ exec ~/.local/bin/syslog-notify.sh &
 #Apps
 bindsym $mod+Ctrl+Return exec chromium
 bindsym $mod+Shift+Return exec $filemanager
+
+#Pano
+exec wl-paste --type text --watch cliphist store
+exec wl-paste --type image --watch cliphist store 
+bindsym $mod+Shift+v cliphist list | fuzzel --dmenu --anchor=top-right --log-no-syslog | cliphist decode | wl-copy
+
