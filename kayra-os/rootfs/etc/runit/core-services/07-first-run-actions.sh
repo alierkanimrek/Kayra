@@ -34,7 +34,23 @@ ln -s /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d
 #Services
 ln -s /etc/sv/socklog-unix /var/service
 ln -s /etc/sv/nanoklogd /var/service
+ln -s /etc/sv/NetworkManager /var/service
+ln -s /etc/sv/acpid /var/service
+ln -s /etc/sv/dbus /var/service
+ln -s /etc/sv/dhcpcd /var/service
+ln -s /etc/sv/greetd /var/service
+ln -s /etc/sv/polkitd /var/service
+ln -s /etc/sv/udevd /var/service
+ln -s /etc/sv/uuidd /var/service
 sv start socklog-unix
 sv start nanoklogd
+sv start acpid
+sv start dbus
+sv start udevd
+sv start polkitd
+sv start uuidd
+sv start NetworkManager
+sv start dhcpcd
+sv start greetd
 
 touch "$MARKER"
