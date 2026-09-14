@@ -4,13 +4,13 @@
 
 * {
     font-family: "Ubuntu Mono", "Material Design Icons", monospace;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     min-height: 0;
 }
 
 /* GTK Karanlık Zemin & Renk Tanımları (%15 Parlatılmış) */
-@define-color gtk-dark-bg #343842;
+@define-color gtk-dark-bg #2c2c2c;
 @define-color gtk-dark-surface #2a2e37;
 @define-color ice-matte #a8c8d9;               /* %15 parlatılmış soft mavi-gri */
 @define-color ice-matte-hover #ffffff;         /* Net beyaz */
@@ -31,7 +31,6 @@ window#waybar tooltip {
 }
 
 window#waybar tooltip label {
-    font-family: "Ubuntu Mono", monospace;
     color: @ice-matte;
 }
 
@@ -43,7 +42,6 @@ window#waybar tooltip label {
 #window,
 #tray,
 #custom-power {
-    font-size: 16px;
     color: @ice-matte;
     background-color: transparent;
     border: none;
@@ -78,7 +76,6 @@ window#waybar tooltip label {
     -gtk-icon-shadow: none;
     -gtk-icon-effect: none;
 
-    font-family: "Ubuntu Mono", monospace;
     color: @ice-matte;
     background-color: rgba(168, 200, 217, 0.12);
     border-radius: 15px 15px 0px 0px;
@@ -108,7 +105,6 @@ window#waybar tooltip label {
 
 /* sway/window */
 #window {
-    font-family: "Ubuntu Mono", monospace;
     background-color: transparent;
     border: none;
 }
@@ -149,7 +145,6 @@ window#waybar tooltip label {
     min-height: 0;
     padding: 0px 3px;             /* Buton içi boşluk */
     margin: 0 1px;                /* Sol-sağ dış boşluk (butonlar arası mesafe) */
-    font-size: 16px;
     color: @ice-matte;
     border: none;
     box-shadow: none;
@@ -167,7 +162,6 @@ window#waybar tooltip label {
 
 /* SwayNC Bildirim Modülü */
 #custom-notification {
-    font-size: 16px;
     padding: 0 4px;
     margin: 0 2px;
     color: @ice-matte;
