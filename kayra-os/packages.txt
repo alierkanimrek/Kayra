@@ -60,11 +60,10 @@ grub-x86_64-efi
 # Görünüm ve Temalar
 nwg-look
 yaru
-yaru-plus
+ttf-ubuntu-font-family
+ttf-material-icons
 
 # Genel Masaüstü
-dejavu-fonts-ttf
-ttf-material-icons
 xorg-fonts
 Thunar
 mousepad
