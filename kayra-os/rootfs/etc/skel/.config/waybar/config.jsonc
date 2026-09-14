@@ -15,6 +15,7 @@
         "tray",
 		"custom/clipboard",
 		"custom/notification",
+		"custom/spacer",
         "group/power-drawer"
     ],
     "tray": {
@@ -95,5 +96,9 @@
 	"on-click-right": "cliphist wipe",
 	"tooltip": true,
 	"tooltip-format": "Sol tık: Pano Geçmişi\nSağ tık: Geçmişi Temizle"
+},
+"custom/spacer": {
+	"format": " "
 }
+
 }
