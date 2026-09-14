@@ -1,6 +1,6 @@
 #!/bin/sh
 # ~/.local/bin/fix-groups.sh
-REQUIRED="audio video input socklog"
+REQUIRED="users audio video input socklog"
 USER=$(id -un)
 MISSING=""
 
