@@ -54,6 +54,7 @@ window#waybar tooltip label {
 #mode:hover,
 #scratchpad:hover,
 #custom-media:hover,
+#custom-clipboard:hover,
 #custom-power:hover {
     background-color: transparent;
     box-shadow: none;
