@@ -184,3 +184,8 @@ window#waybar tooltip label {
     color: #ffb454;
     text-shadow: 0 0 10px rgba(255, 180, 84, 0.8);
 }
+
+/* Hover Durumu */
+#custom-network:hover {
+    color: @ice-matte-hover;
+}
