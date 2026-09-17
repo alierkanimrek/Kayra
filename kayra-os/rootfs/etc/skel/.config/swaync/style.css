@@ -4,7 +4,7 @@
  */
 
 * {
-    font-family: "Ubuntu Mono", "Material Design Icons", sans-serif;
+    font-family: "Noto Sans Mono", "Material Design Icons", sans-serif;
     font-weight: 400;
 }
 
@@ -50,7 +50,6 @@ window#control-center {
 }
 
 .widget-title > button {
-    font-family: "Ubuntu Mono", "Material Design Icons", sans-serif;
     font-weight: 900;
     color: @ice;
     background-color: @bg-raised;
@@ -74,7 +73,6 @@ window#control-center {
 }
 
 .widget-dnd > switch {
-    font-family: "Ubuntu Mono", "Material Design Icons", sans-serif;
     font-weight: 900;
     background-color: @bg-raised;
     border: 1px solid @ice-dim;
@@ -93,7 +91,6 @@ window#control-center {
 
 /* Hızlı erişim düğme grid'i (varsa) */
 .widget-buttons-grid > flowbox > flowboxchild > button {
-    font-family: "Ubuntu Mono", "Material Design Icons", sans-serif;
     font-weight: 900;
     color: @ice;
     background-color: @bg-raised;
@@ -118,7 +115,6 @@ window#control-center {
 }
 
 .widget-mpris > button {
-    font-family: "Ubuntu Mono", "Material Design Icons", sans-serif;
     font-weight: 900;
     color: @ice;
 }
@@ -171,7 +167,6 @@ window#control-center {
 }
 
 .close-button {
-    font-family: "Ubuntu Mono", "Material Design Icons", sans-serif;
     font-weight: 900;
     color: @text-muted;
     background-color: transparent;
@@ -188,7 +183,6 @@ window#control-center {
 
 /* Bildirim içindeki eylem düğmeleri (Reply, Dismiss vb.) */
 .notification-action {
-    font-family: "Ubuntu Mono", "Material Design Icons", sans-serif;
     font-weight: 700;
     color: @ice;
     background-color: @bg-base;
