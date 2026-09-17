@@ -13,6 +13,7 @@
     ],
     "modules-right": [
         "tray",
+		"custom/network",
 		"custom/clipboard",
 		"custom/notification",
 		"custom/spacer",
@@ -21,6 +22,14 @@
     "tray": {
         "spacing": 10
     },
+
+"custom/network": {
+	"exec": "$HOME/.local/bin/net-monitor.sh --ethernet \"en*\" --other \"docker*,veth*,br-*,virbr*\"",
+	"return-type": "json",
+	"restart-interval": 30,
+	"tooltip": true,
+	"on-click": "nm-connection-editor"
+},
 
     // Grup tanımı
 "group/power-drawer": {
