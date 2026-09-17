@@ -60,7 +60,7 @@ grub-x86_64-efi
 # Görünüm ve Temalar
 nwg-look
 yaru
-ttf-ubuntu-font-family
+noto-fonts-ttf
 ttf-material-icons
 
 # Genel Masaüstü
