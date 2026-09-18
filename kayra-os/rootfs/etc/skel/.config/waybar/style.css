@@ -137,3 +137,7 @@ window#waybar tooltip label {
 #custom-notification.notification:hover {
     color: @color-fg-hover;
 }
+
+#custom-connection-warning.warning {
+    color: @color-warning;
+}
