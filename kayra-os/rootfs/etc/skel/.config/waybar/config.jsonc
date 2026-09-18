@@ -13,23 +13,16 @@
     ],
     "modules-right": [
         "tray",
-		"custom/network",
-		"custom/clipboard",
-		"custom/notification",
-		"custom/spacer",
+	"custom/clipboard",
+	"custom/network",
+	"custom/connection-warning",
+	"custom/notification",
+	"custom/spacer",
         "group/power-drawer"
     ],
     "tray": {
         "spacing": 10
     },
-
-"custom/network": {
-	"exec": "$HOME/.local/bin/net-monitor.sh --ethernet \"en*\" --other \"docker*,veth*,br-*,virbr*\"",
-	"return-type": "json",
-	"restart-interval": 30,
-	"tooltip": true,
-	"on-click": "nm-connection-editor"
-},
 
     // Grup tanımı
 "group/power-drawer": {
@@ -99,6 +92,24 @@
 	"on-click-right": "swaync-client -d -sw",
 	"escape": true
 },
+
+"custom/connection-warning": {
+	"exec": "$HOME/.local/bin/connection-check.sh",
+	"return-type": "json",
+	"restart-interval": 30,
+	"tooltip": true,
+	"escape": true,
+	"on-click": "nm-connection-editor"
+},
+
+"custom/network": {
+	"exec": "$HOME/.local/bin/net-monitor.sh --ethernet \"en*\" --other \"docker*,veth*,br-*,virbr*\"",
+	"return-type": "json",
+	"restart-interval": 30,
+	"tooltip": true,
+	"on-click": "nm-connection-editor"
+},
+
 "custom/clipboard": {
 	"format": "\ue14f",
 	"on-click": "cliphist list | fuzzel --dmenu --anchor=top-right --log-no-syslog | cliphist decode | wl-copy",
@@ -111,3 +122,4 @@
 }
 
 }
+
