@@ -1,107 +1,11 @@
 /*
- * Kayra OS — Waybar (%15 Parlatılmış Renkler)
+ * Kayra OS — Waybar Yerleşim (Layout)
+ * ------------------------------------
+ * Bu dosya sadece modüllerin yerleşim (padding/margin/radius) ve
+ * yapısal özelliklerini içerir. Renk ve font değişikliği için
+ * colors.css dosyasını düzenleyin.
  */
-
-* {
-    font-family: "Noto Sans Mono", "Material Symbols Outlined", monospace;
-    font-size: 14px;
-    font-weight: bold;
-    min-height: 0;
-}
-
-/* GTK Karanlık Zemin & Renk Tanımları (%15 Parlatılmış) */
-@define-color gtk-dark-bg #2c2c2c;
-@define-color gtk-dark-surface #2a2e37;
-@define-color ice-matte #a8c8d9;               /* %15 parlatılmış soft mavi-gri */
-@define-color ice-matte-hover #ffffff;         /* Net beyaz */
-@define-color ice-glow rgba(255, 255, 255, 0.98); /* %15 artırılmış ışık efekti */
-@define-color bg-hover-glow rgba(168, 200, 217, 0.50); /* %15 parlatılmış arka plan parlaması */
-
-/* Bar zemini */
-window#waybar {
-    background-color: @gtk-dark-bg;
-    color: @ice-matte;
-    border-bottom: 1px solid @ice-matte;
-}
-
-window#waybar tooltip {
-    background-color: @gtk-dark-surface;
-    border: 1px solid rgba(168, 200, 217, 0.25);
-    border-radius: 6px;
-}
-
-window#waybar tooltip label {
-    color: @ice-matte;
-}
-
-/* Base Modül Tanımları */
-#workspaces,
-#mode,
-#scratchpad,
-#custom-media,
-#window,
-#tray,
-#custom-power {
-    color: @ice-matte;
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
-}
-
-/* HOVER TÜR 1: Sadece Ön Renk / Yazı Parlaması (Power, Window, Media vb.) */
-#mode:hover,
-#scratchpad:hover,
-#custom-media:hover,
-#custom-clipboard:hover,
-#custom-power:hover {
-    background-color: transparent;
-    box-shadow: none;
-    color: @ice-matte-hover;
-}
-
-/* HOVER TÜR 2: Arka Plan + Ön Renk Birlikte Parlak (Workspaces için) */
-#workspaces {
-    padding: 0 2px;
-}
-
-/* Varsayılan GTK buton stillerini sıfırlama */
-#workspaces button {
-    background: none;
-    border: none;
-    padding: 0 8px;
-    margin: 0 2px;
-    text-shadow: none;
-    box-shadow: none;
-    transition: none;
-    -gtk-icon-shadow: none;
-    -gtk-icon-effect: none;
-
-    color: @ice-matte;
-    background-color: rgba(168, 200, 217, 0.12);
-    border-radius: 15px 15px 0px 0px;
-}
-
-/* Pasif Workspace üzerine gelindiğinde */
-#workspaces button:hover {
-    background-color: @bg-hover-glow;
-    color: @ice-matte-hover;
-    text-shadow: 0 0 10px @ice-glow;
-    box-shadow: 0 0 8px rgba(168, 200, 217, 0.35);
-}
-
-/* Aktif Workspace (Varsayılan ve Hover Durumu) */
-#workspaces button.focused,
-#workspaces button.focused:hover {
-    color: @gtk-dark-bg;
-    background-color: @ice-matte;
-    box-shadow: none;
-    text-shadow: none;
-}
-
-#workspaces button.urgent {
-    color: #ffffff;
-    background-color: #d9534f;
-}
+@import url("theme.css");
 
 /* sway/window */
 #window {
@@ -109,83 +13,127 @@ window#waybar tooltip label {
     border: none;
 }
 
-/* TRAY MODÜLÜ */
-#tray {
-    padding: 0 6px;
+
+/* Bar zemini */
+window#waybar {
+    background-color: @color-bg;
+    color: @color-fg;
+    border-bottom: 1px solid @color-fg;
+    text-shadow: none;
+    transition: none;
 }
 
-/* 1. Grup Kapsayıcısı ve Dahili GTK Box Elemanları */
-/* Power Drawer Grup Kapsayıcısı */
-#group-power-drawer {
-    padding: 0;
-    margin: 0;
-    background-color: transparent;
+window#waybar tooltip {
+    background-color: @color-surface;
+    border: 1px solid @color-fg;
+    border-radius: 6px;
 }
 
-/* Tetikleyici İkon */
-#custom-power-trigger {
-    min-height: 0;
-    min-width: 0;
-    padding: 0 0px;
-    margin: 0 0px;
-    color: @ice-matte;
-    background-color: transparent;
+window#waybar tooltip label {
+    color: @color-fg;
 }
 
-#group-power-drawer:hover #custom-power-trigger {
-    color: @ice-matte-hover;
-}
-
-/* Alt Modüller (Her bir butona zorunlu genişlik vererek yapışmayı engelleme) */
-#group-power-drawer button,
+/* ---------------- Ortak Modül Tabanı ---------------- */
+/* Tüm ikon/modüllerin ortak özelliği: transparan arkaplan + ön plan rengi */
+#workspaces,
+#mode,
+#scratchpad,
+#custom-media,
+#window,
+#tray,
+#custom-power,
+#custom-power-trigger,
 #custom-lock,
 #custom-logout,
 #custom-reboot,
-#custom-shutdown {
-    min-height: 0;
-    padding: 0px 3px;             /* Buton içi boşluk */
-    margin: 0 1px;                /* Sol-sağ dış boşluk (butonlar arası mesafe) */
-    color: @ice-matte;
+#custom-shutdown,
+#custom-notification,
+#custom-network,
+#custom-clipboard {
+    color: @color-fg;
+    background-color: transparent;
     border: none;
-    box-shadow: none;
+	padding: 0 3px;
+	margin: 0 1px;
 }
 
-/* Alt Modüller Hover */
-#group-power-drawer button:hover,
+/* Ortak Hover: fare üzerine gelince beyaz parlama */
+#mode:hover,
+#scratchpad:hover,
+#custom-media:hover,
+#custom-clipboard:hover,
+#custom-power:hover,
+#custom-power-trigger:hover,
 #custom-lock:hover,
 #custom-logout:hover,
 #custom-reboot:hover,
-#custom-shutdown:hover {
-    color: @ice-matte-hover;
+#custom-shutdown:hover,
+#custom-notification:hover,
+#custom-network:hover {
+    color: @color-fg-hover;
 }
 
+/* ---------------- Power Drawer Grubu ---------------- */
+#group-power-drawer {
+
+}
+
+#group-power-drawer:hover #custom-power-trigger {
+    color: @color-fg-hover;
+}
+
+#custom-power-trigger,
+#group-power-drawer button {
+    min-height: 0;
+    min-width: 0;
+}
+
+/* ---------------- Workspaces ---------------- */
+#workspaces {
+
+}
+
+#workspaces button {
+    background: none;
+    border: none;
+    padding: 0 6px;
+    margin: 0 1px;
+    color: @color-fg;
+    border-radius: 15px 15px 0px 0px;
+}
+
+/* Pasif workspace hover */
+#workspaces button:hover {
+    color: @color-fg-hover;
+}
+
+/* Aktif workspace: ayırt edilmesi için renkler ters çevrilir (ekstra renk eklemez) */
+#workspaces button.focused,
+#workspaces button.focused:hover {
+    color: @color-bg;
+    background-color: @color-fg;
+}
+
+#workspaces button.urgent {
+    color: @color-fg-hover;
+    background-color: @color-warning;
+}
+
+
+/* Tray */
+#tray {
+}
 
 /* SwayNC Bildirim Modülü */
 #custom-notification {
-    padding: 0 4px;
-    margin: 0 2px;
-    color: @ice-matte;
-    background-color: transparent;
 }
 
-/* Okunmamış Bildirim Var (Turuncu & Parlama) */
+/* Okunmamış bildirim: uyarı rengiyle vurgulanır */
 #custom-notification.notification,
 #custom-notification.dnd-notification {
-    color: #ff9e3b;
-    text-shadow: 0 0 8px rgba(255, 158, 59, 0.6);
-}
-
-/* Hover Durumu */
-#custom-notification:hover {
-    color: @ice-matte-hover;
+    color: @color-warning;
 }
 
 #custom-notification.notification:hover {
-    color: #ffb454;
-    text-shadow: 0 0 10px rgba(255, 180, 84, 0.8);
-}
-
-/* Hover Durumu */
-#custom-network:hover {
-    color: @ice-matte-hover;
+    color: @color-fg-hover;
 }
