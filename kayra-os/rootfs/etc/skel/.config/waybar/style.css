@@ -49,7 +49,8 @@ window#waybar tooltip label {
 #custom-shutdown,
 #custom-notification,
 #custom-network,
-#custom-clipboard {
+#custom-clipboard,
+#custom-wifi {
     color: @color-fg;
     background-color: transparent;
     border: none;
@@ -69,7 +70,8 @@ window#waybar tooltip label {
 #custom-reboot:hover,
 #custom-shutdown:hover,
 #custom-notification:hover,
-#custom-network:hover {
+#custom-network:hover,
+#custom-wifi:hover {
     color: @color-fg-hover;
 }
 
@@ -141,3 +143,12 @@ window#waybar tooltip label {
 #custom-connection-warning.warning {
     color: @color-warning;
 }
+
+#custom-wifi.disconnected {
+    color: @color-warning;
+}
+ 
+#custom-wifi.disconnected:hover {
+    color: @color-fg-hover;
+}
+
