@@ -50,7 +50,8 @@ window#waybar tooltip label {
 #custom-notification,
 #custom-network,
 #custom-clipboard,
-#custom-wifi {
+#custom-wifi,
+#custom-app-menu {
     color: @color-fg;
     background-color: transparent;
     border: none;
@@ -71,7 +72,8 @@ window#waybar tooltip label {
 #custom-shutdown:hover,
 #custom-notification:hover,
 #custom-network:hover,
-#custom-wifi:hover {
+#custom-wifi:hover,
+#custom-app-menu:hover {
     color: @color-fg-hover;
 }
 
