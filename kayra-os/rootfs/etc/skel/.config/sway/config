@@ -8,8 +8,6 @@ exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DE
 exec dbus-update-activation-environment --all
 exec pipewire
 
-exec chmod +x ~/.local/bin/*
-
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
