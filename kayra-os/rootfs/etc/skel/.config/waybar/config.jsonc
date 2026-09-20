@@ -3,6 +3,7 @@
     "height": 30,
     "spacing": 4,
     "modules-left": [
+	"custom/app-menu",
         "sway/workspaces",
         "sway/mode",
         "sway/scratchpad",
@@ -129,6 +130,14 @@
 	"tooltip": true,
 	"tooltip-format": "Sol tık: Pano Geçmişi\nSağ tık: Geçmişi Temizle"
 },
+
+"custom/app-menu": {
+	"format": "\ue5c3",
+	"tooltip": true,
+	"tooltip-format": "Uygulama Menüsü",
+	"on-click": "fuzzel --anchor=top-left --log-no-syslog"
+},
+
 "custom/spacer": {
 	"format": " "
 }
