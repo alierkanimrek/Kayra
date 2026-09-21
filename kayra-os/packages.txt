@@ -7,6 +7,7 @@ mesa-dri
 socklog-void
 daemontools
 polkit-gnome
+inotify-tools
 
 # Sanal İstemci
 spice-vdagent
