@@ -68,3 +68,4 @@ ttf-material-icons
 xorg-fonts
 Thunar
 mousepad
+flatpak
