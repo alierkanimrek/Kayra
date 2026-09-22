@@ -85,7 +85,8 @@ for entry in "${networks[@]}"; do
     menu_map["$label"]="${ssid}:::${security}"
 done
 
-selection=$(printf '%s\n' "${menu_lines[@]}" \
+
+selection=$(pkill fuzzel; printf '%s\n' "${menu_lines[@]}" \
     | fuzzel --dmenu --anchor=top-right --log-no-syslog --placeholder="Wifi ağı seç" --lines=10 --prompt="wifi> ")
 [[ -z "$selection" ]] && exit 0
 
