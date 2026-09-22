@@ -18,7 +18,7 @@
 
 /* Zemin renkleri */
 @define-color color-bg       #2c2c2c;  /* Waybar ana zemin rengi */
-@define-color color-surface  #2a2e37;  /* Tooltip zemin rengi (bardan biraz farklı ton) */
+@define-color color-surface  #2c2c2c;  /* Tooltip zemin rengi (bardan biraz farklı ton) */
 
 /* Ön plan (ikon + yazı) renkleri */
 @define-color color-fg       #a8c8d9;  /* Varsayılan ön plan rengi */
