@@ -23,13 +23,13 @@ window#waybar {
     transition: none;
 }
 
-window#waybar tooltip {
+tooltip {
     background-color: @color-surface;
     border: 1px solid @color-fg;
     border-radius: 6px;
 }
 
-window#waybar tooltip label {
+tooltip label {
     color: @color-fg;
 }
 
@@ -41,6 +41,7 @@ window#waybar tooltip label {
 #custom-media,
 #window,
 #tray,
+#battery,
 #custom-power,
 #custom-power-trigger,
 #custom-lock,
@@ -51,7 +52,8 @@ window#waybar tooltip label {
 #custom-network,
 #custom-clipboard,
 #custom-wifi,
-#custom-app-menu {
+#custom-app-menu,
+#custom-user-info {
     color: @color-fg;
     background-color: transparent;
     border: none;
@@ -61,6 +63,7 @@ window#waybar tooltip label {
 
 /* Ortak Hover: fare üzerine gelince beyaz parlama */
 #mode:hover,
+battery:hover,
 #scratchpad:hover,
 #custom-media:hover,
 #custom-clipboard:hover,
@@ -73,7 +76,8 @@ window#waybar tooltip label {
 #custom-notification:hover,
 #custom-network:hover,
 #custom-wifi:hover,
-#custom-app-menu:hover {
+#custom-app-menu:hover,
+#custom-user-info:hover {
     color: @color-fg-hover;
 }
 
@@ -154,3 +158,20 @@ window#waybar tooltip label {
     color: @color-fg-hover;
 }
 
+#custom-user-info.supervisor {
+    color: @color-warning;
+}
+
+#custom-user-info.supervisor:hover {
+    color: @color-fg-hover;
+}
+#battery{
+
+}
+#battery.charging{
+	color: @color-fg-hover;
+}
+#battery.critical{
+	font-size: 1.3rem;
+	color: @color-warning;
+}
