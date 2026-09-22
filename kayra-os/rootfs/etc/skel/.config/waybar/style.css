@@ -166,12 +166,13 @@ battery:hover,
     color: @color-fg-hover;
 }
 #battery{
-
+	font-size: 1.3rem;
 }
 #battery.charging{
+	font-size: 1.3rem;
 	color: @color-fg-hover;
 }
 #battery.critical{
-	font-size: 1.3rem;
+	font-size: 1.5rem;
 	color: @color-warning;
 }
