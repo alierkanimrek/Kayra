@@ -8,6 +8,7 @@ socklog-void
 daemontools
 polkit-gnome
 inotify-tools
+unzip
 
 # Sanal İstemci
 spice-vdagent
