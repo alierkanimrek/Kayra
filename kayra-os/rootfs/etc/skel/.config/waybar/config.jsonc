@@ -19,6 +19,7 @@
 	"custom/wifi",
 	"custom/connection-warning",
 	"custom/notification",
+	"battery",
 	"custom/spacer",
         "group/power-drawer"
     ],
@@ -35,6 +36,7 @@
     },
     "modules": [
         "custom/power-trigger",
+	"custom/user-info",
         "custom/lock",
         "custom/logout",
         "custom/reboot",
@@ -125,7 +127,7 @@
 
 "custom/clipboard": {
 	"format": "\ue14f",
-	"on-click": "cliphist list | fuzzel --dmenu --anchor=top-right --log-no-syslog | cliphist decode | wl-copy",
+	"on-click": "pkill fuzzel; cliphist list | fuzzel --dmenu --anchor=top-right --log-no-syslog | cliphist decode | wl-copy",
 	"on-click-right": "cliphist wipe",
 	"tooltip": true,
 	"tooltip-format": "Sol tık: Pano Geçmişi\nSağ tık: Geçmişi Temizle"
@@ -135,7 +137,42 @@
 	"format": "\ue5c3",
 	"tooltip": true,
 	"tooltip-format": "Uygulama Menüsü",
-	"on-click": "fuzzel --anchor=top-left --log-no-syslog"
+	"on-click": "pkill fuzzel; fuzzel --anchor=top-left --log-no-syslog"
+},
+
+"custom/user-info": {
+    "format": "{}",
+    "exec": "$HOME/.local/bin/user-info.sh",
+    "return-type": "json",
+    "interval": 30,
+    "tooltip": true,
+    "on-click": "~/.local/bin/user-info-menu.sh",
+    "escape": false
+},
+"battery": {
+	"bat": "BAT1",
+	"interval": 60,
+	"states": {
+		"warning": 30,
+		"critical": 15
+	},
+	"events": {
+		"on-discharging-warning": "notify-send -u normal 'Low Battery'",
+		"on-discharging-critical": "notify-send -u critical 'Very Low Battery'",
+		"on-charging-100": "notify-send -u normal 'Battery Full!'",
+		"on-discharging": "notify-send -u normal 'Power Switch' Discharging",
+		"on-charging": "notify-send -u normal 'Power Switch' Charging'"
+	},
+	"format": "{icon}",
+	"format-charging": "{icon}",
+	"format-icons": {
+		"default": ["\uf30d", "\uf30c", "\uf30b", "\uf30a", "\uf309", "\uf308", "\uf304"],
+		"charging": ["\uf305","\uDBBF\uDF3E", "\uDBBF\uDF3D", "\uDBBF\uDF3B", "\uDBBF\uDF3A", "\uf304"]
+	},
+	"max-length": 25,
+	"tooltip": true,
+	"tooltip-format": "Kapasite: {capacity}% ({time})",
+	"tooltip-format-charging": "Şarj Oluyor: {capacity}% (Dolmaya kalan: {time})"
 },
 
 "custom/spacer": {
