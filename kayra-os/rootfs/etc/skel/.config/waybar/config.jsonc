@@ -146,7 +146,7 @@
     "return-type": "json",
     "interval": 30,
     "tooltip": true,
-    "on-click": "~/.local/bin/user-info-menu.sh",
+    "on-click": "~/.local/bin/fuzzel-menu.sh user-menu.json --anchor=top-right",
     "escape": false
 },
 "battery": {
