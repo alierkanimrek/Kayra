@@ -32,15 +32,15 @@ ln -s /usr/share/alsa/alsa.conf.d/50-pipewire.conf /etc/alsa/conf.d
 ln -s /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d
 
 #Services
-ln -s /etc/sv/socklog-unix /var/service
-ln -s /etc/sv/nanoklogd /var/service
-ln -s /etc/sv/NetworkManager /var/service
-ln -s /etc/sv/acpid /var/service
-ln -s /etc/sv/dbus /var/service
-ln -s /etc/sv/dhcpcd /var/service
-ln -s /etc/sv/greetd /var/service
-ln -s /etc/sv/polkitd /var/service
-ln -s /etc/sv/udevd /var/service
-ln -s /etc/sv/uuidd /var/service
+ln -s /etc/sv/socklog-unix /etc/runit/runsvdir/current
+ln -s /etc/sv/nanoklogd /etc/runit/runsvdir/current
+ln -s /etc/sv/NetworkManager /etc/runit/runsvdir/current
+ln -s /etc/sv/acpid /etc/runit/runsvdir/current
+ln -s /etc/sv/dbus /etc/runit/runsvdir/current
+ln -s /etc/sv/dhcpcd /etc/runit/runsvdir/current
+ln -s /etc/sv/greetd /etc/runit/runsvdir/current
+ln -s /etc/sv/polkitd /etc/runit/runsvdir/current
+ln -s /etc/sv/udevd /etc/runit/runsvdir/current
+ln -s /etc/sv/uuidd /etc/runit/runsvdir/current
 
 touch "$MARKER"
