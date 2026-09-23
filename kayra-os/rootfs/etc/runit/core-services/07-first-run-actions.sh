@@ -42,15 +42,5 @@ ln -s /etc/sv/greetd /var/service
 ln -s /etc/sv/polkitd /var/service
 ln -s /etc/sv/udevd /var/service
 ln -s /etc/sv/uuidd /var/service
-sv start socklog-unix
-sv start nanoklogd
-sv start acpid
-sv start dbus
-sv start udevd
-sv start polkitd
-sv start uuidd
-sv start NetworkManager
-sv start dhcpcd
-sv start greetd
 
 touch "$MARKER"
