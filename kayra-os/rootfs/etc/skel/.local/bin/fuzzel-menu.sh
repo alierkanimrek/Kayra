@@ -19,7 +19,7 @@ fi
 pkill -x fuzzel 2>/dev/null
 
 # 4. Seçimi al (varsayılan parametrelere ek olarak eklenen "$@" aktarılır)
-SELECTED_KEY=$(jq -r 'keys[]' "$HOME/.local/var/lib/waybar/$DATA_FILE" | fuzzel --dmenu --log-no-syslog "$@" --prompt="Eylem: ")
+SELECTED_KEY=$(jq -r 'keys[]' "$HOME/.local/var/lib/waybar/$DATA_FILE" | tac | fuzzel --dmenu --log-no-syslog "$@" --prompt="Eylem: ")
 
 [ -z "$SELECTED_KEY" ] && exit 0
 
