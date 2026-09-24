@@ -24,7 +24,7 @@ SELECTED_KEY=$(jq -r 'keys[]' "$HOME/.local/var/lib/waybar/$DATA_FILE" | fuzzel 
 [ -z "$SELECTED_KEY" ] && exit 0
 
 # 5. Komutu çalıştır
-COMMAND=$(jq -r --arg key "$SELECTED_KEY" '.[$key]' "$HOME/.local/var/lib/waybar/$DATA_FILE")
+COMMAND=$HOME/.local/bin/$(jq -r --arg key "$SELECTED_KEY" '.[$key]' "$HOME/.local/var/lib/waybar/$DATA_FILE")
 
 if [ -n "$COMMAND" ] && [ "$COMMAND" != "null" ]; then
     eval "$COMMAND" &
