@@ -5,15 +5,8 @@
 
 set -euo pipefail
 
-# Gerekli komutların varlığını kontrol et
-if ! command -v notify-send >/dev/null 2>&1; then
-    echo "Hata: notify-send bulunamadı. Kurulum: sudo xbps-install -S libnotify" >&2
-    exit 1
-fi
-
-if ! command -v baobab >/dev/null 2>&1; then
-    echo "Uyarı: baobab bulunamadı. Kurulum: sudo xbps-install -S baobab" >&2
-fi
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=i18n_HOME_USAGE
 
 # $HOME boyutunu hesapla (insan-okunur formatta)
 HOME_SIZE=$(du -sh "$HOME" 2>/dev/null | awk '{print $1}')
@@ -22,9 +15,9 @@ HOME_SIZE=$(du -sh "$HOME" 2>/dev/null | awk '{print $1}')
 ACTION=$(notify-send \
     -w \
     -i drive-harddisk \
-    -A "open=Baobab'ı Aç" \
-    "Ev Dizini Boyutu" \
-    "$HOME dizini şu anda ${HOME_SIZE} yer kaplıyor.")
+    -A "open=${MSG[NOTIFY_BUTTON]}" \
+    "${MSG[NOTIFY_TITLE]}" \
+    "$(i18n_template "${MSG[NOTIFY_MSG]}" HOME="$HOME" USAGE="$HOME_SIZE")")
 
 # Kullanıcı "Baobab'ı Aç" seçeneğine tıkladıysa baobab'ı başlat
 if [ "$ACTION" = "open" ]; then
