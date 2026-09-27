@@ -1,17 +1,21 @@
 #!/usr/bin/env bash
-# grup-ekle.sh
-# fuzzel menüsü ile kullanıcıyı üye olmadığı bir gruba ekler.
 #
-# Kullanım: ./grup-ekle.sh [fuzzel'e geçilecek ek parametreler]
+# Group Add Script - Add user to a group via fuzzel menu.
+# Displays groups the user is not yet a member of.
+#
+# Usage: ./group-add.sh [fuzzel parameters]
 
 set -euo pipefail
 
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=i18n_GROUP_MANAGEMENT
+
 TARGET_USER="${SUDO_USER:-${USER:-$(id -un)}}"
 
-# --- Açık fuzzel pencerelerini kapat -----------------------------------
+# Close any open fuzzel windows
 pkill -x fuzzel 2>/dev/null || true
 
-# --- Grup bilgisi topla --------------------------------------------------
+# Gather group information
 mapfile -t ALL_GROUPS < <(getent group | cut -d: -f1 | sort -u)
 mapfile -t USER_GROUPS < <(id -Gn "$TARGET_USER" | tr ' ' '\n')
 
@@ -21,7 +25,7 @@ for ug in "${USER_GROUPS[@]}"; do
 done
 is_member() { [[ -n "${IS_MEMBER_MAP[$1]+x}" ]]; }
 
-# --- Eklenebilir grup listesi (henüz üye olunmayanlar) -------------------
+# List of groups user can be added to (groups they are not yet members of)
 ADDABLE_GROUPS=()
 for g in "${ALL_GROUPS[@]}"; do
     if ! is_member "$g"; then
@@ -30,24 +34,24 @@ for g in "${ALL_GROUPS[@]}"; do
 done
 
 if [[ ${#ADDABLE_GROUPS[@]} -eq 0 ]]; then
-    notify-send -u normal "Grup Yönetimi" "Eklenebilecek bir grup bulunamadı."
+    notify-send -u normal "${MSG[TITLE]}" "${MSG[NO_GROUPS_AVAILABLE]}"
     exit 0
 fi
 
 menu=$(printf '%s\n' "${ADDABLE_GROUPS[@]}")
 
-# --- fuzzel'i çalıştır -----------------------------------------------------
+# Run fuzzel
 line_count=${#ADDABLE_GROUPS[@]}
 
 selected_group=$(printf '%s' "$menu" | fuzzel --dmenu --log-no-syslog "$@" --lines="$line_count") || true
 
 [[ -z "$selected_group" ]] && exit 0
 
-# --- Gruba ekle (usermod ile) --------------------------------------------
+# Add to group using usermod
 if pkexec usermod -aG "$selected_group" "$TARGET_USER"; then
-    notify-send -u normal "Grup Yönetimi" \
-        "${TARGET_USER} kullanıcısı '${selected_group}' grubuna eklendi."
+    notify-send -u normal "${MSG[TITLE]}" \
+        "$(i18n_template "${MSG[GROUP_ADDED]}" USER="$TARGET_USER" GROUP="$selected_group")"
 else
-    notify-send -u critical "Grup Yönetimi" \
-        "'${selected_group}' grubuna ekleme işlemi başarısız oldu."
+    notify-send -u critical "${MSG[TITLE]}" \
+        "$(i18n_template "${MSG[ADD_FAILED]}" GROUP="$selected_group")"
 fi

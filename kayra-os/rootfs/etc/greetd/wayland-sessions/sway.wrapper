@@ -5,6 +5,10 @@ export XDG_CURRENT_DESKTOP=sway
 mkdir -p $HOME/.local/var/log
 rm $HOME/.local/var/log/sway.log
 chmod +x $HOME/.local/bin/*
+[ -f "$HOME/.profile" ] && . "$HOME/.profile"
+
+# Dil yapılandırmasını başlat
+[ -x "$HOME/.local/bin/set-language.sh" ] && $HOME/.local/bin/set-language.sh -q $(locale | grep LANG= | cut -d= -f2 | cut -d_ -f1)
 
 # Sway'i dbus ile başlatıp logları yazdıralım (Sway -d parametresini artık sorunsuz alır)
 exec dbus-run-session sway > "$HOME/.local/var/log/sway.log" 2>&1

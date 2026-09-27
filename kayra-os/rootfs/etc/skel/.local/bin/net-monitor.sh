@@ -1,34 +1,19 @@
 #!/usr/bin/env bash
 #
-# waybar-netmon.sh
-# ------------------------------------------------------------------
-# Sway/Waybar için ağ aygıtı izleyici custom modül betiği.
+# Network Monitor Script - Waybar custom module for network device monitoring.
 #
-# Yaklaşım:
-#   - "ip monitor address link" SADECE bir değişiklik olduğunu haber
-#     verir (tetikleyici); kendisi hiçbir bilgi ayrıştırmaz.
-#   - Her tetiklemede TEK bir "ip -j addr show" çağrısı yapılır. -j
-#     ile alınan JSON çıktısı doğrudan jq'ye verilir; jq hem desenlere
-#     göre sınıflandırmayı (test() ile regex eşleştirme), hem tooltip
-#     ve ikon metnini, hem de waybar'ın beklediği nihai JSON nesnesini
-#     üretir. jq zaten JSON ürettiği için metin kaçışı (escape) elle
-#     yapılmaz; jq bunu otomatik ve güvenilir şekilde halleder.
-#     Böylece ayrı bir awk adımına ihtiyaç kalmaz.
+# Monitors Ethernet and other (virtual/docker/veth etc.) network interfaces.
+# Wireless (wl*) and cellular (ww*, usb* etc.) interfaces are not handled by this script.
 #
-# Bağımlılık: jq (Void'de: xbps-install -S jq)
+# Usage:
+#   net-monitor.sh --ethernet "en*" --other "docker*,veth*,br-*,virbr*"
 #
-# Sadece komut satırından desen (glob) olarak verilen ETHERNET ve
-# DİĞER (sanal/docker/veth vb.) arayüzleri işler. Kablosuz (wl*) ve
-# geniş bant (ww*, usb* vb.) arayüzler bu betiğe parametre olarak
-# verilmediği için otomatik olarak işlem dışı kalır.
-#
-# Kullanım:
-#   waybar-netmon.sh --ethernet "en*" --other "docker*,veth*,br-*,virbr*"
-#
-# Desenler virgülle ayrılmış birden fazla shell glob içerebilir.
-# ------------------------------------------------------------------
+# Patterns can contain multiple shell globs separated by commas.
 
 set -uo pipefail
+
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=i18n_NET_MONITOR
 
 ETH_PATTERNS=""
 OTHER_PATTERNS=""
@@ -44,27 +29,25 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         *)
-            echo "Bilinmeyen parametre: $1" >&2
+            echo "$(i18n_template "${MSG[UNKNOWN_PARAMETER]}" PARAM="$1")" >&2
             exit 1
             ;;
     esac
 done
 
 if [[ -z "$ETH_PATTERNS" && -z "$OTHER_PATTERNS" ]]; then
-    echo "Kullanım: $0 --ethernet <desen1,desen2,...> --other <desen1,desen2,...>" >&2
+    echo "$(i18n_template "${MSG[USAGE_ERROR]}" SCRIPT="$0")" >&2
     exit 1
 fi
 
-# Nerd Font / icon font kod noktaları (U+EB2F, U+F56E)
-# Not: locale'den bağımsız çalışması için \u kaçışı değil, doğrudan
-# UTF-8 bayt dizisi (\x..) kullanılıyor.
-ETH_ICON=$'\xee\xac\xaf'    # U+EB2F
-OTHER_ICON=$'\xef\x95\xae'  # U+F56E
+# Nerd Font / icon font codepoints (U+EB2F, U+F56E)
+# Note: Using direct UTF-8 byte sequences (\x..) instead of \u escapes
+# for locale-independent operation.
+ETH_ICON=$'\xee\xac\xaf'
+OTHER_ICON=$'\xef\x95\xae'
 
-# Virgülle ayrılmış glob listesini (örn: "docker*,veth*") çapalı bir
-# ERE alternatifine çevirir (örn: "^docker.*$|^veth.*$"). jq'nun
-# test() fonksiyonu (Oniguruma) bu sözdizimini desteklediği için bu
-# dönüşüm gerekli.
+# Convert comma-separated glob list (e.g. "docker*,veth*") to ERE alternation
+# (e.g. "^docker.*$|^veth.*$"). jq's test() function (Oniguruma) supports this syntax.
 glob_list_to_ere() {
     local list="$1"
     local IFS=','
@@ -85,14 +68,15 @@ glob_list_to_ere() {
 ETH_ERE=$(glob_list_to_ere "$ETH_PATTERNS")
 OTHER_ERE=$(glob_list_to_ere "$OTHER_PATTERNS")
 
-# Tek bir "ip -j addr show | jq" çağrısıyla durumu hesapla ve
-# waybar'ın beklediği JSON satırını doğrudan jq'den bas
+# Compute state and emit waybar JSON in a single "ip -j addr show | jq" call
 emit_state() {
     ip -j addr show 2>/dev/null | jq -c \
         --arg eth_re "$ETH_ERE" \
         --arg other_re "$OTHER_ERE" \
         --arg eth_icon "$ETH_ICON" \
-        --arg other_icon "$OTHER_ICON" '
+        --arg other_icon "$OTHER_ICON" \
+        --arg label_eth "$(i18n_template "${MSG[LABEL_ETHERNET]}")" \
+        --arg label_other "$(i18n_template "${MSG[LABEL_OTHER]}")" '
         def classify(name):
             if ($eth_re != "" and (name | test($eth_re))) then "eth"
             elif ($other_re != "" and (name | test($other_re))) then "other"
@@ -112,8 +96,8 @@ emit_state() {
         | ($other | map(if .ip != "" then "\(.name) : \(.ip)" else .name end)) as $other_lines
         | ([ (if $has_eth   then $eth_icon   else empty end),
              (if $has_other then $other_icon else empty end) ] | join(" ")) as $text
-        | ([ (if ($eth_lines   | length) > 0 then "Ethernet:\n" + ($eth_lines   | join("\n")) else empty end),
-             (if ($other_lines | length) > 0 then "Diğer:\n"    + ($other_lines | join("\n")) else empty end) ]
+        | ([ (if ($eth_lines   | length) > 0 then $label_eth + "\n" + ($eth_lines   | join("\n")) else empty end),
+             (if ($other_lines | length) > 0 then $label_other + "\n"    + ($other_lines | join("\n")) else empty end) ]
            | join("\n\n")) as $tooltip
         | { text: $text,
             tooltip: $tooltip,
@@ -122,13 +106,13 @@ emit_state() {
         '
 }
 
-# Başlangıçta bir kez mevcut durumu bildir
+# Report current state once at startup
 emit_state
 
-# "ip monitor" ile kalıcı izleme: sadece TETİKLEYİCİ olarak kullanılır,
-# içerik ayrıştırması yapılmaz. Her olayda emit_state yeniden çağrılır.
+# Persistent monitoring: use "ip monitor" only as a TRIGGER,
+# no content parsing. Each event triggers a fresh emit_state call.
 ip monitor address link 2>/dev/null | while read -r _; do
-    # Art arda gelen olay patlamalarını (burst) sönümle
+    # Dampen bursts of consecutive events
     sleep 0.3
     while read -r -t 0.1 _; do :; done
     emit_state

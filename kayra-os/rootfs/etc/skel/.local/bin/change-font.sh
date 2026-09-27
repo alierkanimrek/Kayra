@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 #
-# degistir_font.sh
+# Change Font Script - Replace font names in configuration files.
 #
-# Usage: ./degistir_font.sh "new text"
+# Usage: ./change-font.sh "new font name"
 #
-# Replaces the old text (stored in ~/.config/.wayfont) with the new text
-# (given as a parameter) in the hardcoded list of files below.
-# If the replacement succeeds in all files, the new text is saved to
-# ~/.config/.wayfont.
+# Replaces the old font name (stored in ~/.config/.wayfont) with the new one
+# in a hardcoded list of configuration files. If replacement succeeds in all files,
+# the new font name is saved to ~/.config/.wayfont.
 
 set -euo pipefail
 
-# --- Files to modify (add your own file paths here) ---
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=i18n_CHANGE_FONT
+
+# Configuration files to modify (add your own file paths here)
 FILES=(
     "$HOME/.config/waybar/style.css"
     "$HOME/.config/alacritty/alacritty.toml"
@@ -21,45 +23,45 @@ FILES=(
 
 WAYFONT_FILE="$HOME/.config/.wayfont"
 
-# --- Parameter check ---
+# Parameter check
 if [[ $# -ne 1 ]]; then
-    echo "Usage: $0 \"new text\"" >&2
+    echo "$(i18n_template "${MSG[USAGE_ERROR]}" SCRIPT="$0")" >&2
     exit 1
 fi
 
 NEW_TEXT="$1"
 
-# --- Check that ~/.config/.wayfont exists ---
+# Check that ~/.config/.wayfont exists
 if [[ ! -f "$WAYFONT_FILE" ]]; then
-    echo "Error: $WAYFONT_FILE not found." >&2
+    echo "$(i18n_template "${MSG[ERROR_FILE_NOT_FOUND]}" FILE="$WAYFONT_FILE")" >&2
     exit 1
 fi
 
 OLD_TEXT=$(<"$WAYFONT_FILE")
 
 if [[ -z "$OLD_TEXT" ]]; then
-    echo "Error: no text to replace found in $WAYFONT_FILE." >&2
+    echo "$(i18n_template "${MSG[ERROR_NO_TEXT]}" FILE="$WAYFONT_FILE")" >&2
     exit 1
 fi
 
 if [[ "$OLD_TEXT" == "$NEW_TEXT" ]]; then
-    echo "Old text and new text are identical, nothing to do."
+    echo "$(i18n_template "${MSG[MSG_IDENTICAL]}")"
     exit 0
 fi
 
-echo "Old font: $OLD_TEXT"
-echo "New font: $NEW_TEXT"
+echo "$(i18n_template "${MSG[MSG_OLD_FONT]}" FONT="$OLD_TEXT")"
+echo "$(i18n_template "${MSG[MSG_NEW_FONT]}" FONT="$NEW_TEXT")"
 
 FAILED=0
 
 for file in "${FILES[@]}"; do
     if [[ ! -f "$file" ]]; then
-        echo "Warning: '$file' not found, skipping." >&2
+        echo "$(i18n_template "${MSG[WARNING_FILE_NOT_FOUND]}" FILE="$file")" >&2
         continue
     fi
 
     if ! grep -qF -- "$OLD_TEXT" "$file"; then
-        echo "Warning: text '$OLD_TEXT' not found in '$file', skipping."
+        echo "$(i18n_template "${MSG[WARNING_TEXT_NOT_FOUND]}" TEXT="$OLD_TEXT" FILE="$file")"
         continue
     fi
 
@@ -70,15 +72,15 @@ for file in "${FILES[@]}"; do
     if sed -i "s/${OLD_ESC}/${NEW_ESC}/g" "$file"; then
         echo "Updated: $file"
     else
-        echo "Error: failed to update '$file'." >&2
+        echo "$(i18n_template "${MSG[ERROR_UPDATE_FAILED]}" FILE="$file")" >&2
         FAILED=1
     fi
 done
 
 if [[ "$FAILED" -eq 0 ]]; then
     printf '%s' "$NEW_TEXT" > "$WAYFONT_FILE"
-    echo "Success: new text saved to $WAYFONT_FILE."
+    echo "$(i18n_template "${MSG[SUCCESS_SAVED]}" FILE="$WAYFONT_FILE")"
 else
-    echo "Some files failed to update, $WAYFONT_FILE was not changed." >&2
+    echo "$(i18n_template "${MSG[ERROR_PARTIAL_FAILED]}" FILE="$WAYFONT_FILE")" >&2
     exit 1
 fi

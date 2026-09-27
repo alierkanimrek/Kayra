@@ -1,23 +1,26 @@
 #!/usr/bin/env bash
 #
-# custom/wifi-warning için Waybar modül scripti (olay tabanlı / "ip monitor")
+# Waybar module script for custom/wifi-warning (event-driven / "ip monitor")
 # ---------------------------------------------------------------------------
-# Mantık:
-#   - "nmcli networking connectivity check" çıktısı "full" İSE  -> ikon YOK
-#   - Sistemde bir Wi-Fi aygıtı VARSA (bağlı olmasa da yeterli) -> ikon YOK
-#   - Bunların HİÇBİRİ doğru değilse (bağlantı "full" değil VE
-#     Wi-Fi aygıtı da yoksa)                                    -> uyarı ikonu
+# Logic:
+#   - If "nmcli networking connectivity check" output is "full"  -> no icon
+#   - If system has a Wi-Fi device (even if not connected) -> no icon
+#   - If none of the above (connectivity is not "full" AND
+#     no Wi-Fi device present)                              -> warning icon
 #
-# Periyodik (interval) kontrol YOK: script açılışta bir kez durumu bildirir,
-# sonra "ip monitor" ile arayüz (link) / adres (address) / rota (route)
-# olaylarını dinler ve SADECE bir değişiklik olduğunda yeniden kontrol eder.
-# Waybar bu scripti sürekli (interval'siz) çalıştırır; her satır yeni bir
-# JSON durumu olarak okunur.
+# No periodic (interval) checks: script reports status once on startup,
+# then listens to interface (link) / address / route events via "ip monitor"
+# and only rechecks when something changes. Waybar runs this script continuously
+# (without interval); each line is read as a new JSON state.
 #
-# NOT: Mesajındaki ikon kodu ("\ufffb7") bozuk/geçersiz bir Unicode kod
-# noktası olduğu için kullanılamadı. Yerine theme.css'te zaten kullandığın
-# "Material Symbols Outlined" fontundan "wifi_off" ikonunu (\ue648) koydum.
-# Farklı bir ikon istersen aşağıdaki satırı kendi kod noktanla değiştir.
+# NOTE: The original icon code is an invalid Unicode codepoint.
+# If you want a different icon, replace the line below with your own codepoint.
+
+set -uo pipefail
+
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=i18n_CONNECTION_CHECK
+
 ICON_WARNING=$(printf '%b' '\U000FFFB7')
 
 check_and_report() {
@@ -31,31 +34,30 @@ check_and_report() {
     fi
 
     if [[ "$connectivity" == "full" || "$has_wifi_device" == "true" ]]; then
-        # Her şey normal: hiçbir simge gösterilmesin
+        # Everything is normal: show no icon
         printf '{"text": "", "class": "hidden"}\n'
     else
-        # İnternet "full" değil VE hiç Wi-Fi aygıtı yok -> uyar
-        printf '{"text": "%s", "class": "warning", "tooltip": "Wi-Fi aygıtı bulunamadı ve internet bağlantısı yok (connectivity: %s)\\nTıkla: Ağ Yöneticisini aç"}\n' \
-            "$ICON_WARNING" "$connectivity"
+        # Internet is not "full" AND no Wi-Fi device present -> warn
+        printf '{"text": "%s", "class": "warning", "tooltip": "%s"}\n' \
+            "$ICON_WARNING" "$(i18n_template "${MSG[TOOLTIP_NO_WIFI_NO_INTERNET]}" CONNECTIVITY="$connectivity")"
     fi
 }
 
-# Başlangıçta mevcut durumu bir kez bildir
+# Report current status once at startup
 check_and_report
 
-# "ip monitor" çıkışını satır satır oku; link (arayüz ekleme/çıkarma,
-# up/down), address (IP atama/kaldırma) ve route (varsayılan rota
-# değişiklikleri) olaylarını dinler. Bu komut ağ değişmediği sürece
-# hiçbir çıktı üretmez, dolayısıyla CPU'da boşta bekler.
+# Read "ip monitor" output line by line; listens for link (interface add/remove,
+# up/down), address (IP assignment/removal) and route (default route changes) events.
+# This command produces no output unless network changes, so it idles on the CPU.
 ip monitor link address route 2>/dev/null | while true; do
-    # Bir olay satırı gelene kadar blokla bekle
+    # Wait until an event line arrives
     if ! read -r _; then
         break
     fi
 
-    # Kısa bir süre içinde art arda gelen olayları (örn. bir arayüzün
-    # aşağı/yukarı gitmesiyle oluşan birden çok satır) tek bir kontrolde
-    # birleştir (debounce), gereksiz tekrar kontrolleri önle.
+    # Combine consecutive events within a short time (e.g., multiple lines from
+    # an interface going down/up) into a single check (debounce) to prevent
+    # unnecessary repeated checks.
     while read -r -t 0.5 _; do :; done
 
     check_and_report

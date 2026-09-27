@@ -1,30 +1,29 @@
 #!/bin/bash
+#
+# Fuzzel menu helper script for launching user menu commands.
+# Uses user_menu array from current language file.
 
-DATA_FILE="$1"
-shift # İlk parametreyi (JSON dosyası) tüket, kalan tüm parametreleri ($@) fuzzel'a aktar
+set -euo pipefail
 
-# 1. Parametre kontrolü
-if [ -z "$HOME/.local/var/lib/waybar/$DATA_FILE" ]; then
-    echo "Kullanım: $0 $HOME/.local/var/lib/waybar/<json-dosya> [fuzzel parametreleri...]" >&2
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=i18n_FUZZEL_MENU
+
+# Check if user_menu array exists
+if [ -z "${user_menu[*]:-}" ]; then
+    echo "$(i18n_template "${MSG[MSG_NO_ITEMS]}")" >&2
     exit 1
 fi
 
-# 2. Dosya kontrolü
-if [ ! -f "$HOME/.local/var/lib/waybar/$DATA_FILE" ]; then
-    echo "Hata: Dosya bulunamadı -> $HOME/.local/var/lib/waybar/$DATA_FILE" >&2
-    exit 1
-fi
+# Close any existing fuzzel processes
+pkill -x fuzzel 2>/dev/null || true
 
-# 3. Var olan Fuzzel süreçlerini kapat
-pkill -x fuzzel 2>/dev/null
-
-# 4. Seçimi al (varsayılan parametrelere ek olarak eklenen "$@" aktarılır)
-SELECTED_KEY=$(jq -r 'keys[]' "$HOME/.local/var/lib/waybar/$DATA_FILE" | tac | fuzzel --dmenu --log-no-syslog "$@" --prompt="Eylem: ")
+# Get selection from fuzzel dmenu
+SELECTED_KEY=$(printf '%s\n' "${!user_menu[@]}" | tac | fuzzel --dmenu --log-no-syslog "$@" --prompt="${MSG[PROMPT_ACTION]}")
 
 [ -z "$SELECTED_KEY" ] && exit 0
 
-# 5. Komutu çalıştır
-COMMAND=$HOME/.local/bin/$(jq -r --arg key "$SELECTED_KEY" '.[$key]' "$HOME/.local/var/lib/waybar/$DATA_FILE")
+# Execute the command
+COMMAND="$HOME/.local/bin/${user_menu[$SELECTED_KEY]}"
 
 if [ -n "$COMMAND" ] && [ "$COMMAND" != "null" ]; then
     eval "$COMMAND" &

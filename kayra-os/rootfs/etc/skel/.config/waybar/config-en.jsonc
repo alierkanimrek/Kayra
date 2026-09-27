@@ -1,0 +1,182 @@
+// -*- mode: jsonc -*-
+{
+    "height": 30,
+    "spacing": 4,
+    "modules-left": [
+	"custom/app-menu",
+        "sway/workspaces",
+        "sway/mode",
+        "sway/scratchpad",
+        "custom/media"
+    ],
+    "modules-center": [
+        "sway/window"
+    ],
+    "modules-right": [
+        "tray",
+	"custom/clipboard",
+	"custom/network",
+	"custom/wifi",
+	"custom/connection-warning",
+	"custom/notification",
+	"battery",
+	"custom/spacer",
+        "group/power-drawer"
+    ],
+    "tray": {
+        "spacing": 10
+    },
+
+    // Group definition
+"group/power-drawer": {
+    "orientation": "horizontal",
+    "drawer": {
+        "transition-duration": 0,
+        "transition-left-to-right": false
+    },
+    "modules": [
+        "custom/power-trigger",
+	"custom/user-info",
+        "custom/lock",
+        "custom/logout",
+        "custom/reboot",
+        "custom/shutdown"
+    ]
+},
+    // Submodule definitions
+"custom/power-trigger": {
+    "format": "", // drag-vertical / handle
+    "tooltip": false
+},
+
+"custom/lock": {
+    "format": "", // lock
+    "tooltip": true,
+    "tooltip-format": "Lock",
+    "on-click": "loginctl lock-session"
+},
+
+"custom/logout": {
+    "format": "", // logout
+    "tooltip": true,
+    "tooltip-format": "Logout",
+    "on-click": "loginctl terminate-user $USER"
+},
+
+"custom/reboot": {
+    "format": "", // reload / reboot
+    "tooltip": true,
+    "tooltip-format": "Reboot",
+    "on-click": "loginctl reboot"
+},
+
+"custom/shutdown": {
+    "format": "", // power
+    "tooltip": true,
+    "tooltip-format": "Shutdown",
+    "on-click": "loginctl poweroff"
+},
+
+// SwayNotificationCenter Notification Module
+"custom/notification": {
+	"tooltip": false,
+	"format": "{icon}",
+	"format-icons": {
+		"notification": "",
+		"none": "",
+		"dnd-notification": "",
+		"dnd-none": "",
+		"inhibited-notification": "",
+		"inhibited-none": ""
+	},
+	"return-type": "json",
+	"exec-if": "which swaync-client",
+	"exec": "swaync-client -swb",
+	"on-click": "swaync-client -t -sw",
+	"on-click-right": "swaync-client -d -sw",
+	"escape": true
+},
+
+"custom/connection-warning": {
+	"exec": "$HOME/.local/bin/connection-check.sh",
+	"return-type": "json",
+	"restart-interval": 30,
+	"tooltip": true,
+	"escape": true,
+	"on-click": "nm-connection-editor"
+},
+
+"custom/network": {
+	"exec": "$HOME/.local/bin/net-monitor.sh --ethernet \"en*\" --other \"docker*,veth*,br-*,virbr*\"",
+	"return-type": "json",
+	"restart-interval": 30,
+	"tooltip": true,
+	"on-click": "nm-connection-editor"
+},
+
+"custom/wifi": {
+	"exec": "$HOME/.local/bin/wifi-monitor.sh",
+	"exec-if": "nmcli -t -f TYPE device status | grep -q '^wifi$'",
+	"return-type": "json",
+	"restart-interval": 0,
+	"tooltip": true,
+	"escape": true,
+	"on-click": "$HOME/.local/bin/wifi-menu.sh",
+	"on-click-right": "nm-connection-editor"
+},
+
+"custom/clipboard": {
+	"format": "",
+	"on-click": "pkill fuzzel; cliphist list | fuzzel --dmenu --anchor=top-right --log-no-syslog | cliphist decode | wl-copy",
+	"on-click-right": "cliphist wipe",
+	"tooltip": true,
+	"tooltip-format": "Left click: Clipboard History\nRight click: Clear History"
+},
+
+"custom/app-menu": {
+	"format": "",
+	"tooltip": true,
+	"tooltip-format": "App Menu",
+	"on-click": "pkill fuzzel; fuzzel --anchor=top-left --log-no-syslog"
+},
+
+"custom/user-info": {
+    "format": "{}",
+    "exec": "$HOME/.local/bin/user-info.sh",
+    "return-type": "json",
+    "interval": 30,
+    "tooltip": true,
+    "on-click": "$HOME/.local/bin/fuzzel-menu.sh --anchor=top-right",
+    "escape": false
+},
+"battery": {
+	"bat": "BAT1",
+	"interval": 60,
+	"states": {
+		"warning": 30,
+		"critical": 15
+	},
+	"events": {
+		"on-discharging-warning": "notify-send -u normal 'Low Battery'",
+		"on-discharging-critical": "notify-send -u critical 'Very Low Battery'",
+		"on-charging-100": "notify-send -u normal 'Battery Full!'",
+		"on-discharging": "notify-send -u normal 'Power Switch' Discharging",
+		"on-charging": "notify-send -u normal 'Power Switch' Charging'"
+	},
+	"format": "{icon}",
+	"format-charging": "{icon}",
+	"format-icons": {
+		"default": ["", "", "", "", "", "", ""],
+		"charging": ["","󿼾", "󿼽", "󿼻", "󿼺", ""]
+	},
+	"max-length": 25,
+	"tooltip": true,
+	"tooltip-format": "Capacity: {capacity}% ({time})",
+	"tooltip-format-charging": "Charging: {capacity}% (Time remaining: {time})"
+},
+
+"custom/spacer": {
+	"format": " "
+}
+
+}

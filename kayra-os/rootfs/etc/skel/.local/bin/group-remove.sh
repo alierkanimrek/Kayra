@@ -1,27 +1,31 @@
 #!/usr/bin/env bash
-# grup-cikar.sh
-# fuzzel menüsü ile kullanıcının üye olduğu gruplardan çıkarma yapar.
-# İstisna gruplar menüde görünür ama üzerlerinde işlem yapılamaz.
 #
-# Kullanım: ./grup-cikar.sh [fuzzel'e geçilecek ek parametreler]
+# Group Remove Script - Remove user from groups via fuzzel menu.
+# Shows groups the user is a member of, with icons indicating removable vs. exception groups.
+# Exception groups (marked in the script) cannot be removed.
+#
+# Usage: ./group-remove.sh [fuzzel parameters]
 
 set -euo pipefail
 
-# --- Ayarlar -----------------------------------------------------------
-ICON_MEMBER=$(printf '%b' '\U0000E7EF')   # çıkarılabilir grup simgesi
-ICON_EXCEPTION=""                          # istisna grup simgesi yok
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=i18n_GROUP_MANAGEMENT
 
-SEP=$'\t'   # simge ile grup adı arasındaki sabit ayraç
+# Configuration
+ICON_MEMBER=$(printf '%b' '\U0000E7EF')
+ICON_EXCEPTION=""
 
-# İşlem yapılamayacak istisna gruplar
+SEP=$'\t'
+
+# Exception groups - cannot be removed from these
 EXCEPTION_GROUPS=(audio video input users socklog)
 
 TARGET_USER="${SUDO_USER:-${USER:-$(id -un)}}"
 
-# --- Açık fuzzel pencerelerini kapat -----------------------------------
+# Close any open fuzzel windows
 pkill -x fuzzel 2>/dev/null || true
 
-# --- Grup bilgisi topla --------------------------------------------------
+# Gather group information
 mapfile -t USER_GROUPS < <(id -Gn "$TARGET_USER" | tr ' ' '\n')
 PRIMARY_GROUP=$(id -gn "$TARGET_USER")
 
@@ -31,7 +35,7 @@ for eg in "${EXCEPTION_GROUPS[@]}"; do
 done
 is_exception() { [[ -n "${IS_EXCEPTION_MAP[$1]+x}" ]]; }
 
-# --- Menüde gösterilecek gruplar (birincil grup hariç) -------------------
+# List of groups to display in menu (excluding primary group)
 LISTED_GROUPS=()
 for g in "${USER_GROUPS[@]}"; do
     [[ "$g" == "$PRIMARY_GROUP" ]] && continue
@@ -39,11 +43,11 @@ for g in "${USER_GROUPS[@]}"; do
 done
 
 if [[ ${#LISTED_GROUPS[@]} -eq 0 ]]; then
-    notify-send -u normal "Grup Yönetimi" "Çıkarılabilecek bir grup bulunamadı."
+    notify-send -u normal "${MSG[TITLE]}" "${MSG[NO_GROUPS_TO_REMOVE]}"
     exit 0
 fi
 
-# --- Menü metnini oluştur (TAB ayraçlı) ----------------------------------
+# Build menu text (tab-separated with icons)
 menu=""
 for g in "${LISTED_GROUPS[@]}"; do
     if is_exception "$g"; then
@@ -53,24 +57,24 @@ for g in "${LISTED_GROUPS[@]}"; do
     fi
 done
 
-# --- fuzzel'i çalıştır -----------------------------------------------------
+# Run fuzzel
 line_count=${#LISTED_GROUPS[@]}
 
 selection=$(printf '%s' "$menu" | fuzzel --dmenu --log-no-syslog "$@" --lines="$line_count") || true
 
 [[ -z "$selection" ]] && exit 0
 
-# TAB'a göre ayrıştır: simge boş olsa da kesin sonuç verir
+# Parse: extract group name after TAB (works even if icon is empty)
 selected_group="${selection#*"$SEP"}"
 
-# --- İstisna grup ise: işlem yapılmaz ------------------------------------
+# If exception group: do not perform operation
 if is_exception "$selected_group"; then
-    notify-send -u normal "Grup Yönetimi" \
-        "'${selected_group}' istisna grubudur, ${TARGET_USER} kullanıcısı bu gruptan çıkarılamaz."
+    notify-send -u normal "${MSG[TITLE]}" \
+        "$(i18n_template "${MSG[EXCEPTION_GROUP]}" GROUP="$selected_group" USER="$TARGET_USER")"
     exit 0
 fi
 
-# --- Gruptan çıkar (usermod ile) -----------------------------------------
+# Remove from group using usermod with new group list
 new_list=""
 for g in "${USER_GROUPS[@]}"; do
     if [[ "$g" != "$selected_group" && "$g" != "$PRIMARY_GROUP" ]]; then
@@ -80,9 +84,9 @@ done
 new_list="${new_list%,}"
 
 if pkexec usermod -G "$new_list" "$TARGET_USER"; then
-    notify-send -u normal "Grup Yönetimi" \
-        "${TARGET_USER} kullanıcısı '${selected_group}' grubundan çıkarıldı."
+    notify-send -u normal "${MSG[TITLE]}" \
+        "$(i18n_template "${MSG[GROUP_REMOVED]}" USER="$TARGET_USER" GROUP="$selected_group")"
 else
-    notify-send -u critical "Grup Yönetimi" \
-        "'${selected_group}' grubundan çıkarma işlemi başarısız oldu."
+    notify-send -u critical "${MSG[TITLE]}" \
+        "$(i18n_template "${MSG[REMOVE_FAILED]}" GROUP="$selected_group")"
 fi

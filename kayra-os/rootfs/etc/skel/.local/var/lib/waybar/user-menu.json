@@ -1,6 +1,0 @@
-{
-  "Şifreyi değiştir": "change-passwd.sh",
-  "Gruba ekle": "group-add.sh --anchor=top-right",
-  "Gruptan çıkar": "group-remove.sh --anchor=top-right",
-  "Ev Dizini Kullanımı": "home-usage.sh"
-}

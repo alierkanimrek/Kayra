@@ -1,35 +1,34 @@
 #!/usr/bin/env bash
 #
-# wifi-monitor.sh — Waybar "custom/wifi" modülü için durum üreticisi.
+# Wi-Fi Monitor Script - Waybar status producer for "custom/wifi" module.
 #
-# Görev:
-#   - Sistemde wifi aygıtı yoksa boş/gizli çıktı verir (exec-if zaten
-#     modülü başlangıçta gizler, burada da hotplug durumu için aynı
-#     davranış tekrarlanır).
-#   - Wifi aygıtı var ama bağlı değilse: uyarı simgesi + "disconnected" sınıfı.
-#   - Bağlıysa: sinyal gücüne göre 4 seviyeli simge + "connected" sınıfı,
-#     tooltip'te aygıt adı, SSID, IP adresi ve sinyal gücü.
+# Behavior:
+#   - No Wi-Fi device -> empty/hidden output (exec-if already hides the module at startup;
+#     this script provides consistent behavior for hotplug events).
+#   - Wi-Fi device present but not connected -> warning icon + "disconnected" class.
+#   - Connected -> 4-level signal strength icon + "connected" class,
+#     with device name, SSID, IP address, and signal strength in tooltip.
 #
-# İzleme:
-#   `ip monitor link addr` ile arayüz/adres değişiklikleri anlık yakalanır
-#   (bağlantı kurma/kesme, IP alma vb. bu olayları tetikler). Sinyal gücü
-#   değişimi her zaman bu olayları tetiklemediğinden, ayrıca 15 saniyede
-#   bir periyodik tazeleme yapılır.
+# Monitoring:
+#   `ip monitor link addr` captures interface/address changes instantly
+#   (connection up/down, IP assignment etc.). Since signal strength changes
+#   don't always trigger these events, we also do periodic refresh every 15 seconds.
 #
-# Bağımlılıklar: nmcli (NetworkManager), jq, iproute2 (ip monitor).
+# Dependencies: nmcli (NetworkManager), jq, iproute2 (ip monitor).
 
 set -uo pipefail
 
-# nmcli çıktısının yerelleştirilmiş (Türkçe vb.) kelimelerle gelmesini önler;
-# awk/cut ile yapılan sabit-metin karşılaştırmaları (STATE, SECURITY, "--" vb.)
-# bu sayede locale bağımsız çalışır.
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=i18n_WIFI_MONITOR
 
+# nmcli locale: Prevent localized (Turkish etc.) keywords in output;
+# fixed-text comparisons (STATE, SECURITY, "--" etc.) rely on this.
 
-ICON_WARN=$(printf '%b' '\U0000E1DA')   # bağlı değil / uyarı
-ICON_L1=$(printf '%b' '\U0000EBE4')     # sinyal seviye 1 (zayıf)
-ICON_L2=$(printf '%b' '\U0000EBD6')     # sinyal seviye 2
-ICON_L3=$(printf '%b' '\U0000EBE1')     # sinyal seviye 3
-ICON_L4=$(printf '%b' '\U0000E1D8')     # sinyal seviye 4 (güçlü)
+ICON_WARN=$(printf '%b' '\U0000E1DA')
+ICON_L1=$(printf '%b' '\U0000EBE4')
+ICON_L2=$(printf '%b' '\U0000EBD6')
+ICON_L3=$(printf '%b' '\U0000EBE1')
+ICON_L4=$(printf '%b' '\U0000E1D8')
 
 get_wifi_iface() {
     LC_ALL=C nmcli -t -f DEVICE,TYPE device status 2>/dev/null \
@@ -40,7 +39,7 @@ emit() {
     local iface="$1"
 
     if [[ -z "$iface" ]]; then
-        # Wifi aygıtı yok -> modülü gizle (boş metin, boşluk kaplamasın diye)
+        # No Wi-Fi device -> hide module (empty text, no whitespace)
         jq -nc '{"text":"", "tooltip":"", "class":"hidden"}'
         return
     fi
@@ -51,8 +50,9 @@ emit() {
 
     if [[ "$state" != "connected" ]]; then
         jq -nc --arg icon "$ICON_WARN" --arg dev "$iface" \
+            --arg disconnected "$(i18n_template "${MSG[DEVICE_DISCONNECTED]}" DEVICE="$dev")" \
             '{"text": $icon,
-              "tooltip": ("Aygıt: " + $dev + "\nDurum: Bağlı değil"),
+              "tooltip": $disconnected,
               "class": "disconnected"}'
         return
     fi
@@ -76,18 +76,19 @@ emit() {
     else                          icon="$ICON_L1"
     fi
 
-    jq -nc --arg icon "$icon" --arg dev "$iface" --arg ssid "$ssid" \
-        --arg ip "$ip4" --arg sig "$signal" \
+    local tooltip="$(i18n_template "${MSG[DEVICE_CONNECTED]}" DEVICE="$iface" SSID="$ssid" IP="$ip4" SIGNAL="$signal")"
+
+    jq -nc --arg icon "$icon" --arg tooltip "$tooltip" \
         '{"text": $icon,
-          "tooltip": ("Aygıt: " + $dev + "\nSSID: " + $ssid + "\nIP: " + $ip + "\nSinyal: %" + $sig),
+          "tooltip": $tooltip,
           "class": "connected"}'
 }
 
-# İlk durumu hemen bildir
+# Report initial state immediately
 iface=$(get_wifi_iface)
 emit "$iface"
 
-# `ip monitor` ile arayüz/adres değişikliklerini izle; her olayda durumu yenile
+# Monitor interface/address changes; re-check state on each event
 (
     ip monitor link addr 2>/dev/null | while read -r _; do
         iface=$(get_wifi_iface)
@@ -101,7 +102,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-# Sinyal gücü değişimi `ip monitor` olayı üretmeyebileceğinden periyodik tazeleme
+# Signal strength changes may not trigger ip monitor events, so do periodic refresh
 while true; do
     sleep 15
     iface=$(get_wifi_iface)

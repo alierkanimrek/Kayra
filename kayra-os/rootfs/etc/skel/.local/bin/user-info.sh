@@ -1,32 +1,35 @@
 #!/usr/bin/env bash
 #
-# Kayra OS — Waybar "Kullanıcı Bilgisi" modülü
-# ---------------------------------------------
-# Waybar'ın return-type=json bekleyen bir custom modülü için veri üretir.
-# Çıktı: {"text": "...", "tooltip": "...", "class": "...", "alt": "..."}
+# Kayra OS — Waybar "User Info" module
+# ------------------------------------
+# Generates data for a Waybar custom module expecting return-type=json.
+# Output: {"text": "...", "tooltip": "...", "class": "...", "alt": "..."}
 #
-# Bağımlılıklar: jq, coreutils (getent, id)
+# Dependencies: jq, coreutils (getent, id)
 
 set -euo pipefail
 
-# Modül ikonu (kullanıcı simgesi)
-# NOT: LC_ALL=C.UTF-8 ZORUNLU. \U kaçış dizisi, çalıştırma ortamının
-# locale'i UTF-8 değilse (örn. sway/waybar minimal bir ortamda
-# başlatıldıysa) sessizce doğru UTF-8 baytlarını üretmeyip literal
-# "\uXXXX" metnini basar. Bu satırlar o riski ortadan kaldırır.
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=i18n_USER_INFO
+
+# Module icon (user symbol)
+# NOTE: LC_ALL=C.UTF-8 is required. The \U escape sequence, if the
+# runtime locale is not UTF-8 (e.g., sway/waybar started in minimal env),
+# silently fails to produce correct UTF-8 bytes and prints literal "\uXXXX".
+# These lines eliminate that risk.
 ICON_USER=$(LC_ALL=C.UTF-8 printf '%b' '\U000E853')
-# Supervisor (wheel grubu üyesi) rozeti
+# Supervisor (wheel group member) badge
 ICON_SUPERVISOR=$(LC_ALL=C.UTF-8 printf '%b' '\U000E8D3')
 
 USERNAME="${USER:-$(whoami)}"
 
-# GECOS alanından tam adı çek (virgülle ayrılmış ilk alan = tam ad)
+# Extract full name from GECOS field (comma-separated first field = full name)
 FULLNAME=$(getent passwd "$USERNAME" | awk -F: '{print $5}' | cut -d, -f1)
 if [ -z "$FULLNAME" ]; then
     FULLNAME="$USERNAME"
 fi
 
-# Kullanıcının üyesi olduğu tüm gruplar (birincil + ikincil), alfabetik sıralı
+# All groups user is member of (primary + secondary), alphabetically sorted
 GROUPS_LIST=$(id -nG "$USERNAME" | tr ' ' '\n' | sort)
 
 IS_SUPERVISOR=false
@@ -34,7 +37,7 @@ if printf '%s\n' "$GROUPS_LIST" | grep -qx "wheel"; then
     IS_SUPERVISOR=true
 fi
 
-# Tooltip (Pango markup desteklenir)
+# Tooltip (supports Pango markup)
 TOOLTIP="<b>${FULLNAME}</b>  (${USERNAME})"
 if $IS_SUPERVISOR; then
     TOOLTIP="${TOOLTIP}  ${ICON_SUPERVISOR}"
@@ -43,7 +46,7 @@ fi
 GROUPS_FORMATTED=$(printf '%s\n' "$GROUPS_LIST" | sed 's/^/  • /')
 TOOLTIP="${TOOLTIP}
 
-<b>Gruplar:</b>
+<b>${MSG[LABEL_GROUPS]}</b>
 ${GROUPS_FORMATTED}"
 
 CLASS="user-info"
@@ -51,10 +54,9 @@ if $IS_SUPERVISOR; then
     CLASS="user-info supervisor"
 fi
 
-# -c (compact) ZORUNLU: waybar'ın return-type=json modülleri çıktıyı
-# satır satır okur. jq'nun varsayılan pretty-print modu birden çok satıra
-# yayılmış JSON ürettiği için (ilk satır sadece "{" olur) waybar
-# "Missing '}' or object member name" hatası verir.
+# -c (compact) is required: waybar's return-type=json modules read output
+# line by line. jq's default pretty-print produces multiline JSON (first line
+# is just "{"), causing waybar to error "Missing '}' or object member name".
 jq -nc \
   --arg text "$ICON_USER" \
   --arg tooltip "$TOOLTIP" \
