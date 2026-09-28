@@ -10,6 +10,7 @@ polkit-gnome
 inotify-tools
 unzip
 wtype
+git
 
 # Sanal İstemci
 spice-vdagent
@@ -71,3 +72,4 @@ xorg-fonts
 Thunar
 mousepad
 flatpak
+firefox
