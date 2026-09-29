@@ -4,9 +4,9 @@
 #
 # Usage: ./change-font.sh "new font name"
 #
-# Replaces the old font name (stored in ~/.config/.wayfont) with the new one
+# Replaces the old font name (stored in ~/.config/kayra/settings.conf) with the new one
 # in a hardcoded list of configuration files. If replacement succeeds in all files,
-# the new font name is saved to ~/.config/.wayfont.
+# the new font name is saved to ~/.config/kayra/settings.conf.
 
 set -euo pipefail
 
@@ -21,7 +21,7 @@ FILES=(
     "$HOME/.config/swaync/style.css"
 )
 
-WAYFONT_FILE="$HOME/.config/.wayfont"
+SETTINGS_FILE="$HOME/.config/kayra/settings.conf"
 
 # Parameter check
 if [[ $# -ne 1 ]]; then
@@ -31,16 +31,22 @@ fi
 
 NEW_TEXT="$1"
 
-# Check that ~/.config/.wayfont exists
-if [[ ! -f "$WAYFONT_FILE" ]]; then
-    echo "$(i18n_template "${MSG[ERROR_FILE_NOT_FOUND]}" FILE="$WAYFONT_FILE")" >&2
+# Check that settings.conf exists
+if [[ ! -f "$SETTINGS_FILE" ]]; then
+    echo "$(i18n_template "${MSG[ERROR_FILE_NOT_FOUND]}" FILE="$SETTINGS_FILE")" >&2
     exit 1
 fi
 
-OLD_TEXT=$(<"$WAYFONT_FILE")
+# Source settings file and get current font value
+source "$SETTINGS_FILE" || {
+    echo "$(i18n_template "${MSG[ERROR_FILE_NOT_FOUND]}" FILE="$SETTINGS_FILE")" >&2
+    exit 1
+}
+
+OLD_TEXT="$font"
 
 if [[ -z "$OLD_TEXT" ]]; then
-    echo "$(i18n_template "${MSG[ERROR_NO_TEXT]}" FILE="$WAYFONT_FILE")" >&2
+    echo "$(i18n_template "${MSG[ERROR_NO_TEXT]}" FILE="$SETTINGS_FILE")" >&2
     exit 1
 fi
 
@@ -78,9 +84,11 @@ for file in "${FILES[@]}"; do
 done
 
 if [[ "$FAILED" -eq 0 ]]; then
-    printf '%s' "$NEW_TEXT" > "$WAYFONT_FILE"
-    echo "$(i18n_template "${MSG[SUCCESS_SAVED]}" FILE="$WAYFONT_FILE")"
+    # Escape special characters for safe sed replacement
+    NEW_ESC=$(printf '%s' "$NEW_TEXT" | sed -e 's/[\/&]/\\&/g')
+    sed -i "s/^font=.*/font=\"${NEW_ESC}\"/" "$SETTINGS_FILE"
+    echo "$(i18n_template "${MSG[SUCCESS_SAVED]}" FILE="$SETTINGS_FILE")"
 else
-    echo "$(i18n_template "${MSG[ERROR_PARTIAL_FAILED]}" FILE="$WAYFONT_FILE")" >&2
+    echo "$(i18n_template "${MSG[ERROR_PARTIAL_FAILED]}" FILE="$SETTINGS_FILE")" >&2
     exit 1
 fi

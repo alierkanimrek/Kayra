@@ -16,6 +16,14 @@ declare -A user_menu=(
   ["Home Directory Usage"]="home-usage.sh"
 )
 
+declare -A settings_menu=(
+  ["Appearance & Theme"]="appearance-settings.sh"
+  ["Font"]="font-settings.sh"
+  ["Language"]="language-settings.sh"
+  ["Keyboard"]="keyboard-settings.sh"
+  ["Display"]="display-settings.sh"
+)
+
 declare -A i18n_HOME_USAGE=(
   [NOTIFY_TITLE]="Home directory size"
   [NOTIFY_MSG]="{HOME} directory uses {USAGE} of storage."
@@ -137,4 +145,26 @@ declare -A i18n_CHANGE_FONT=(
   [ERROR_UPDATE_FAILED]="Error: failed to update '{FILE}'."
   [SUCCESS_SAVED]="Success: new text saved to {FILE}."
   [ERROR_PARTIAL_FAILED]="Some files failed to update, {FILE} was not changed."
+)
+
+declare -A i18n_SYSTEM_INFO=(
+  [LABEL_SYSTEM]="System"
+  [LABEL_KERNEL]="Kernel"
+  [LABEL_CPU]="CPU"
+  [LABEL_GPU]="GPU"
+  [LABEL_RAM]="RAM"
+  [LABEL_DISK]="Disk"
+)
+
+declare -A i18n_SETTINGS_MENU=(
+  [PROMPT_ACTION]="Action: "
+  [MSG_NO_ITEMS]="No items found"
+)
+
+declare -A i18n_FONT_SETTINGS=(
+  [PROMPT_SELECT]="Select font: "
+  [NOTIFY_TITLE]="Font Settings"
+  [MSG_FONT_CHANGED]="Font changed to {FONT}"
+  [MSG_FONT_UNCHANGED]="Font {FONT} is already selected"
+  [MSG_FONT_FAILED]="Failed to change font to {FONT}"
 )

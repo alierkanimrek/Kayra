@@ -37,6 +37,7 @@
     "modules": [
         "custom/power-trigger",
 	"custom/user-info",
+	"custom/system-info",
         "custom/lock",
         "custom/logout",
         "custom/reboot",
@@ -147,6 +148,16 @@
     "interval": 30,
     "tooltip": true,
     "on-click": "$HOME/.local/bin/fuzzel-menu.sh --anchor=top-right",
+    "escape": false
+},
+
+"custom/system-info": {
+    "format": "{}",
+    "exec": "$HOME/.local/bin/system-info.sh",
+    "return-type": "json",
+    "interval": 30,
+    "tooltip": true,
+    "on-click": "$HOME/.local/bin/settings-menu.sh --anchor=top-right",
     "escape": false
 },
 "battery": {

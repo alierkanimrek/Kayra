@@ -16,6 +16,14 @@ declare -A user_menu=(
   ["Ev Dizini Kullanımı"]="home-usage.sh"
 )
 
+declare -A settings_menu=(
+  ["Görünüm ve Tema"]="appearance-settings.sh"
+  ["Yazı Tipi"]="font-settings.sh"
+  ["Dil"]="language-settings.sh"
+  ["Klavye"]="keyboard-settings.sh"
+  ["Ekran"]="display-settings.sh"
+)
+
 declare -A i18n_HOME_USAGE=(
   [NOTIFY_TITLE]="Ev dizini boyutu"
   [NOTIFY_MSG]="{HOME} Dizini {USAGE} yer kaplıyor."
@@ -137,4 +145,26 @@ declare -A i18n_CHANGE_FONT=(
   [ERROR_UPDATE_FAILED]="Hata: '{FILE}' güncellenemedi."
   [SUCCESS_SAVED]="Başarılı: yeni metin {FILE} dosyasına kaydedildi."
   [ERROR_PARTIAL_FAILED]="Bazı dosyalar güncellenemedi, {FILE} dosyası değiştirilmedi."
+)
+
+declare -A i18n_SYSTEM_INFO=(
+  [LABEL_SYSTEM]="Sistem"
+  [LABEL_KERNEL]="Çekirdek"
+  [LABEL_CPU]="İşlemci"
+  [LABEL_GPU]="Grafik Kartı"
+  [LABEL_RAM]="RAM"
+  [LABEL_DISK]="Disk"
+)
+
+declare -A i18n_SETTINGS_MENU=(
+  [PROMPT_ACTION]="Eylem: "
+  [MSG_NO_ITEMS]="Öğe bulunamadı"
+)
+
+declare -A i18n_FONT_SETTINGS=(
+  [PROMPT_SELECT]="Yazı tipi seç: "
+  [NOTIFY_TITLE]="Yazı Tipi Ayarları"
+  [MSG_FONT_CHANGED]="Yazı tipi {FONT} olarak değiştirildi"
+  [MSG_FONT_UNCHANGED]="Yazı tipi {FONT} zaten seçili"
+  [MSG_FONT_FAILED]="Yazı tipi {FONT} olarak değiştirilemedi"
 )

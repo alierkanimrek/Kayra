@@ -53,7 +53,8 @@ tooltip label {
 #custom-clipboard,
 #custom-wifi,
 #custom-app-menu,
-#custom-user-info {
+#custom-user-info,
+#custom-system-info {
     color: @color-fg;
     background-color: transparent;
     border: none;
@@ -77,7 +78,8 @@ battery:hover,
 #custom-network:hover,
 #custom-wifi:hover,
 #custom-app-menu:hover,
-#custom-user-info:hover {
+#custom-user-info:hover,
+#custom-system-info:hover {
     color: @color-fg-hover;
 }
 
