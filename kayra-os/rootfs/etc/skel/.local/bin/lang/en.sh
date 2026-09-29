@@ -82,7 +82,7 @@ declare -A i18n_GROUP_MANAGEMENT=(
   [REMOVE_FAILED]="Failed to remove from '{GROUP}' group."
 )
 
-declare -A i18n_FUZZEL_MENU=(
+declare -A i18n_USER_MENU=(
   [PROMPT_SEARCH]="Search: "
   [MSG_NO_ITEMS]="No items found"
   [USAGE_ERROR]="Usage: {SCRIPT} <json-file> [fuzzel parameters...]"

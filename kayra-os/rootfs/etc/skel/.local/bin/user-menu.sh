@@ -6,7 +6,7 @@
 set -euo pipefail
 
 source "$(dirname "$0")/i18n.sh"
-declare -n MSG=i18n_FUZZEL_MENU
+declare -n MSG=i18n_USER_MENU
 
 # Check if user_menu array exists
 if [ -z "${user_menu[*]:-}" ]; then

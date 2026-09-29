@@ -82,7 +82,7 @@ declare -A i18n_GROUP_MANAGEMENT=(
   [REMOVE_FAILED]="'{GROUP}' grubundan çıkarma işlemi başarısız oldu."
 )
 
-declare -A i18n_FUZZEL_MENU=(
+declare -A i18n_USER_MENU=(
   [PROMPT_SEARCH]="Ara: "
   [MSG_NO_ITEMS]="Öğe bulunamadı"
   [USAGE_ERROR]="Kullanım: {SCRIPT} <json-dosya> [fuzzel parametreleri...]"
