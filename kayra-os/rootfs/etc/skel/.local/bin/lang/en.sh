@@ -18,10 +18,14 @@ declare -A user_menu=(
 
 declare -A settings_menu=(
   ["Appearance & Theme"]="appearance-settings.sh"
-  ["Font"]="font-settings.sh"
   ["Language"]="language-settings.sh"
   ["Keyboard"]="keyboard-settings.sh"
   ["Display"]="display-settings.sh"
+)
+
+declare -A appearance_menu=(
+  ["Font"]="font-settings.sh"
+  ["Font Size"]="font-size-settings.sh"
 )
 
 declare -A i18n_HOME_USAGE=(
@@ -115,8 +119,8 @@ declare -A i18n_NET_MONITOR=(
 )
 
 declare -A i18n_WIFI_MONITOR=(
-  [DEVICE_DISCONNECTED]="Device: {DEVICE}\nStatus: Not connected"
-  [DEVICE_CONNECTED]="Device: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSignal: %{SIGNAL}"
+  [DEVICE_DISCONNECTED]=$'Device: {DEVICE}\nStatus: Not connected'
+  [DEVICE_CONNECTED]=$'Device: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSignal: %{SIGNAL}'
 )
 
 declare -A i18n_CHECK_GROUPS=(
@@ -167,4 +171,20 @@ declare -A i18n_FONT_SETTINGS=(
   [MSG_FONT_CHANGED]="Font changed to {FONT}"
   [MSG_FONT_UNCHANGED]="Font {FONT} is already selected"
   [MSG_FONT_FAILED]="Failed to change font to {FONT}"
+)
+
+declare -A i18n_SET_LANGUAGE=(
+  [ERROR_NO_CODE]="No language code provided"
+  [ERROR_USAGE]="Usage: {SCRIPT} [OPTIONS] <lang-code>"
+  [ERROR_NOT_FOUND]="Language {LANG} not found"
+  [WARN_FALLBACK]="Language {LANG} not found, falling back to English"
+  [MSG_SUCCESS]="Language set to: {LANG}"
+  [AVAILABLE]="Available: en, tr"
+)
+
+declare -A i18n_CHANGE_FONT_SIZE=(
+  [USAGE_ERROR]="Usage: {SCRIPT} <size>"
+  [ERROR_INVALID_SIZE]="Error: Font size must be between {MIN} and {MAX}"
+  [ERROR_SETTINGS_NOT_FOUND]="Error: Settings file not found: {FILE}"
+  [MSG_SUCCESS]="Success"
 )

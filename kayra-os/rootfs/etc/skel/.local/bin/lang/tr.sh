@@ -18,10 +18,14 @@ declare -A user_menu=(
 
 declare -A settings_menu=(
   ["Görünüm ve Tema"]="appearance-settings.sh"
-  ["Yazı Tipi"]="font-settings.sh"
   ["Dil"]="language-settings.sh"
   ["Klavye"]="keyboard-settings.sh"
   ["Ekran"]="display-settings.sh"
+)
+
+declare -A appearance_menu=(
+  ["Yazı Tipi"]="font-settings.sh"
+  ["Yazı Tipi Büyüklüğü"]="font-size-settings.sh"
 )
 
 declare -A i18n_HOME_USAGE=(
@@ -115,8 +119,8 @@ declare -A i18n_NET_MONITOR=(
 )
 
 declare -A i18n_WIFI_MONITOR=(
-  [DEVICE_DISCONNECTED]="Aygıt: {DEVICE}\nDurum: Bağlı değil"
-  [DEVICE_CONNECTED]="Aygıt: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSinyal: %{SIGNAL}"
+  [DEVICE_DISCONNECTED]=$'Aygıt: {DEVICE}\nDurum: Bağlı değil'
+  [DEVICE_CONNECTED]=$'Aygıt: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSinyal: %{SIGNAL}'
 )
 
 declare -A i18n_CHECK_GROUPS=(
@@ -167,4 +171,20 @@ declare -A i18n_FONT_SETTINGS=(
   [MSG_FONT_CHANGED]="Yazı tipi {FONT} olarak değiştirildi"
   [MSG_FONT_UNCHANGED]="Yazı tipi {FONT} zaten seçili"
   [MSG_FONT_FAILED]="Yazı tipi {FONT} olarak değiştirilemedi"
+)
+
+declare -A i18n_SET_LANGUAGE=(
+  [ERROR_NO_CODE]="Dil kodu belirtilmedi"
+  [ERROR_USAGE]="Kullanım: {SCRIPT} [SEÇENEKLER] <dil-kodu>"
+  [ERROR_NOT_FOUND]="Dil {LANG} bulunamadı"
+  [WARN_FALLBACK]="Dil {LANG} bulunamadı, İngilizceye geçiliyor"
+  [MSG_SUCCESS]="Dil ayarı yapıldı: {LANG}"
+  [AVAILABLE]="Mevcut: en, tr"
+)
+
+declare -A i18n_CHANGE_FONT_SIZE=(
+  [USAGE_ERROR]="Kullanım: {SCRIPT} <boyut>"
+  [ERROR_INVALID_SIZE]="Hata: Font büyüklüğü {MIN} ile {MAX} arasında olmalı"
+  [ERROR_SETTINGS_NOT_FOUND]="Hata: Ayarlar dosyası bulunamadı: {FILE}"
+  [MSG_SUCCESS]="Başarılı"
 )

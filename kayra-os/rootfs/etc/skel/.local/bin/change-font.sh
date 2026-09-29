@@ -9,6 +9,7 @@
 # the new font name is saved to ~/.config/kayra/settings.conf.
 
 set -euo pipefail
+export LC_ALL=C
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_CHANGE_FONT

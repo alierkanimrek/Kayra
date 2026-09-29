@@ -11,6 +11,10 @@
 #   set-language.sh --get-current   # Show current language
 
 set -euo pipefail
+export LC_ALL=C
+
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=i18n_SET_LANGUAGE
 
 BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 LANG_DIR="$BIN_DIR/lang"
@@ -60,7 +64,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     -*)
       log "ERROR" "Unknown option: $1"
-      echo "Error: Unknown option: $1" >&2
+      echo "$(i18n_template "Error: Unknown option: {OPT}" OPT="$1")" >&2
       exit 1
       ;;
     *)
@@ -69,25 +73,24 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-LANG_CODE="${1:-}"
+LANG_CODE="${1:-en}"
 
-if [ -z "$LANG_CODE" ]; then
-    log "ERROR" "No language code provided"
-    echo "Usage: $0 [OPTIONS] <lang-code>" >&2
-    echo "Available: en, tr" >&2
-    exit 1
-fi
+# Map language codes to locale strings
+declare -A LOCALE_MAP=(
+    ["en"]="en_US.UTF-8"
+    ["tr"]="tr_TR.UTF-8"
+)
 
 # Verify language file exists, fallback to English if not
 if [ ! -f "$LANG_DIR/$LANG_CODE.sh" ]; then
     if [ ! -f "$LANG_DIR/en.sh" ]; then
         log "ERROR" "Language '$LANG_CODE' not found and fallback 'en.sh' missing"
-        echo "Error: Language '$LANG_CODE' not found and fallback 'en.sh' missing" >&2
+        echo "$(i18n_template "Error: Language {LANG} not found and fallback 'en.sh' missing" LANG="$LANG_CODE")" >&2
         exit 1
     fi
     log "WARN" "Language '$LANG_CODE' not found, falling back to English"
     if [ "$QUIET" = false ]; then
-        echo "Warning: Language '$LANG_CODE' not found, falling back to English" >&2
+        echo "$(i18n_template "${MSG[WARN_FALLBACK]}" LANG="$LANG_CODE")" >&2
     fi
     LANG_CODE="en"
 fi
@@ -104,6 +107,41 @@ if [ -d "$CONFIG_DIR" ]; then
     fi
 fi
 
+# Update ~/.profile with LANG and LC_ALL
+PROFILE_FILE="$HOME/.profile"
+LOCALE_STRING="${LOCALE_MAP[$LANG_CODE]}"
+LOCALE_ESCAPED=$(printf '%s\n' "$LOCALE_STRING" | sed -e 's/[\/&]/\\&/g')
+
+if [ -f "$PROFILE_FILE" ]; then
+    # Update existing LANG and LC_ALL values
+    if grep -q "^export LANG=" "$PROFILE_FILE"; then
+        sed -i "s/^export LANG=.*/export LANG=$LOCALE_ESCAPED/" "$PROFILE_FILE"
+    else
+        echo "export LANG=$LOCALE_STRING" >> "$PROFILE_FILE"
+    fi
+
+    if grep -q "^export LC_ALL=" "$PROFILE_FILE"; then
+        sed -i "s/^export LC_ALL=.*/export LC_ALL=$LOCALE_ESCAPED/" "$PROFILE_FILE"
+    else
+        echo "export LC_ALL=$LOCALE_STRING" >> "$PROFILE_FILE"
+    fi
+    log "INFO" "Updated ~/.profile with LANG and LC_ALL: $LOCALE_STRING"
+else
+    # Create .profile if it doesn't exist
+    cat > "$PROFILE_FILE" << 'EOFPROFILE'
+# User profile - language and locale settings
+export LANG=
+export LC_ALL=
+EOFPROFILE
+    # Update the values using sed to properly escape special characters
+    sed -i "s/^export LANG=$/export LANG=$LOCALE_ESCAPED/" "$PROFILE_FILE"
+    sed -i "s/^export LC_ALL=$/export LC_ALL=$LOCALE_ESCAPED/" "$PROFILE_FILE"
+    log "INFO" "Created ~/.profile with LANG and LC_ALL: $LOCALE_STRING"
+fi
+
+# Signal waybar to reload configuration if it's running
+pkill -SIGUSR2 waybar 2>/dev/null || true
+
 if [ "$QUIET" = false ]; then
-    echo "Language set to: $LANG_CODE"
+    echo "$(i18n_template "${MSG[MSG_SUCCESS]}" LANG="$LANG_CODE")"
 fi

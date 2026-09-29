@@ -147,7 +147,7 @@
     "return-type": "json",
     "interval": 30,
     "tooltip": true,
-    "on-click": "$HOME/.local/bin/fuzzel-menu.sh --anchor=top-right",
+    "on-click": "$HOME/.local/bin/user-menu.sh",
     "escape": false
 },
 
@@ -157,7 +157,7 @@
     "return-type": "json",
     "interval": 30,
     "tooltip": true,
-    "on-click": "$HOME/.local/bin/settings-menu.sh --anchor=top-right",
+    "on-click": "$HOME/.local/bin/settings-menu.sh",
     "escape": false
 },
 "battery": {
