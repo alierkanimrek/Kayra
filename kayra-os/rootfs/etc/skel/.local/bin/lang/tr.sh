@@ -179,3 +179,10 @@ declare -A i18n_CHANGE_FONT_SIZE=(
   [ERROR_SETTINGS_NOT_FOUND]="Hata: Ayarlar dosyası bulunamadı: {FILE}"
   [MSG_SUCCESS]="Başarılı"
 )
+
+declare -A i18n_LANGUAGE_SETTINGS=(
+  [PROMPT_SELECT]="Seç: "
+  [NOTIFY_TITLE]="Dil"
+  [MSG_CHANGED]="Değiştirildi: {LANG}"
+  [MSG_FAILED]="Dil değiştirilemedi: {LANG}"
+)

@@ -179,3 +179,10 @@ declare -A i18n_CHANGE_FONT_SIZE=(
   [ERROR_SETTINGS_NOT_FOUND]="Error: Settings file not found: {FILE}"
   [MSG_SUCCESS]="Success"
 )
+
+declare -A i18n_LANGUAGE_SETTINGS=(
+  [PROMPT_SELECT]="Select: "
+  [NOTIFY_TITLE]="Language"
+  [MSG_CHANGED]="Changed to: {LANG}"
+  [MSG_FAILED]="Failed to change language to: {LANG}"
+)

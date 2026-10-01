@@ -7,7 +7,7 @@ set -euo pipefail
 export LC_ALL=C
 
 source "$(dirname "$0")/i18n.sh"
-declare -n MSG=i18n_SETTINGS_MENU
+declare -n MSG=i18n_LANGUAGE_SETTINGS
 
 # Get current language from ~/.profile
 # Extract language code from locale string (first 2 chars)
@@ -67,7 +67,7 @@ SELECTED=$(
      printf '* %s\n' "$CURRENT_NAME"
    fi
    printf '%s\n' "${lang_names[@]}" | grep -v "^${CURRENT_NAME}$" 2>/dev/null || true) | \
-  fuzzel --dmenu --log-no-syslog --anchor=top-right "$@" --prompt="Select: "
+  fuzzel --dmenu --log-no-syslog --anchor=top-right "$@" --prompt="${MSG[PROMPT_SELECT]}"
 ) || exit 0
 
 # Exit if user cancelled
@@ -86,8 +86,8 @@ SELECTED_CODE="${lang_menu[$SELECTED]}"
 
 # Apply language change
 if ~/.local/bin/set-language.sh "$SELECTED_CODE" 2>&1; then
-    notify-send -i preferences-desktop-locale "Language" "Changed to: $SELECTED"
+    notify-send -i preferences-desktop-locale "${MSG[NOTIFY_TITLE]}" "$(i18n_template "${MSG[MSG_CHANGED]}" "LANG=$SELECTED")"
 else
-    notify-send -u critical "Language" "Failed to change language to: $SELECTED"
+    notify-send -u critical "${MSG[NOTIFY_TITLE]}" "$(i18n_template "${MSG[MSG_FAILED]}" "LANG=$SELECTED")"
     exit 1
 fi
