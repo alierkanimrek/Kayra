@@ -173,15 +173,6 @@ declare -A i18n_FONT_SETTINGS=(
   [MSG_FONT_FAILED]="Failed to change font to {FONT}"
 )
 
-declare -A i18n_SET_LANGUAGE=(
-  [ERROR_NO_CODE]="No language code provided"
-  [ERROR_USAGE]="Usage: {SCRIPT} [OPTIONS] <lang-code>"
-  [ERROR_NOT_FOUND]="Language {LANG} not found"
-  [WARN_FALLBACK]="Language {LANG} not found, falling back to English"
-  [MSG_SUCCESS]="Language set to: {LANG}"
-  [AVAILABLE]="Available: en, tr"
-)
-
 declare -A i18n_CHANGE_FONT_SIZE=(
   [USAGE_ERROR]="Usage: {SCRIPT} <size>"
   [ERROR_INVALID_SIZE]="Error: Font size must be between {MIN} and {MAX}"

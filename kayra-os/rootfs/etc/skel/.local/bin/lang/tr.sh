@@ -173,15 +173,6 @@ declare -A i18n_FONT_SETTINGS=(
   [MSG_FONT_FAILED]="Yazı tipi {FONT} olarak değiştirilemedi"
 )
 
-declare -A i18n_SET_LANGUAGE=(
-  [ERROR_NO_CODE]="Dil kodu belirtilmedi"
-  [ERROR_USAGE]="Kullanım: {SCRIPT} [SEÇENEKLER] <dil-kodu>"
-  [ERROR_NOT_FOUND]="Dil {LANG} bulunamadı"
-  [WARN_FALLBACK]="Dil {LANG} bulunamadı, İngilizceye geçiliyor"
-  [MSG_SUCCESS]="Dil ayarı yapıldı: {LANG}"
-  [AVAILABLE]="Mevcut: en, tr"
-)
-
 declare -A i18n_CHANGE_FONT_SIZE=(
   [USAGE_ERROR]="Kullanım: {SCRIPT} <boyut>"
   [ERROR_INVALID_SIZE]="Hata: Font büyüklüğü {MIN} ile {MAX} arasında olmalı"
