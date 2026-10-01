@@ -13,9 +13,6 @@
 set -euo pipefail
 export LC_ALL=C
 
-source "$(dirname "$0")/i18n.sh"
-declare -n MSG=i18n_SET_LANGUAGE
-
 BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 LANG_DIR="$BIN_DIR/lang"
 CONFIG_DIR="$HOME/.config/waybar"
@@ -64,7 +61,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     -*)
       log "ERROR" "Unknown option: $1"
-      echo "$(i18n_template "Error: Unknown option: {OPT}" OPT="$1")" >&2
+      echo "Error: Unknown option: $1" >&2
       exit 1
       ;;
     *)
@@ -85,12 +82,12 @@ declare -A LOCALE_MAP=(
 if [ ! -f "$LANG_DIR/$LANG_CODE.sh" ]; then
     if [ ! -f "$LANG_DIR/en.sh" ]; then
         log "ERROR" "Language '$LANG_CODE' not found and fallback 'en.sh' missing"
-        echo "$(i18n_template "Error: Language {LANG} not found and fallback 'en.sh' missing" LANG="$LANG_CODE")" >&2
+        echo "Error: Language '$LANG_CODE' not found and fallback 'en.sh' missing" >&2
         exit 1
     fi
     log "WARN" "Language '$LANG_CODE' not found, falling back to English"
     if [ "$QUIET" = false ]; then
-        echo "$(i18n_template "${MSG[WARN_FALLBACK]}" LANG="$LANG_CODE")" >&2
+        echo "Warning: Language '$LANG_CODE' not found, falling back to English" >&2
     fi
     LANG_CODE="en"
 fi
@@ -143,5 +140,5 @@ fi
 pkill -SIGUSR2 waybar 2>/dev/null || true
 
 if [ "$QUIET" = false ]; then
-    echo "$(i18n_template "${MSG[MSG_SUCCESS]}" LANG="$LANG_CODE")"
+    echo "Language set to: $LANG_CODE"
 fi
