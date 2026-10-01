@@ -137,20 +137,6 @@ declare -A i18n_FIX_GROUPS=(
   [TITLE_FAILED]="İşlem iptal edildi veya başarısız oldu"
 )
 
-declare -A i18n_CHANGE_FONT=(
-  [USAGE_ERROR]="Kullanım: {SCRIPT} \"yeni metin\""
-  [ERROR_FILE_NOT_FOUND]="Hata: {FILE} bulunamadı."
-  [ERROR_NO_TEXT]="Hata: {FILE} içinde değiştirilecek metin bulunamadı."
-  [MSG_IDENTICAL]="Eski ve yeni metin aynı, yapılacak bir şey yok."
-  [MSG_OLD_FONT]="Eski yazı tipi: {FONT}"
-  [MSG_NEW_FONT]="Yeni yazı tipi: {FONT}"
-  [WARNING_FILE_NOT_FOUND]="Uyarı: '{FILE}' bulunamadı, atlanıyor."
-  [WARNING_TEXT_NOT_FOUND]="Uyarı: '{TEXT}' metni '{FILE}' içinde bulunamadı, atlanıyor."
-  [ERROR_UPDATE_FAILED]="Hata: '{FILE}' güncellenemedi."
-  [SUCCESS_SAVED]="Başarılı: yeni metin {FILE} dosyasına kaydedildi."
-  [ERROR_PARTIAL_FAILED]="Bazı dosyalar güncellenemedi, {FILE} dosyası değiştirilmedi."
-)
-
 declare -A i18n_SYSTEM_INFO=(
   [LABEL_SYSTEM]="Sistem"
   [LABEL_KERNEL]="Çekirdek"

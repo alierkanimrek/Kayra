@@ -137,20 +137,6 @@ declare -A i18n_FIX_GROUPS=(
   [TITLE_FAILED]="Operation cancelled or failed"
 )
 
-declare -A i18n_CHANGE_FONT=(
-  [USAGE_ERROR]="Usage: {SCRIPT} \"new text\""
-  [ERROR_FILE_NOT_FOUND]="Error: {FILE} not found."
-  [ERROR_NO_TEXT]="Error: no text to replace found in {FILE}."
-  [MSG_IDENTICAL]="Old text and new text are identical, nothing to do."
-  [MSG_OLD_FONT]="Old font: {FONT}"
-  [MSG_NEW_FONT]="New font: {FONT}"
-  [WARNING_FILE_NOT_FOUND]="Warning: '{FILE}' not found, skipping."
-  [WARNING_TEXT_NOT_FOUND]="Warning: text '{TEXT}' not found in '{FILE}', skipping."
-  [ERROR_UPDATE_FAILED]="Error: failed to update '{FILE}'."
-  [SUCCESS_SAVED]="Success: new text saved to {FILE}."
-  [ERROR_PARTIAL_FAILED]="Some files failed to update, {FILE} was not changed."
-)
-
 declare -A i18n_SYSTEM_INFO=(
   [LABEL_SYSTEM]="System"
   [LABEL_KERNEL]="Kernel"
