@@ -172,3 +172,15 @@ declare -A i18n_LANGUAGE_SETTINGS=(
   [MSG_CHANGED]="Changed to: {LANG}"
   [MSG_FAILED]="Failed to change language to: {LANG}"
 )
+
+declare -A i18n_KEYBOARD_SETTINGS=(
+  [PROMPT_SELECT]="Select keyboard layout: "
+  [NOTIFY_TITLE]="Keyboard Layout"
+  [MSG_CHANGED]="Layout: {LAYOUT}"
+  [MSG_VARIANT]="Variant: {VARIANT}"
+  [MSG_FAILED]="Failed to change keyboard layout"
+  [MSG_UNCHANGED]="Keyboard layout is already set"
+  [ERROR_DATA_NOT_FOUND]="Keyboard data files not found. Please run generate-keyboard-data.sh"
+  [ERROR_SELECTION_NOT_FOUND]="Selection not found in keyboard database"
+  [ERROR_CONFIG_NOT_FOUND]="Keyboard config file not found"
+)

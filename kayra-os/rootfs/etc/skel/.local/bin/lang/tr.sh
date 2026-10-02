@@ -172,3 +172,15 @@ declare -A i18n_LANGUAGE_SETTINGS=(
   [MSG_CHANGED]="Değiştirildi: {LANG}"
   [MSG_FAILED]="Dil değiştirilemedi: {LANG}"
 )
+
+declare -A i18n_KEYBOARD_SETTINGS=(
+  [PROMPT_SELECT]="Klavye düzeni seç: "
+  [NOTIFY_TITLE]="Klavye Düzeni"
+  [MSG_CHANGED]="Düzen: {LAYOUT}"
+  [MSG_VARIANT]="Varyant: {VARIANT}"
+  [MSG_FAILED]="Klavye düzeni değiştirilemedi"
+  [MSG_UNCHANGED]="Klavye düzeni zaten ayarlanmış"
+  [ERROR_DATA_NOT_FOUND]="Klavye veri dosyaları bulunamadı. Lütfen generate-keyboard-data.sh betiğini çalıştırın"
+  [ERROR_SELECTION_NOT_FOUND]="Seçim klavye veritabanında bulunamadı"
+  [ERROR_CONFIG_NOT_FOUND]="Klavye yapılandırma dosyası bulunamadı"
+)

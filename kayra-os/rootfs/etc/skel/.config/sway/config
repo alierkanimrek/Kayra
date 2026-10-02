@@ -60,10 +60,8 @@ output * bg $HOME/.local/share/backgrounds/kayra_desktop.png fill
 #       middle_emulation enabled
 #   }
 #
-   input type:keyboard {
-       xkb_layout "tr"
-       xkb_variant "f"
-   }
+# Keyboard input settings
+include ~/.config/sway/input-keyboard.conf
 #
 # You can also configure each device individually.
 # Read `man 5 sway-input` for more information about this section.
