@@ -137,7 +137,7 @@ EOFPROFILE
 fi
 
 # Signal waybar to reload configuration if it's running
-pkill -SIGUSR2 waybar 2>/dev/null || true
+swaymsg reload
 
 if [ "$QUIET" = false ]; then
     echo "Language set to: $LANG_CODE"
