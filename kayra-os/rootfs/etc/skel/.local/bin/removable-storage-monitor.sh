@@ -22,7 +22,7 @@ emit() {
         | if ($d | length) == 0
           then {text: "", tooltip: "'"${MSG[TOOLTIP_EMPTY]}"'", class: "empty"}
           else {
-              text: "\ue1db \($d | length)",
+              text: "\ue1db",
               class: "present", 
               tooltip: "'"${MSG[TOOLTIP_PRESENT]}"'\n" + ($d | map(
                   "\(.type)  \(.label // "-")  \(.fstype // "-")  \(.size)  \(
