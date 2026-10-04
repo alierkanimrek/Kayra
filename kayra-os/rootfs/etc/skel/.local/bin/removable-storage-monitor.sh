@@ -25,12 +25,8 @@ emit() {
               text: "\ue1db \($d | length)",
               class: "present",
               tooltip: ($d | map(
-                  i18n_template("${MSG[TOOLTIP_ITEM_FORMAT]}" \
-                    type=(.type // "-") \
-                    label=(.label // "-") \
-                    fstype=(.fstype // "-") \
-                    size=(.size // "-") \
-                    mountpoints=([.mountpoints[]? | select(.)] | join(", ") | if . == "" then "-" else . end))
+                  "\(.type // "-")  \(.label // "-")  \(.fstype // "-")  \(.size // "-")  \(
+                      [.mountpoints[]? | select(.)] | join(", ") | if . == "" then "-" else . end)"
                   ) | map(esc) | join("\n"))
           } end' <<<"$1"
 }
