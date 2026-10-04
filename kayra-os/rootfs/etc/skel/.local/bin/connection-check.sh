@@ -16,12 +16,14 @@
 # NOTE: The original icon code is an invalid Unicode codepoint.
 # If you want a different icon, replace the line below with your own codepoint.
 
-set -uo pipefail
+set -u
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_CONNECTION_CHECK
 
 ICON_WARNING=$(printf '%b' '\U000FFFB7')
+
+trap 'exit 0' TERM INT PIPE
 
 check_and_report() {
     local connectivity has_wifi_device
@@ -46,8 +48,6 @@ check_and_report() {
 # Report current status once at startup
 check_and_report
 
-# Set up signal handling to gracefully exit
-trap 'exec 1>&-; exit 0' TERM INT
 
 # Read "ip monitor" output line by line; listens for link (interface add/remove,
 # up/down), address (IP assignment/removal) and route (default route changes) events.

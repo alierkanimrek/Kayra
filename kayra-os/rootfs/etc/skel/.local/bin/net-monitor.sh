@@ -10,10 +10,12 @@
 #
 # Patterns can contain multiple shell globs separated by commas.
 
-set -uo pipefail
+set -u
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_NET_MONITOR
+
+trap 'exit 0' TERM INT PIPE
 
 ETH_PATTERNS=""
 OTHER_PATTERNS=""

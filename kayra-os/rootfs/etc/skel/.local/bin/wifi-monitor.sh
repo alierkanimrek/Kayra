@@ -16,7 +16,8 @@
 #
 # Dependencies: nmcli (NetworkManager), jq, iproute2 (ip monitor).
 
-set -uo pipefail
+#set -uo pipefail
+trap 'exit 0' PIPE SIGTERM
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_WIFI_MONITOR
@@ -87,20 +88,6 @@ emit() {
 # Report initial state immediately
 iface=$(get_wifi_iface)
 emit "$iface"
-
-# Monitor interface/address changes; re-check state on each event
-(
-    ip monitor link addr 2>/dev/null | while read -r _; do
-        iface=$(get_wifi_iface)
-        emit "$iface"
-    done
-) &
-IP_MON_PID=$!
-
-cleanup() {
-    kill "$IP_MON_PID" 2>/dev/null
-}
-trap cleanup EXIT INT TERM
 
 # Signal strength changes may not trigger ip monitor events, so do periodic refresh
 while true; do
