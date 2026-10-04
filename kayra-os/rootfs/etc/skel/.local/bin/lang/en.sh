@@ -186,5 +186,10 @@ declare -A i18n_KEYBOARD_SETTINGS=(
 )
 
 declare -A i18n_REMOVABLE_STORAGE_MONITOR=(
-
+  [NEW_STORAGE]="New storage device"
+  [ACTION_OPEN]="Open"
+  [ACTION_MOUNT]="Mount"
+  [ACTION_DEFAULT]="Open"
+  [TOOLTIP_EMPTY]="No removable storage devices"
+  [TOOLTIP_PRESENT]="Removable storage devices"
 )

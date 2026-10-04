@@ -186,5 +186,10 @@ declare -A i18n_KEYBOARD_SETTINGS=(
 )
 
 declare -A i18n_REMOVABLE_STORAGE_MONITOR=(
-
+  [NEW_STORAGE]="Yeni depolama birimi"
+  [ACTION_OPEN]="Aç"
+  [ACTION_MOUNT]="Bağla"
+  [ACTION_DEFAULT]="Aç"
+  [TOOLTIP_EMPTY]="Çıkarılabilir depolama aygıtı yok"
+  [TOOLTIP_PRESENT]="Çıkarılabilir depolama aygıtları"
 )

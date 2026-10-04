@@ -20,11 +20,11 @@ emit() {
         def esc: gsub("&";"&amp;") | gsub("<";"&lt;") | gsub(">";"&gt;");
         [.[]] | sort_by(.path) as $d
         | if ($d | length) == 0
-          then {text: "", tooltip: "", class: "empty"}
+          then {text: "", tooltip: "'"${MSG[TOOLTIP_EMPTY]}"'", class: "empty"}
           else {
               text: "\ue1db \($d | length)",
-              class: "present",
-              tooltip: ($d | map(
+              class: "present", 
+              tooltip: "'"${MSG[TOOLTIP_PRESENT]}"'\n" + ($d | map(
                   "\(.type)  \(.label // "-")  \(.fstype // "-")  \(.size)  \(
                       [.mountpoints[]? | select(.)] | join(",")
                       | if . == "" then "-" else . end)"
@@ -36,8 +36,8 @@ emit() {
 notify_part() {
     local dev=$1 msg=$2 act mp
     act=$(notify-send -i drive-removable-media -t 15000 \
-          -A open=Aç -A mount=Bağla -A default=Aç \
-          "Yeni depolama birimi" "$msg")
+          -A open="${MSG[ACTION_OPEN]}" -A mount="${MSG[ACTION_MOUNT]}" -A default="${MSG[ACTION_DEFAULT]}" \
+          "${MSG[NEW_STORAGE]}" "$msg")
     case "$act" in
         open|default|mount)
             udisksctl mount -b "$dev" >/dev/null 2>&1
