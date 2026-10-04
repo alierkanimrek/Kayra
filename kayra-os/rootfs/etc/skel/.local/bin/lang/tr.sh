@@ -186,10 +186,5 @@ declare -A i18n_KEYBOARD_SETTINGS=(
 )
 
 declare -A i18n_REMOVABLE_STORAGE_MONITOR=(
-  [NOTIFY_TITLE]="Yeni depolama birimi"
-  [NOTIFY_ACTION_OPEN]="Aç"
-  [NOTIFY_ACTION_MOUNT]="Bağla"
-  [NOTIFY_ACTION_DEFAULT]="Aç"
-  [TOOLTIP_EMPTY]="Çıkarılabilir depolama aygıtı yok"
-  [TOOLTIP_ITEM_FORMAT]="{type}  {label}  {fstype}  {size}  {mountpoints}"
+
 )
