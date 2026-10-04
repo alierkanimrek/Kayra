@@ -192,4 +192,10 @@ declare -A i18n_REMOVABLE_STORAGE_MONITOR=(
   [NOTIFY_ACTION_DEFAULT]="Open"
   [TOOLTIP_EMPTY]="No removable storage devices"
   [TOOLTIP_ITEM_FORMAT]="{type}  {label}  {fstype}  {size}  {mountpoints}"
+  [NOTIFY_NEW_DEVICE]="New storage device detected"
+  [NOTIFY_DEVICE_INFO]="{label} ({fstype}, {size})"
+  [NOTIFY_MOUNT_SUCCESS]="Mounted successfully"
+  [NOTIFY_MOUNT_FAILED]="Mount failed"
+  [NOTIFY_OPEN_SUCCESS]="Opened successfully"
+  [NOTIFY_OPEN_FAILED]="Open failed"
 )
