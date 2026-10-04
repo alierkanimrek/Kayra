@@ -7,11 +7,15 @@ mesa-dri
 socklog-void
 daemontools
 polkit-gnome
+udisks2
+gvfs
 curl
 inotify-tools
 unzip
 wtype
 git
+python
+python3-pipx
 
 # Sanal İstemci
 spice-vdagent
