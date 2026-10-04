@@ -5,7 +5,7 @@
 trap 'kill 0' EXIT
 
 source "$(dirname "$0")/i18n.sh"
-declare -n MSG=i18n_removable_storage_monitor
+declare -n MSG=I18N_REMOVABLE_STORAGE_MONITOR
 
 snap() {
     lsblk -J -o PATH,TYPE,LABEL,FSTYPE,SIZE,RM,MOUNTPOINTS |

@@ -3,7 +3,7 @@
 # Seçilen bölüm bağlı değilse bağlanır, ardından dosya yöneticisinde açılır.
 
 source "$(dirname "$0")/i18n.sh"
-declare -n MSG=i18n_removable_menu
+declare -n MSG=I18N_REMOVABLE_MENU
 
 list=$(lsblk -J -o PATH,TYPE,LABEL,FSTYPE,SIZE,RM,MOUNTPOINTS |
     jq -r '.blockdevices[] | recurse(.children[]?)
