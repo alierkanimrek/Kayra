@@ -185,7 +185,7 @@ declare -A i18n_KEYBOARD_SETTINGS=(
   [ERROR_CONFIG_NOT_FOUND]="Klavye yapılandırma dosyası bulunamadı"
 )
 
-declare -A i18n_REMOVABLE_STORAGE=(
+declare -A i18n_removable_storage_monitor=(
   [NEW_STORAGE]="Yeni depolama birimi"
   [ACTION_OPEN]="Aç"
   [ACTION_MOUNT]="Bağla"
@@ -194,7 +194,7 @@ declare -A i18n_REMOVABLE_STORAGE=(
   [TOOLTIP_PRESENT]="Çıkarılabilir depolama aygıtları"
 )
 
-declare -A i18n_REMOVABLE_MENU=(
+declare -A i18n_removable_menu=(
   [MENU_TITLE]="Depolama"
   [NO_PARTITIONS]="Çıkarılabilir bölüm yok"
   [MOUNT_FAILED]="Bağlama başarısız"

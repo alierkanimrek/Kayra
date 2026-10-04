@@ -185,7 +185,7 @@ declare -A i18n_KEYBOARD_SETTINGS=(
   [ERROR_CONFIG_NOT_FOUND]="Keyboard config file not found"
 )
 
-declare -A i18n_REMOVABLE_STORAGE=(
+declare -A i18n_removable_storage_monitor=(
   [NEW_STORAGE]="New storage device"
   [ACTION_OPEN]="Open"
   [ACTION_MOUNT]="Mount"
@@ -194,7 +194,7 @@ declare -A i18n_REMOVABLE_STORAGE=(
   [TOOLTIP_PRESENT]="Removable storage devices"
 )
 
-declare -A i18n_REMOVABLE_MENU=(
+declare -A i18n_removable_menu=(
   [MENU_TITLE]="Storage"
   [NO_PARTITIONS]="No removable partitions"
   [MOUNT_FAILED]="Mount failed"
