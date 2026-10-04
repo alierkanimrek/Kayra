@@ -132,8 +132,8 @@
 	"restart-interval": 0,
 	"tooltip": true,
 	"escape": true,
-	"on-click": "",
-	"on-click-right": ""
+	"on-click": "$HOME/.local/bin/removable-menu.sh",
+	"on-click-right": "$HOME/.local/bin/removable-eject-menu.sh"
 },
 
 "custom/clipboard": {
