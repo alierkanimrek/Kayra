@@ -16,7 +16,7 @@ snap() {
 }
 
 emit() {
-    jq -c '
+    jq -c --arg format "${MSG[TOOLTIP_ITEM_FORMAT]}" '
         def esc: gsub("&";"&amp;") | gsub("<";"&lt;") | gsub(">";"&gt;");
         [.[]] | sort_by(.path) as $d
         | if ($d | length) == 0
@@ -25,12 +25,12 @@ emit() {
               text: "\ue1db \($d | length)",
               class: "present",
               tooltip: ($d | map(
-                  i18n_template("${MSG[TOOLTIP_ITEM_FORMAT]}" \
-                    type=(.type // "-") \
-                    label=(.label // "-") \
-                    fstype=(.fstype // "-") \
-                    size=(.size // "-") \
-                    mountpoints=([.mountpoints[]? | select(.)] | join(", ") | if . == "" then "-" else . end))
+                  ($format | 
+                    gsub("\\{type\\}"; (.type // "-")) |
+                    gsub("\\{label\\}"; (.label // "-")) |
+                    gsub("\\{fstype\\}"; (.fstype // "-")) |
+                    gsub("\\{size\\}"; (.size // "-")) |
+                    gsub("\\{mountpoints\\}"; ([.mountpoints[]? | select(.)] | join(", ") | if . == "" then "-" else . end)))
                   ) | map(esc) | join("\n"))
           } end' <<<"$1"
 }
