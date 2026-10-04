@@ -46,6 +46,9 @@ check_and_report() {
 # Report current status once at startup
 check_and_report
 
+# Set up signal handling to gracefully exit
+trap 'exec 1>&-; exit 0' TERM INT
+
 # Read "ip monitor" output line by line; listens for link (interface add/remove,
 # up/down), address (IP assignment/removal) and route (default route changes) events.
 # This command produces no output unless network changes, so it idles on the CPU.
@@ -60,5 +63,10 @@ ip monitor link address route 2>/dev/null | while true; do
     # unnecessary repeated checks.
     while read -r -t 0.5 _; do :; done
 
+    # Check if stdout is still available before writing
+    if ! printf "" 2>/dev/null; then
+        break
+    fi
+    
     check_and_report
 done
