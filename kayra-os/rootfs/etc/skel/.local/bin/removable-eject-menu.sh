@@ -14,12 +14,15 @@ list=$(lsblk -J -o PATH,TYPE,LABEL,SIZE,RM,MODEL,PKNAME,MOUNTPOINTS |
         | ([$parts[] | .label // empty] | join(",")) as $l
         | "\($p)  \((.model // "-") | gsub("^\\s+|\\s+$";""))  \(.size)  \(if $l == "" then "-" else $l end)"')
 
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=I18N_REMOVABLE_EJECT_MENU
+
 if [ -z "$list" ]; then
-    notify-send -i drive-removable-media "Depolama" "Bağlı çıkarılabilir aygıt yok"
+    notify-send -i drive-removable-media "${MSG[EJECT_TITLE]}" "${MSG[NO_DEVICES]}"
     exit 0
 fi
 
-sel=$(printf '%s\n' "$list" | fuzzel --dmenu -p "Çıkar: ") || exit 0
+sel=$(printf '%s\n' "$list" | fuzzel --dmenu -p "${MSG[EJECT_TITLE]}: ") || exit 0
 disk=$(awk '{print $1}' <<<"$sel")
 [ -n "$disk" ] || exit 0
 
@@ -38,14 +41,14 @@ if lsblk -dno MOUNTPOINTS "$disk" | grep -q .; then
 fi
 
 if [ ${#failed[@]} -gt 0 ]; then
-    notify-send -u critical -i dialog-error "Çıkarma başarısız" \
-        "Ayrılamayan (meşgul olabilir): ${failed[*]}"
+    notify-send -u critical -i dialog-error "${MSG[EJECT_FAILED]}" \
+        "$(i18n_template "${MSG[EJECT_FAILED_MSG]}" DEVICES="${failed[*]}")"
     exit 1
 fi
 
 sync
 if udisksctl power-off -b "$disk" >/dev/null 2>&1; then
-    notify-send -i drive-removable-media "Depolama" "$disk güvenle çıkarılabilir"
+    notify-send -i drive-removable-media "${MSG[EJECT_TITLE]}" "$(i18n_template "${MSG[EJECT_SUCCESS]}" DEVICE="$disk")"
 else
-    notify-send -i drive-removable-media "Depolama" "$disk ayrıldı (power-off desteklenmiyor olabilir, çıkarmak güvenli)"
+    notify-send -i drive-removable-media "${MSG[EJECT_TITLE]}" "$(i18n_template "${MSG[EJECT_PARTIAL]}" DEVICE="$disk")"
 fi

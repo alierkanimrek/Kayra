@@ -200,3 +200,12 @@ declare -A I18N_REMOVABLE_MENU=(
   [MOUNT_FAILED]="Mount failed"
   [MOUNT_FAILED_MSG]="{DEVICE}"
 )
+
+declare -A I18N_REMOVABLE_EJECT_MENU=(
+  [NO_DEVICES]="No connected removable devices"
+  [EJECT_TITLE]="Eject"
+  [EJECT_SUCCESS]="{DEVICE} can be safely removed"
+  [EJECT_PARTIAL]="{DEVICE} unmounted (power-off may not be supported, safe to remove)"
+  [EJECT_FAILED]="Eject failed"
+  [EJECT_FAILED_MSG]="Could not unmount (may be busy): {DEVICES}"
+)

@@ -200,3 +200,12 @@ declare -A I18N_REMOVABLE_MENU=(
   [MOUNT_FAILED]="Bağlama başarısız"
   [MOUNT_FAILED_MSG]="{DEVICE}"
 )
+
+declare -A I18N_REMOVABLE_EJECT_MENU=(
+  [NO_DEVICES]="Bağlı çıkarılabilir aygıt yok"
+  [EJECT_TITLE]="Çıkar"
+  [EJECT_SUCCESS]="{DEVICE} güvenle çıkarılabilir"
+  [EJECT_PARTIAL]="{DEVICE} ayrıldı (power-off desteklenmiyor olabilir, çıkarmak güvenli)"
+  [EJECT_FAILED]="Çıkarma başarısız"
+  [EJECT_FAILED_MSG]="Ayrılamayan (meşgul olabilir): {DEVICES}"
+)
