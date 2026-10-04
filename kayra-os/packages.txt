@@ -78,3 +78,7 @@ Thunar
 mousepad
 flatpak
 firefox
+
+#Araçlar
+gnome-disk-utility
+exfatprogs
