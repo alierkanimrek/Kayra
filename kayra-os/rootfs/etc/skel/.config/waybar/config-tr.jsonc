@@ -15,6 +15,7 @@
     "modules-right": [
         "tray",
 	"custom/clipboard",
+	"custom/removable-monitor",
 	"custom/network",
 	"custom/wifi",
 	"custom/connection-warning",
@@ -124,6 +125,15 @@
 	"escape": true,
 	"on-click": "$HOME/.local/bin/wifi-menu.sh",
 	"on-click-right": "nm-connection-editor"
+},
+"custom/removable-monitor": {
+	"exec": "$HOME/.local/bin/removable-storage-monitor.sh",
+	"return-type": "json",
+	"restart-interval": 0,
+	"tooltip": true,
+	"escape": true,
+	"on-click": "",
+	"on-click-right": ""
 },
 
 "custom/clipboard": {

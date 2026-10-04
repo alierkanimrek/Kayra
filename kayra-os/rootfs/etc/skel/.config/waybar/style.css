@@ -54,7 +54,8 @@ tooltip label {
 #custom-wifi,
 #custom-app-menu,
 #custom-user-info,
-#custom-system-info {
+#custom-system-info,
+#custom-removable-monitor{
     color: @color-fg;
     background-color: transparent;
     border: none;
@@ -79,7 +80,8 @@ battery:hover,
 #custom-wifi:hover,
 #custom-app-menu:hover,
 #custom-user-info:hover,
-#custom-system-info:hover {
+#custom-system-info:hover,
+#custom-removable-monitor{
     color: @color-fg-hover;
 }
 

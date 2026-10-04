@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # usbeject: bağlı bölümü olan rm=true diskleri fuzzel'de listeler, seçileni ayırıp güvenle çıkarır.
 
+source "$(dirname "$0")/i18n.sh"
+declare -n MSG=I18N_REMOVABLE_EJECT_MENU
+
 list=$(lsblk -J -o PATH,TYPE,LABEL,SIZE,RM,MODEL,PKNAME,MOUNTPOINTS |
     jq -r '
         [.blockdevices[] | recurse(.children[]?)] as $all
@@ -14,15 +17,15 @@ list=$(lsblk -J -o PATH,TYPE,LABEL,SIZE,RM,MODEL,PKNAME,MOUNTPOINTS |
         | ([$parts[] | .label // empty] | join(",")) as $l
         | "\($p)  \((.model // "-") | gsub("^\\s+|\\s+$";""))  \(.size)  \(if $l == "" then "-" else $l end)"')
 
-source "$(dirname "$0")/i18n.sh"
-declare -n MSG=I18N_REMOVABLE_EJECT_MENU
+
 
 if [ -z "$list" ]; then
     notify-send -i drive-removable-media "${MSG[EJECT_TITLE]}" "${MSG[NO_DEVICES]}"
     exit 0
 fi
 
-sel=$(printf '%s\n' "$list" | fuzzel --dmenu -p "${MSG[EJECT_TITLE]}: ") || exit 0
+pkill fuzzel 2>/dev/null
+sel=$(printf '%s\n' "$list" | fuzzel --dmenu --anchor=top-right --log-no-syslog --width 40 -p "${MSG[EJECT_TITLE]}: ") || exit 0
 disk=$(awk '{print $1}' <<<"$sel")
 [ -n "$disk" ] || exit 0
 
