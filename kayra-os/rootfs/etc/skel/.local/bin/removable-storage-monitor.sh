@@ -30,7 +30,7 @@ emit() {
                     label=(.label // "-") \
                     fstype=(.fstype // "-") \
                     size=(.size // "-") \
-                    mountpoints=([.mountpoints[]? | select(.)] | join(",") | if . == "" then "-" else . end))
+                    mountpoints=([.mountpoints[]? | select(.)] | join(", ") | if . == "" then "-" else . end))
                   ) | map(esc) | join("\n"))
           } end' <<<"$1"
 }
