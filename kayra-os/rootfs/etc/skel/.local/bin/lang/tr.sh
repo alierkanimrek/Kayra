@@ -184,3 +184,5 @@ declare -A i18n_KEYBOARD_SETTINGS=(
   [ERROR_SELECTION_NOT_FOUND]="Seçim klavye veritabanında bulunamadı"
   [ERROR_CONFIG_NOT_FOUND]="Klavye yapılandırma dosyası bulunamadı"
 )
+
+declare -A i18n_REMOVABLE_STORAGE_MONITOR=()
