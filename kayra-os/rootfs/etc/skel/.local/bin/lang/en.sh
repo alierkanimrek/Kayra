@@ -192,4 +192,8 @@ declare -A i18n_REMOVABLE_STORAGE_MONITOR=(
   [ACTION_DEFAULT]="Open"
   [TOOLTIP_EMPTY]="No removable storage devices"
   [TOOLTIP_PRESENT]="Removable storage devices"
+  [MENU_TITLE]="Storage"
+  [NO_PARTITIONS]="No removable partitions"
+  [MOUNT_FAILED]="Mount failed"
+  [MOUNT_FAILED_MSG]="{DEVICE}"
 )

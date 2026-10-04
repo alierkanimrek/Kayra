@@ -192,4 +192,8 @@ declare -A i18n_REMOVABLE_STORAGE_MONITOR=(
   [ACTION_DEFAULT]="Aç"
   [TOOLTIP_EMPTY]="Çıkarılabilir depolama aygıtı yok"
   [TOOLTIP_PRESENT]="Çıkarılabilir depolama aygıtları"
+  [MENU_TITLE]="Depolama"
+  [NO_PARTITIONS]="Çıkarılabilir bölüm yok"
+  [MOUNT_FAILED]="Bağlama başarısız"
+  [MOUNT_FAILED_MSG]="{DEVICE}"
 )
