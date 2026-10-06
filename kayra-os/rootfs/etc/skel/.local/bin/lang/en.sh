@@ -57,6 +57,7 @@ declare -A i18n_WIFI_MENU=(
   [MSG_DISCONNECT_FAILED]="Failed to disconnect"
   [MSG_CONNECTED]="Connected"
   [MSG_CONNECT_FAILED]="Connection failed (password may be incorrect)"
+  [MSG_HIDDEN]="<Hidden Network>"
 )
 
 declare -A i18n_USER_INFO=(

@@ -57,6 +57,7 @@ declare -A i18n_WIFI_MENU=(
   [MSG_DISCONNECT_FAILED]="Bağlantı kesilemedi"
   [MSG_CONNECTED]="Bağlandı"
   [MSG_CONNECT_FAILED]="Bağlantı başarısız (şifre yanlış olabilir)"
+  [MSG_HIDDEN]="<Gizli Ağ>"
 )
 
 declare -A i18n_USER_INFO=(

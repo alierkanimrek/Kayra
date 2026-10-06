@@ -49,7 +49,7 @@ sleep 1
 # Get SSID:SECURITY:SIGNAL lines, sort by signal, deduplicate by SSID
 mapfile -t networks < <(
     LC_ALL=C nmcli -t -f SSID,SECURITY,SIGNAL device wifi list ifname "$iface" 2>/dev/null \
-        | awk -F: '$1!=""' \
+        | awk -F: '$1=="*"' \
         | sort -t: -k3,3 -nr \
         | awk -F: '!seen[$1]++'
 )
@@ -83,7 +83,10 @@ for entry in "${networks[@]}"; do
     mark=""
     [[ "$ssid" == "$active_ssid" ]] && mark="$CHECK "
 
-    label="${icon}  ${lock}${mark}${ssid}"
+    display_ssid="$ssid"
+    [[ -z "$ssid" ]] && display_ssid="$(i18n_template "${MSG[MSG_HIDDEN]}")"
+
+    label="${icon}  ${lock}${mark}${display_ssid}"
     menu_lines+=("$label")
     menu_map["$label"]="${ssid}|||${security}"
 done
@@ -111,18 +114,18 @@ fi
 
 # Encrypted network: ask for masked password via fuzzel --password
 if [[ -n "$security" && "$security" != "--" ]]; then
-    password=$(fuzzel --dmenu --password --anchor=top-right --log-no-syslog --placeholder="$(i18n_template "${MSG[PROMPT_PASSWORD]}" SSID="$ssid")" --prompt="${MSG[PROMPT_PASSWORD_LABEL]}" < /dev/null)
+    password=$(fuzzel --dmenu --password --anchor=top-right --log-no-syslog --placeholder="$(i18n_template "${MSG[PROMPT_PASSWORD]}" SSID="${ssid:-$(i18n_template "${MSG[MSG_HIDDEN]}")}")" --prompt="${MSG[PROMPT_PASSWORD_LABEL]}" < /dev/null)
     [[ -z "$password" ]] && exit 0
 
     if LC_ALL=C nmcli device wifi connect "$ssid" password "$password" ifname "$iface" >/dev/null 2>&1; then
-        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECTED]} ({SSID})" SSID="$ssid")"
+        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECTED]} ({SSID})" SSID="${ssid:-$(i18n_template "${MSG[MSG_HIDDEN]}")}")"
     else
-        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECT_FAILED]} ({SSID})" SSID="$ssid")"
+        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECT_FAILED]} ({SSID})" SSID="${ssid:-$(i18n_template "${MSG[MSG_HIDDEN]}")}")"
     fi
 else
     if LC_ALL=C nmcli device wifi connect "$ssid" ifname "$iface" >/dev/null 2>&1; then
-        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECTED]} ({SSID})" SSID="$ssid")"
+        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECTED]} ({SSID})" SSID="${ssid:-$(i18n_template "${MSG[MSG_HIDDEN]}")}")"
     else
-        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECT_FAILED]} ({SSID})" SSID="$ssid")"
+        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECT_FAILED]} ({SSID})" SSID="${ssid:-$(i18n_template "${MSG[MSG_HIDDEN]}")}")"
     fi
 fi
