@@ -35,7 +35,7 @@ notify() {
 
 iface=$(LC_ALL=C nmcli -t -f DEVICE,TYPE device status | awk -F: '$2=="wifi"{print $1; exit}')
 if [[ -z "$iface" ]]; then
-    notify "Wifi" "${MSG[NOTIFY_DEVICE_NOT_FOUND]}"
+    notify "Wifi" "$(i18n_template "${MSG[NOTIFY_DEVICE_NOT_FOUND]}")"
     exit 1
 fi
 
@@ -55,7 +55,7 @@ mapfile -t networks < <(
 )
 
 if [[ ${#networks[@]} -eq 0 ]]; then
-    notify "Wifi" "${MSG[NOTIFY_NO_NETWORKS]}"
+    notify "Wifi" "$(i18n_template "${MSG[NOTIFY_NO_NETWORKS]}")"
     exit 1
 fi
 
@@ -63,10 +63,12 @@ declare -A menu_map
 menu_lines=()
 
 for entry in "${networks[@]}"; do
-    ssid="${entry%%:*}"
-    rest="${entry#*:}"
-    security="${rest%%:*}"
-    signal="${rest#*:}"
+    # Split from right so colons inside SSID are preserved
+    signal="${entry##*:}"
+    rest="${entry%:*}"
+    security="${rest##*:}"
+    ssid="${rest%:*}"
+
     [[ "$signal" =~ ^[0-9]+$ ]] || signal=0
 
     if   (( signal >= 80 )); then icon="$ICON_L4"
@@ -83,7 +85,7 @@ for entry in "${networks[@]}"; do
 
     label="${icon}  ${lock}${mark}${ssid}"
     menu_lines+=("$label")
-    menu_map["$label"]="${ssid}:::${security}"
+    menu_map["$label"]="${ssid}|||${security}"
 done
 
 
@@ -94,15 +96,15 @@ selection=$(pkill fuzzel 2>/dev/null || true; printf '%s\n' "${menu_lines[@]}" \
 chosen="${menu_map[$selection]:-}"
 [[ -z "$chosen" ]] && exit 0
 
-ssid="${chosen%%:::*}"
-security="${chosen#*:::}"
+ssid="${chosen%%|||*}"
+security="${chosen#*|||}"
 
 # If selected network is already connected: disconnect
 if [[ "$ssid" == "$active_ssid" ]]; then
     if LC_ALL=C nmcli device disconnect "$iface" >/dev/null 2>&1; then
-        notify "Wifi" "${MSG[MSG_DISCONNECTED]}" "$ssid"
+        notify "Wifi" "$(i18n_template "${MSG[MSG_DISCONNECTED]} ({SSID})" SSID="$ssid")"
     else
-        notify "Wifi" "${MSG[MSG_DISCONNECT_FAILED]}" "$ssid"
+        notify "Wifi" "$(i18n_template "${MSG[MSG_DISCONNECT_FAILED]} ({SSID})" SSID="$ssid")"
     fi
     exit 0
 fi
@@ -113,14 +115,14 @@ if [[ -n "$security" && "$security" != "--" ]]; then
     [[ -z "$password" ]] && exit 0
 
     if LC_ALL=C nmcli device wifi connect "$ssid" password "$password" ifname "$iface" >/dev/null 2>&1; then
-        notify "Wifi" "${MSG[MSG_CONNECTED]}" "$ssid"
+        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECTED]} ({SSID})" SSID="$ssid")"
     else
-        notify "Wifi" "${MSG[MSG_CONNECT_FAILED]}" "$ssid"
+        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECT_FAILED]} ({SSID})" SSID="$ssid")"
     fi
 else
     if LC_ALL=C nmcli device wifi connect "$ssid" ifname "$iface" >/dev/null 2>&1; then
-        notify "Wifi" "${MSG[MSG_CONNECTED]}" "$ssid"
+        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECTED]} ({SSID})" SSID="$ssid")"
     else
-        notify "Wifi" "${MSG[MSG_CONNECT_FAILED]}" "$ssid"
+        notify "Wifi" "$(i18n_template "${MSG[MSG_CONNECT_FAILED]} ({SSID})" SSID="$ssid")"
     fi
 fi
