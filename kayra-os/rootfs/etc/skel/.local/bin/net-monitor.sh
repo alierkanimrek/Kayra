@@ -10,7 +10,8 @@
 #
 # Patterns can contain multiple shell globs separated by commas.
 
-set -u
+source $HOME/.local/bin/single-instance.sh
+single_instance
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_NET_MONITOR

@@ -16,8 +16,8 @@
 #
 # Dependencies: nmcli (NetworkManager), jq, iproute2 (ip monitor).
 
-#set -uo pipefail
-trap 'exit 0' PIPE SIGTERM
+source $HOME/.local/bin/single-instance.sh
+single_instance
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_WIFI_MONITOR

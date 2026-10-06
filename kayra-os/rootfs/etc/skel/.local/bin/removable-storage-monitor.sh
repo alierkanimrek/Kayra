@@ -2,7 +2,10 @@
 # usbwatch: çıkarılabilir (rm=true) aygıtları izler, waybar için JSON basar,
 # yeni takılan bölümler için notify-send gönderir.
 
-trap 'kill 0' EXIT
+source $HOME/.local/bin/single-instance.sh
+single_instance
+
+export LC_CTYPE=en_US.UTF-8
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=I18N_REMOVABLE_STORAGE_MONITOR
@@ -67,7 +70,7 @@ emit "$prev"
     findmnt --poll -n &
     wait
 } | while read -r _; do
-    while read -t 0.3 -r _; do :; done   # debounce
+    while read -t 0.5 -r _; do :; done   # debounce
     udevadm settle
     cur=$(snap)
     if [ "$cur" != "$prev" ]; then
