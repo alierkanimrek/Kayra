@@ -49,7 +49,6 @@ sleep 1
 # Get SSID:SECURITY:SIGNAL lines, sort by signal, deduplicate by SSID
 mapfile -t networks < <(
     LC_ALL=C nmcli -t -f SSID,SECURITY,SIGNAL device wifi list ifname "$iface" 2>/dev/null \
-        | awk -F: '$1=="*"' \
         | sort -t: -k3,3 -nr \
         | awk -F: '!seen[$1]++'
 )
