@@ -50,7 +50,7 @@ fi
 # Update Fuzzel config (remove old size and add new one)
 if [[ -f "$FUZZEL_CONFIG" ]]; then
     if grep -q "^font=" "$FUZZEL_CONFIG"; then
-        sed -i "s/^font=\(.*\):size=[0-9]*/font=\1:size=$SIZE/" "$FUZZEL_CONFIG"
+        sed -i "s/^font=\(.*\):pixelsize=[0-9]*/font=\1:pixelsize=$SIZE/" "$FUZZEL_CONFIG"
     fi
 fi
 
@@ -69,9 +69,9 @@ if [[ -f "$SWAYNC_THEME" ]]; then
 fi
 
 # Update Alacritty config (TOML format: size = 12.0)
-if [[ -f "$ALACRITTY_CONFIG" ]]; then
-    sed -i "s/^size = [0-9.]*$/size = ${SIZE}.0/" "$ALACRITTY_CONFIG"
-fi
+#if [[ -f "$ALACRITTY_CONFIG" ]]; then
+#    sed -i "s/^size = [0-9.]*$/size = ${SIZE}.0/" "$ALACRITTY_CONFIG"
+#fi
 
 # Reload Waybar
 pkill -SIGUSR2 waybar 2>/dev/null || true
