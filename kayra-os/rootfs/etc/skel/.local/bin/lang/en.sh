@@ -192,6 +192,7 @@ declare -A I18N_REMOVABLE_STORAGE_MONITOR=(
   [ACTION_DEFAULT]="Open"
   [TOOLTIP_EMPTY]="No removable storage devices"
   [TOOLTIP_PRESENT]="Removable storage devices"
+  [TOOLTIP_RIGHT_CLICK_INFO]="Right click: Eject device"
 )
 
 declare -A I18N_REMOVABLE_MENU=(

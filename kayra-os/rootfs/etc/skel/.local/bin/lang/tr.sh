@@ -192,6 +192,7 @@ declare -A I18N_REMOVABLE_STORAGE_MONITOR=(
   [ACTION_DEFAULT]="Aç"
   [TOOLTIP_EMPTY]="Çıkarılabilir depolama aygıtı yok"
   [TOOLTIP_PRESENT]="Çıkarılabilir depolama aygıtları"
+  [TOOLTIP_RIGHT_CLICK_INFO]="Sağ tık: Aygıtı çıkar"
 )
 
 declare -A I18N_REMOVABLE_MENU=(

@@ -31,7 +31,7 @@ emit() {
                   "\(.type)  \(.label // "-")  \(.fstype // "-")  \(.size)  \(
                       [.mountpoints[]? | select(.)] | join(",")
                       | if . == "" then "-" else . end)"
-                  ) | map(esc) | join("\n"))
+                  ) | map(esc) | join("\n")) + "'"\n\n${MSG[TOOLTIP_RIGHT_CLICK_INFO]}"'"
           } end' <<<"$1"
 }
 
