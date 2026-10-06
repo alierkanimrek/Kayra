@@ -4,6 +4,7 @@
 # Uses settings_menu array from current language file.
 
 set -euo pipefail
+export LC_CTYPE=en_US.UTF-8
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_SETTINGS_MENU

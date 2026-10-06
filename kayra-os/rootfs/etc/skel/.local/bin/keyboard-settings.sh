@@ -4,7 +4,7 @@
 # Gets available layouts from generated menu and allows switching
 
 set -euo pipefail
-export LC_ALL=C
+export LC_CTYPE=en_US.UTF-8
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_KEYBOARD_SETTINGS

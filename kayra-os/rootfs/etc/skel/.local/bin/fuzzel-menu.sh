@@ -4,10 +4,9 @@
 # Uses user_menu array from current language file.
 
 set -euo pipefail
-export LC_CTYPE=en_US.UTF-8
 
 source "$(dirname "$0")/i18n.sh"
-declare -n MSG=i18n_USER_MENU
+declare -n MSG=i18n_FUZZEL_MENU
 
 # Check if user_menu array exists
 if [ -z "${user_menu[*]:-}" ]; then
@@ -19,7 +18,7 @@ fi
 pkill -x fuzzel 2>/dev/null || true
 
 # Get selection from fuzzel dmenu
-SELECTED_KEY=$(printf '%s\n' "${!user_menu[@]}" | tac | fuzzel --dmenu --anchor=top-right --log-no-syslog "$@" --prompt="${MSG[PROMPT_ACTION]}")
+SELECTED_KEY=$(printf '%s\n' "${!user_menu[@]}" | tac | fuzzel --dmenu --log-no-syslog "$@" --prompt="${MSG[PROMPT_ACTION]}")
 
 [ -z "$SELECTED_KEY" ] && exit 0
 

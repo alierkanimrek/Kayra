@@ -5,7 +5,7 @@
 # Integrates with settings.conf and change-font.sh
 
 set -euo pipefail
-export LC_ALL=C
+export LC_CTYPE=en_US.UTF-8
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_FONT_SETTINGS

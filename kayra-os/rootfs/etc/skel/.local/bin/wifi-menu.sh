@@ -14,6 +14,7 @@
 # plain bash/awk is sufficient here, so jq is not required).
 
 set -uo pipefail
+export LC_CTYPE=en_US.UTF-8
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_WIFI_MENU

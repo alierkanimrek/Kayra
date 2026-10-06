@@ -4,7 +4,7 @@
 # Gets available languages from system locales and allows switching
 
 set -euo pipefail
-export LC_ALL=C
+export LC_CTYPE=en_US.UTF-8
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_LANGUAGE_SETTINGS
