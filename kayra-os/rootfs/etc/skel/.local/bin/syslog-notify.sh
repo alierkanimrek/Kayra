@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Syslog Notify Script
 # Persistent log monitor that watches socklog "errors" directory and sends

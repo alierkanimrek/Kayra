@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Fix Groups Script - Add user to required system groups.
 

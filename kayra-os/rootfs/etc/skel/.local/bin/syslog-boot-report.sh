@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Syslog Boot Report Script
 # Shows error log entries accumulated since system boot in a single notification.

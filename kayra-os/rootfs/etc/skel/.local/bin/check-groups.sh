@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Check Groups Script - Verify user group membership and prompt to add missing groups.
 # Required groups are defined in the REQUIRED variable.
