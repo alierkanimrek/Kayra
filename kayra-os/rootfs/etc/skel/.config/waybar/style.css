@@ -78,10 +78,11 @@ battery:hover,
 #custom-notification:hover,
 #custom-network:hover,
 #custom-wifi:hover,
+#custom-connection-warning:hover,
 #custom-app-menu:hover,
 #custom-user-info:hover,
 #custom-system-info:hover,
-#custom-removable-monitor{
+#custom-removable-monitor:hover{
     color: @color-fg-hover;
 }
 

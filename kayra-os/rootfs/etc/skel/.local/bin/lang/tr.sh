@@ -95,7 +95,7 @@ declare -A i18n_CONNECTION_CHECK=(
   [MSG_ONLINE]="Çevrimiçi"
   [MSG_OFFLINE]="Çevrimdışı"
   [MSG_CHECKING]="Bağlantı kontrol ediliyor..."
-  [TOOLTIP_NO_WIFI_NO_INTERNET]="Wi-Fi aygıtı bulunamadı ve internet bağlantısı yok (connectivity: {CONNECTIVITY})\nTıkla: Ağ Yöneticisini aç"
+  [TOOLTIP_NO_WIFI_NO_INTERNET]="Wi-Fi aygıtı bulunamadı\nİnternet bağlantısı durumu: {CONNECTIVITY}\nTıkla: Ağ Yöneticisini aç"
 )
 
 declare -A i18n_SYSLOG_NOTIFY=(

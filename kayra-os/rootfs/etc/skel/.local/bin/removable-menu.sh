@@ -17,8 +17,10 @@ if [ -z "$list" ]; then
     exit 0
 fi
 
+line_count=$(printf '%s\n' "$list" | grep -c "^...*")
+
 pkill fuzzel 2>/dev/null
-sel=$(printf '%s\n' "$list" | fuzzel --dmenu --anchor=top-right --log-no-syslog --width 40 -p "${MSG[MENU_TITLE]}: ") || exit 0
+sel=$(printf '%s\n' "$list" | fuzzel --dmenu --anchor=top-right --log-no-syslog --width 40  --lines="$line_count" -p "${MSG[MENU_TITLE]}: ") || exit 0
 dev=$(awk '{print $2}' <<<"$sel")
 [ -n "$dev" ] || exit 0
 

@@ -95,7 +95,7 @@ declare -A i18n_CONNECTION_CHECK=(
   [MSG_ONLINE]="Online"
   [MSG_OFFLINE]="Offline"
   [MSG_CHECKING]="Checking connection..."
-  [TOOLTIP_NO_WIFI_NO_INTERNET]="Wi-Fi device not found and no internet connection (connectivity: {CONNECTIVITY})\nClick: Open Network Manager"
+  [TOOLTIP_NO_WIFI_NO_INTERNET]="Wi-Fi device not found\nInternet connection status: {CONNECTIVITY}\nClick: Open Network Manager"
 )
 
 declare -A i18n_SYSLOG_NOTIFY=(

@@ -15,11 +15,13 @@ if [ -z "${user_menu[*]:-}" ]; then
     exit 1
 fi
 
+line_count=$(printf '%s\n' "${!user_menu[@]}" | grep -c "^...*")
+
 # Close any existing fuzzel processes
 pkill -x fuzzel 2>/dev/null || true
 
 # Get selection from fuzzel dmenu
-SELECTED_KEY=$(printf '%s\n' "${!user_menu[@]}" | tac | fuzzel --dmenu --anchor=top-right --log-no-syslog "$@" --prompt="${MSG[PROMPT_ACTION]}")
+SELECTED_KEY=$(printf '%s\n' "${!user_menu[@]}" | tac | fuzzel --dmenu --anchor=top-right --log-no-syslog  --lines="$line_count" "$@" --prompt="${MSG[PROMPT_ACTION]}")
 
 [ -z "$SELECTED_KEY" ] && exit 0
 
