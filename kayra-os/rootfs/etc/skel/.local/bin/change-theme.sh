@@ -4,7 +4,7 @@ WAYBAR_THEME_CSS="$HOME/.config/waybar/theme.css"
 FUZZEL_INI="$HOME/.config/fuzzel/fuzzel.ini"
 
 json="${1:-{}}"
-[ -z "$json" ] && json="{}"
+[ -z "${json// /}" ] && json="{}"
 
 # JSON doğrulama: hatalı/eksik girdi jq hatasını önler
 if ! jq -e . >/dev/null 2>&1 <<< "$json"; then
@@ -26,7 +26,17 @@ if [ -f "$WAYBAR_THEME_CSS" ]; then
 fi
 
 # fuzzel/fuzzel.ini (alpha ff eklenerek)
-f() { [ -n "$1" ] && echo "${1#\#}ff"; }
+f() {
+  local c="${1:-}"
+  [ -z "$c" ] && return
+  c="${c#\#}"
+  if [ "${#c}" -eq 6 ]; then
+    printf '%s\n' "${c}ff"
+  else
+    printf '%s\n' "$c"
+  fi
+}
+
 if [ -f "$FUZZEL_INI" ]; then
   fb=$(f "$bg"); ff=$(f "$fg")
   fsb=$(f "$sbg"); fsf=$(f "$sfg")
