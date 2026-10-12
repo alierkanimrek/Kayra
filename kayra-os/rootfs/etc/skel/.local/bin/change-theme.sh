@@ -30,6 +30,7 @@ f() {
   local c="${1:-}"
   [ -z "$c" ] && return
   c="${c#\#}"
+  [ -z "$c" ] && return
   if [ "${#c}" -eq 6 ]; then
     printf '%s\n' "${c}ff"
   else
