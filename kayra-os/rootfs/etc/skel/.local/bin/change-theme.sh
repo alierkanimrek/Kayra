@@ -4,10 +4,17 @@ WAYBAR_THEME_CSS="$HOME/.config/waybar/theme.css"
 FUZZEL_INI="$HOME/.config/fuzzel/fuzzel.ini"
 
 json="${1:-{}}"
-bg=$(echo "$json" | jq -r '.bg // empty')
-fg=$(echo "$json" | jq -r '.fg // empty')
-sbg=$(echo "$json" | jq -r '.selected_bg // empty')
-sfg=$(echo "$json" | jq -r '.selected_fg // empty')
+
+# JSON doğrulama: hatalı/eksik girdi jq hatasını önler
+if ! printf '%s\n' "$json" | jq -e . >/dev/null 2>&1; then
+  echo "Hata: Geçersiz JSON parametresi: $json" >&2
+  exit 1
+fi
+
+bg=$(printf '%s\n' "$json" | jq -r '.bg // empty')
+fg=$(printf '%s\n' "$json" | jq -r '.fg // empty')
+sbg=$(printf '%s\n' "$json" | jq -r '.selected_bg // empty')
+sfg=$(printf '%s\n' "$json" | jq -r '.selected_fg // empty')
 
 # waybar/theme.css
 [ -n "$bg" ] && sed -i "s/@define-color color-bg[[:space:]]*[^;]*;/@define-color color-bg $bg;/" "$WAYBAR_THEME_CSS"
