@@ -4,7 +4,7 @@
 CONFIG_FILE="${HOME}/.config/kayra/settings.conf"
 
 # Belirtilen anahtarın değerini okur
-settings_conf_get() {
+conf_get() {
     local key="$1"
     if [ -f "$CONFIG_FILE" ]; then
         grep "^${key}=" "$CONFIG_FILE" | cut -d'=' -f2- | sed 's/^"//;s/"$//'
@@ -12,7 +12,7 @@ settings_conf_get() {
 }
 
 # Belirtilen anahtarın değerini değiştirir (sed ile günceller)
-settings_conf_set() {
+conf_set() {
     local key="$1"
     local value="$2"
     if [ -f "$CONFIG_FILE" ]; then
