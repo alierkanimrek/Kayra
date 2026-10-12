@@ -7,15 +7,15 @@ json="${1:-{}}"
 [ -z "$json" ] && json="{}"
 
 # JSON doğrulama: hatalı/eksik girdi jq hatasını önler
-if ! printf '%s\n' "$json" | jq -e . >/dev/null 2>&1; then
+if ! jq -e . >/dev/null 2>&1 <<< "$json"; then
   echo "Hata: Geçersiz JSON parametresi: $json" >&2
   exit 1
 fi
 
-bg=$(printf '%s\n' "$json" | jq -r '.bg // empty')
-fg=$(printf '%s\n' "$json" | jq -r '.fg // empty')
-sbg=$(printf '%s\n' "$json" | jq -r '.selected_bg // empty')
-sfg=$(printf '%s\n' "$json" | jq -r '.selected_fg // empty')
+bg=$(jq -r '.bg // empty' <<< "$json")
+fg=$(jq -r '.fg // empty' <<< "$json")
+sbg=$(jq -r '.selected_bg // empty' <<< "$json")
+sfg=$(jq -r '.selected_fg // empty' <<< "$json")
 
 # waybar/theme.css
 if [ -f "$WAYBAR_THEME_CSS" ]; then
