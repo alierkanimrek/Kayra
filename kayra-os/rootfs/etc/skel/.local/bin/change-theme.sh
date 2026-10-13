@@ -2,6 +2,7 @@
 
 WAYBAR_THEME_CSS="$HOME/.config/waybar/theme.css"
 FUZZEL_INI="$HOME/.config/fuzzel/fuzzel.ini"
+SWAYNC_THEME_DIR="$HOME/.config/swaync/"
 
 json="$1"
 bg=$(echo "$json" | jq -r '.bg // empty')
@@ -10,10 +11,12 @@ sbg=$(echo "$json" | jq -r '.selected_bg // empty')
 sfg=$(echo "$json" | jq -r '.selected_fg // empty')
 
 # waybar/theme.css
-[ -n "$bg" ] && sed -i "s/@define-color color-bg[[:space:]]*[^;]*;/@define-color color-bg $bg;/" "$WAYBAR_THEME_CSS"
-[ -n "$bg" ] && sed -i "s/@define-color color-surface[[:space:]]*[^;]*;/@define-color color-surface $bg;/" "$WAYBAR_THEME_CSS"
-[ -n "$fg" ] && sed -i "s/@define-color color-fg[[:space:]]*[^;]*;/@define-color color-fg $fg;/" "$WAYBAR_THEME_CSS"
-[ -n "$sfg" ] && sed -i "s/@define-color color-fg-hover[[:space:]]*[^;]*;/@define-color color-fg-hover $sfg;/" "$WAYBAR_THEME_CSS"
+[ -n "$bg" ] && sed -i -E "s/^([[:space:]]*@define-color[[:space:]]+color-bg[[:space:]]+)[^;]*;/\1$bg;/" "$WAYBAR_THEME_CSS"
+[ -n "$bg" ] && sed -i -E "s/^([[:space:]]*@define-color[[:space:]]+color-surface[[:space:]]+)[^;]*;/\1$bg;/" "$WAYBAR_THEME_CSS"
+[ -n "$fg" ] && sed -i -E "s/^([[:space:]]*@define-color[[:space:]]+color-fg[[:space:]]+)[^;]*;/\1$fg;/" "$WAYBAR_THEME_CSS"
+[ -n "$sbg" ] && sed -i -E "s/^([[:space:]]*@define-color[[:space:]]+color-fg-hover[[:space:]]+)[^;]*;/\1$sbg;/" "$WAYBAR_THEME_CSS"
+
+cp $WAYBAR_THEME_CSS $SWAYNC_THEME_DIR
 
 # fuzzel/fuzzel.ini (alpha ff eklenerek)
 f() { echo "${1#\#}ff"; }
@@ -22,5 +25,7 @@ f() { echo "${1#\#}ff"; }
 [ -n "$sfg" ] && sed -i "s/^match=.*/match=$(f "$sfg")/" "$FUZZEL_INI"
 [ -n "$sbg" ] && sed -i "s/^selection=.*/selection=$(f "$sbg")/" "$FUZZEL_INI"
 [ -n "$sfg" ] && sed -i "s/^selection-text=.*/selection-text=$(f "$sfg")/" "$FUZZEL_INI"
-[ -n "$sfg" ] && sed -i "s/^selection-match=.*/selection-match=$(f "$sfg")/" "$FUZZEL_INI"
+[ -n "$fg" ] && sed -i "s/^selection-match=.*/selection-match=$(f "$fg")/" "$FUZZEL_INI"
 [ -n "$fg" ] && sed -i "s/^border=.*/border=$(f "$fg")/" "$FUZZEL_INI"
+
+pkill -USR2 waybar

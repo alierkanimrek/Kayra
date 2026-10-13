@@ -9,7 +9,7 @@
 /* Fontlar */
 * {
     font-family: "Noto Sans Mono", "Material Symbols Outlined", monospace;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: normal;
     min-height: 0;
 }
@@ -17,8 +17,8 @@
 /* ---------------- Renk Paleti (sade, 6 tanım) ---------------- */
 
 /* Zemin renkleri */
-@define-color color-bg       #2c2c2c;
-@define-color color-surface  #2c2c2c;
-@define-color color-fg       #a8c8d9;
-@define-color color-fg-hover #ffffff;
+@define-color color-bg #2c2c2c;
+@define-color color-surface #2c2c2c;
+@define-color color-fg #f7f7f7;
+@define-color color-fg-hover #e95420;
 @define-color color-warning  #d9534f;

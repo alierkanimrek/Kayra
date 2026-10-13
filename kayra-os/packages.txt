@@ -16,6 +16,7 @@ wtype
 git
 python
 python3-pipx
+grim
 
 # Sanal İstemci
 spice-vdagent

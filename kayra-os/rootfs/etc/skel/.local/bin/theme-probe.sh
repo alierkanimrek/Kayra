@@ -48,6 +48,10 @@ row.add(selLabel);
 list.add(row);
 box.pack_start(list, false, false, 0);
 
+const progress = new Gtk.ProgressBar();
+progress.set_fraction(1.0);
+box.pack_start(progress, false, false, 0);
+
 win.add(box);
 win.connect('destroy', () => Gtk.main_quit());
 win.show_all();
@@ -67,7 +71,7 @@ GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
     const lines = [
         'bg ' + [`4,4`, `${W - 5},4`, `4,${H - 5}`].join(' '),
         'fg ' + glyphPts(fgLabel).filter(Boolean).join(' '),
-        'selected_bg ' + [at(row, 0, 0.5, 4, 0), at(row, 1, 0.5, -5, 0)].filter(Boolean).join(' '),
+        'selected_bg ' + [at(progress, 0.25, 0.5, 0, 0), at(progress, 0.75, 0.5, 0, 0)].filter(Boolean).join(' '),
         'selected_fg ' + glyphPts(selLabel).filter(Boolean).join(' '),
     ];
     GLib.file_set_contents(out, imports.byteArray.fromString(lines.join('\n') + '\n'));

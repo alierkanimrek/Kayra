@@ -1,0 +1,24 @@
+/*
+ * Kayra OS — Waybar Font & Renk Teması
+ * ------------------------------------
+ * Renk temasını değiştirmek istediğinizde SADECE bu dosyayı düzenleyin.
+ * style.css dosyası bu renkleri @define-color üzerinden kullanır,
+ * hiçbir modülde doğrudan renk kodu geçmez.
+ */
+
+/* Fontlar */
+* {
+    font-family: "Noto Sans Mono", "Material Symbols Outlined", monospace;
+    font-size: 18px;
+    font-weight: normal;
+    min-height: 0;
+}
+
+/* ---------------- Renk Paleti (sade, 6 tanım) ---------------- */
+
+/* Zemin renkleri */
+@define-color color-bg #2c2c2c;
+@define-color color-surface #2c2c2c;
+@define-color color-fg #f7f7f7;
+@define-color color-fg-hover #e95420;
+@define-color color-warning  #d9534f;

@@ -2,20 +2,8 @@
  * Kayra OS — SwayNotificationCenter Teması
  * Waybar renk paletine uyumlu, sade ve tutarlı tasarım
  */
+@import url("theme.css");
 
-* {
-    font-family: "Noto Sans Mono", "Material Symbols Outlined", monospace;
-    font-weight: normal;
-}
-
-/* ---------- Renk Paleti (Waybar ile uyumlu) ---------- */
-
-@define-color color-bg       #2c2c2c;      /* Zemin */
-@define-color color-surface  #3a3a3a;      /* Yükseltilmiş zemin */
-@define-color color-fg       #a8c8d9;      /* Yazı */
-@define-color color-fg-hover #ffffff;      /* Hover yazı */
-@define-color color-glow     rgba(255, 255, 255, 0.6); /* Glow efekti */
-@define-color color-warning  #d9534f;      /* Uyarı */
 
 /* Karartma katmanı */
 .blank-window {
@@ -37,13 +25,11 @@ window#control-center {
 
 .control-center-list-placeholder {
     color: @color-fg;
-    font-size: 12px;
 }
 
 /* Başlık ve butonları */
 .widget-title {
     color: @color-fg;
-    font-size: 13px;
     font-weight: 600;
     padding: 6px;
 }
@@ -64,7 +50,6 @@ window#control-center {
 /* Do Not Disturb */
 .widget-dnd {
     color: @color-fg;
-    font-size: 12px;
     padding: 6px;
 }
 
@@ -121,19 +106,16 @@ window#control-center {
 
 .notification .summary {
     color: @color-fg;
-    font-size: 13px;
     font-weight: 600;
 }
 
 .notification .time {
     color: @color-fg;
-    font-size: 11px;
     opacity: 0.7;
 }
 
 .notification .body {
     color: @color-fg;
-    font-size: 12px;
 }
 
 /* Kapatma düğmesi */
