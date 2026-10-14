@@ -15,14 +15,16 @@
 # Design: check the log file every INTERVAL seconds; collect new lines that
 # appeared after the last seen timestamp; send all new entries in a single notification.
 
+source $HOME/.local/bin/single-instance.sh
+single_instance
+
 set -euo pipefail
+
+source $HOME/.local/bin/settings-conf.sh
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_SYSLOG_NOTIFY
 
-if pgrep -u "$(id -u)" -f "syslog-notify.sh" | grep -qv "^$$\$"; then
-    exit 0
-fi
 
 LOGFILE="/var/log/socklog/errors/current"
 
@@ -66,16 +68,20 @@ while true; do
     else
         TITLE="${MSG[TITLE_SINGLE]}"
     fi
+	
+	error_log_notify=$(conf_get error_log_notify)
+	if [ $error_log_notify = true ]; then
 
-    # Show notification in background: -w waits for user action, but we
-    # background it with "&" to prevent blocking the main monitoring loop
-    # (so new log entries aren't delayed by user interaction).
-    (
-        ACTION=$(notify-send -w -u low -a "${MSG[NOTIFY_APP]}" \
-            -A "open_log=${MSG[BUTTON_OPEN_LOG]}" \
-            "$TITLE" "$MSG_CONTENT")
-        if [ "$ACTION" = "open_log" ]; then
-            mousepad "$LOGFILE" &
-        fi
-    ) &
+		# Show notification in background: -w waits for user action, but we
+		# background it with "&" to prevent blocking the main monitoring loop
+		# (so new log entries aren't delayed by user interaction).
+		(
+			ACTION=$(notify-send -w -u low -a "${MSG[NOTIFY_APP]}" \
+				-A "open_log=${MSG[BUTTON_OPEN_LOG]}" \
+				"$TITLE" "$MSG_CONTENT")
+			if [ "$ACTION" = "open_log" ]; then
+				mousepad "$LOGFILE" &
+			fi
+		) &
+    fi
 done

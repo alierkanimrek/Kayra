@@ -6,6 +6,8 @@
 
 set -euo pipefail
 
+source $HOME/.local/bin/settings-conf.sh
+
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_SYSLOG_BOOT_REPORT
 
@@ -34,10 +36,14 @@ else
     TITLE="${MSG[TITLE_SINGLE]}"
 fi
 
-ACTION=$(notify-send -w -t "$NOTIFY_TIMEOUT" -u normal -a "${MSG[NOTIFY_APP]}" \
-    -A "open_log=${MSG[BUTTON_OPEN_LOG]}" \
-    "$TITLE" "$NEW")
+error_log_notify=$(conf_get error_log_notify)
+if [ $error_log_notify = true ]; then
 
-if [ "$ACTION" = "open_log" ]; then
-    mousepad "$LOGFILE" &
+	ACTION=$(notify-send -w -t "$NOTIFY_TIMEOUT" -u normal -a "${MSG[NOTIFY_APP]}" \
+		-A "open_log=${MSG[BUTTON_OPEN_LOG]}" \
+		"$TITLE" "$NEW")
+
+	if [ "$ACTION" = "open_log" ]; then
+		mousepad "$LOGFILE" &
+	fi
 fi
