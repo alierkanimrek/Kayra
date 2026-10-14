@@ -25,7 +25,12 @@ SELECTED_KEY=$(printf '%s\n' "${!appearance_menu[@]}" | tac | fuzzel --dmenu --l
 [ -z "$SELECTED_KEY" ] && exit 0
 
 # Execute the command
-COMMAND="$HOME/.local/bin/${appearance_menu[$SELECTED_KEY]}"
+CMD_VAL="${appearance_menu[$SELECTED_KEY]}"
+if [[ "$CMD_VAL" == /* ]]; then
+    COMMAND="$CMD_VAL"
+else
+    COMMAND="$HOME/.local/bin/$CMD_VAL"
+fi
 
 if [ -n "$COMMAND" ] && [ "$COMMAND" != "null" ]; then
     eval "$COMMAND" &

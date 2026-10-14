@@ -26,6 +26,7 @@ declare -A settings_menu=(
 declare -A appearance_menu=(
   ["Font"]="font-settings.sh"
   ["Font Size"]="font-size-settings.sh"
+  ["Change Theme"]="/usr/bin/nwg-look"
 )
 
 declare -A i18n_HOME_USAGE=(
