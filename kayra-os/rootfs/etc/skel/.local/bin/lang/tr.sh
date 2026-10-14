@@ -27,6 +27,7 @@ declare -A appearance_menu=(
   ["Yazı Tipi"]="font-settings.sh"
   ["Yazı Tipi Büyüklüğü"]="font-size-settings.sh"
   ["Temayı değiştir"]="/usr/bin/nwg-look"
+  ["Otomatik Tema"]="toggle-auto-theme.sh"
 )
 
 declare -A i18n_HOME_USAGE=(
@@ -137,6 +138,12 @@ declare -A i18n_FIX_GROUPS=(
   [TITLE_SUCCESS]="Gruplar eklendi"
   [MSG_SUCCESS]="Değişikliklerin etkili olması için çıkış yapıp tekrar giriş yapın."
   [TITLE_FAILED]="İşlem iptal edildi veya başarısız oldu"
+)
+
+declare -A i18n_TOGGLE_AUTO_THEME=(
+  [NOTIFY_TITLE]="Otomatik Tema"
+  [MSG_ON]="Otomatik tema değişiklikleri etkinleştirildi"
+  [MSG_OFF]="Otomatik tema değişiklikleri devre dışı bırakıldı"
 )
 
 declare -A i18n_SYSTEM_INFO=(

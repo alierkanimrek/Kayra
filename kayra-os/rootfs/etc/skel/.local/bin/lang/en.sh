@@ -27,6 +27,7 @@ declare -A appearance_menu=(
   ["Font"]="font-settings.sh"
   ["Font Size"]="font-size-settings.sh"
   ["Change Theme"]="/usr/bin/nwg-look"
+  ["Auto Theme"]="toggle-auto-theme.sh"
 )
 
 declare -A i18n_HOME_USAGE=(
@@ -137,6 +138,12 @@ declare -A i18n_FIX_GROUPS=(
   [TITLE_SUCCESS]="Groups added"
   [MSG_SUCCESS]="Log out and log back in for this to take effect."
   [TITLE_FAILED]="Operation cancelled or failed"
+)
+
+declare -A i18n_TOGGLE_AUTO_THEME=(
+  [NOTIFY_TITLE]="Auto Theme"
+  [MSG_ON]="Automatic theme changes enabled"
+  [MSG_OFF]="Automatic theme changes disabled"
 )
 
 declare -A i18n_SYSTEM_INFO=(
