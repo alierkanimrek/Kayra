@@ -21,6 +21,11 @@ declare -A settings_menu=(
   ["Language"]="language-settings.sh"
   ["Keyboard"]="keyboard-settings.sh"
   ["Display"]="display-settings.sh"
+  ["System"]="system-menu.sh"
+)
+
+declare -A system_menu=(
+  ["Log Monitor"]="toggle-log-monitor.sh"
 )
 
 declare -A appearance_menu=(
@@ -144,6 +149,12 @@ declare -A i18n_TOGGLE_AUTO_THEME=(
   [NOTIFY_TITLE]="Auto Theme"
   [MSG_ON]="Automatic theme changes enabled"
   [MSG_OFF]="Automatic theme changes disabled"
+)
+
+declare -A i18n_LOG_MONITOR=(
+  [NOTIFY_TITLE]="Log Monitor"
+  [MSG_ON]="Log error notifications enabled"
+  [MSG_OFF]="Log error notifications disabled"
 )
 
 declare -A i18n_SYSTEM_INFO=(
