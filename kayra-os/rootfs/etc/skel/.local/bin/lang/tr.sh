@@ -1,232 +1,232 @@
 #!/bin/bash
 
 declare -A i18n=(
-  [WELCOME]="Welcome"
-  [NOT_INSTALLED]="{BIN} is not installed"
-  [OPERATION_CANCELLED]="Operation cancelled"
-  [SUCCESS]="Success"
-  [ERROR]="Error"
-  [FAILED]="Failed"
+  [WELCOME]="Hoşgeldiniz"
+  [NOT_INSTALLED]="{BIN} kurulu değil"
+  [OPERATION_CANCELLED]="İşlem iptal edildi"
+  [SUCCESS]="Başarı"
+  [ERROR]="Hata"
+  [FAILED]="Başarısız"
 )
 
 declare -A user_menu=(
-  ["Change Password"]="change-passwd.sh"
-  ["Add to Group"]="group-add.sh --anchor=top-right"
-  ["Remove from Group"]="group-remove.sh --anchor=top-right"
-  ["Home Directory Usage"]="home-usage.sh"
+  ["Şifreyi değiştir"]="change-passwd.sh"
+  ["Gruba ekle"]="group-add.sh --anchor=top-right"
+  ["Gruptan çıkar"]="group-remove.sh --anchor=top-right"
+  ["Ev Dizini Kullanımı"]="home-usage.sh"
 )
 
 declare -A settings_menu=(
-  ["Appearance & Theme"]="appearance-settings.sh"
-  ["Language"]="language-settings.sh"
-  ["Keyboard"]="keyboard-settings.sh"
-  ["Display"]="display-settings.sh"
-  ["System"]="system-menu.sh"
+  ["Görünüm ve Tema"]="appearance-settings.sh"
+  ["Dil"]="language-settings.sh"
+  ["Klavye"]="keyboard-settings.sh"
+  ["Ekran"]="display-settings.sh"
+  ["Sistem"]="system-menu.sh"
 )
 
 declare -A system_menu=(
-  ["Log Monitor"]="toggle-log-monitor.sh"
+  ["Log İzleyici"]="toggle-log-monitor.sh"
 )
 
 declare -A appearance_menu=(
-  ["Font"]="font-settings.sh"
-  ["Font Size"]="font-size-settings.sh"
-  ["Change Theme"]="/usr/bin/nwg-look"
-  ["Auto Theme"]="toggle-auto-theme.sh"
+  ["Yazı Tipi"]="font-settings.sh"
+  ["Yazı Tipi Büyüklüğü"]="font-size-settings.sh"
+  ["Temayı değiştir"]="/usr/bin/nwg-look"
+  ["Otomatik Tema"]="toggle-auto-theme.sh"
 )
 
 declare -A i18n_HOME_USAGE=(
-  [NOTIFY_TITLE]="Home directory size"
-  [NOTIFY_MSG]="{HOME} directory uses {USAGE} of storage."
-  [NOTIFY_BUTTON]="Open Baobab"
+  [NOTIFY_TITLE]="Ev dizini boyutu"
+  [NOTIFY_MSG]="{HOME} Dizini {USAGE} yer kaplıyor."
+  [NOTIFY_BUTTON]="Baobab'ı Aç"
 )
 
 declare -A i18n_CHANGE_PASSWD=(
-  [PROMPT_CURRENT]="Current password: "
-  [PROMPT_NEW]="New password: "
-  [PROMPT_NEW_REPEAT]="New password (again): "
-  [NOTIFY_TITLE]="Password change"
-  [MSG_NOT_INSTALLED]="{BIN} is not installed (xbps-install -S {BIN})"
-  [MSG_CANCELLED]="Operation cancelled"
-  [MSG_MISMATCH]="New passwords do not match."
-  [MSG_SUCCESS]="Password changed successfully."
-  [MSG_FAILED]="Password change failed. Current password may be incorrect."
+  [PROMPT_CURRENT]="Mevcut şifre: "
+  [PROMPT_NEW]="Yeni şifre: "
+  [PROMPT_NEW_REPEAT]="Yeni şifre (tekrar): "
+  [NOTIFY_TITLE]="Şifre değiştirme"
+  [MSG_NOT_INSTALLED]="{BIN} kurulu değil (xbps-install -S {BIN})"
+  [MSG_CANCELLED]="İşlem iptal edildi"
+  [MSG_MISMATCH]="Yeni şifreler birbiriyle eşleşmiyor."
+  [MSG_SUCCESS]="Şifre başarıyla değiştirildi."
+  [MSG_FAILED]="Şifre değiştirilemedi. Mevcut şifre hatalı olabilir."
 )
 
 declare -A i18n_WIFI_MENU=(
-  [NOTIFY_DEVICE_NOT_FOUND]="Wifi device not found"
-  [NOTIFY_NO_NETWORKS]="No networks found nearby"
-  [PROMPT_SELECT]="Select wifi network"
-  [PROMPT_PASSWORD]="Password: {SSID}"
+  [NOTIFY_DEVICE_NOT_FOUND]="Wifi aygıtı bulunamadı"
+  [NOTIFY_NO_NETWORKS]="Yakında ağ bulunamadı"
+  [PROMPT_SELECT]="Wifi ağı seç"
+  [PROMPT_PASSWORD]="Şifre: {SSID}"
   [PROMPT_LABEL]="wifi> "
-  [PROMPT_PASSWORD_LABEL]="password> "
-  [MSG_DISCONNECTED]="Disconnected"
-  [MSG_DISCONNECT_FAILED]="Failed to disconnect"
-  [MSG_CONNECTED]="Connected"
-  [MSG_CONNECT_FAILED]="Connection failed (password may be incorrect)"
-  [MSG_HIDDEN]="<Hidden Network>"
+  [PROMPT_PASSWORD_LABEL]="şifre> "
+  [MSG_DISCONNECTED]="Bağlantı kesildi"
+  [MSG_DISCONNECT_FAILED]="Bağlantı kesilemedi"
+  [MSG_CONNECTED]="Bağlandı"
+  [MSG_CONNECT_FAILED]="Bağlantı başarısız (şifre yanlış olabilir)"
+  [MSG_HIDDEN]="<Gizli Ağ>"
 )
 
 declare -A i18n_USER_INFO=(
-  [LABEL_GROUPS]="Groups:"
-  [LABEL_SUPERVISOR]="Supervisor"
+  [LABEL_GROUPS]="Gruplar:"
+  [LABEL_SUPERVISOR]="Yönetici"
 )
 
 declare -A i18n_GROUP_MANAGEMENT=(
-  [PROMPT_GROUP_NAME]="Group name: "
-  [PROMPT_CONFIRM]="Are you sure?"
-  [MSG_SUCCESS]="Operation completed."
-  [MSG_FAILED]="Operation failed."
-  [MSG_GROUP_EXISTS]="Group already exists."
-  [MSG_GROUP_NOT_FOUND]="Group not found."
-  [MSG_USER_NOT_FOUND]="User not found."
-  [TITLE]="Group Management"
-  [NO_GROUPS_AVAILABLE]="No groups available to add."
-  [GROUP_ADDED]="{USER} user added to '{GROUP}' group."
-  [ADD_FAILED]="Failed to add to '{GROUP}' group."
-  [NO_GROUPS_TO_REMOVE]="No groups available to remove."
-  [EXCEPTION_GROUP]="'{GROUP}' is an exception group, {USER} user cannot be removed from this group."
-  [GROUP_REMOVED]="{USER} user removed from '{GROUP}' group."
-  [REMOVE_FAILED]="Failed to remove from '{GROUP}' group."
+  [PROMPT_GROUP_NAME]="Grup adı: "
+  [PROMPT_CONFIRM]="Emin misiniz?"
+  [MSG_SUCCESS]="İşlem tamamlandı."
+  [MSG_FAILED]="İşlem başarısız oldu."
+  [MSG_GROUP_EXISTS]="Grup zaten mevcut."
+  [MSG_GROUP_NOT_FOUND]="Grup bulunamadı."
+  [MSG_USER_NOT_FOUND]="Kullanıcı bulunamadı."
+  [TITLE]="Grup Yönetimi"
+  [NO_GROUPS_AVAILABLE]="Eklenebilecek bir grup bulunamadı."
+  [GROUP_ADDED]="{USER} kullanıcısı '{GROUP}' grubuna eklendi."
+  [ADD_FAILED]="'{GROUP}' grubuna ekleme işlemi başarısız oldu."
+  [NO_GROUPS_TO_REMOVE]="Çıkarılabilecek bir grup bulunamadı."
+  [EXCEPTION_GROUP]="'{GROUP}' istisna grubudur, {USER} kullanıcısı bu gruptan çıkarılamaz."
+  [GROUP_REMOVED]="{USER} kullanıcısı '{GROUP}' grubundan çıkarıldı."
+  [REMOVE_FAILED]="'{GROUP}' grubundan çıkarma işlemi başarısız oldu."
 )
 
 declare -A i18n_USER_MENU=(
-  [PROMPT_SEARCH]="Search: "
-  [MSG_NO_ITEMS]="No items found"
-  [USAGE_ERROR]="Usage: {SCRIPT} <json-file> [fuzzel parameters...]"
-  [FILE_NOT_FOUND]="Error: File not found -> {FILE}"
-  [PROMPT_ACTION]="Action: "
+  [PROMPT_SEARCH]="Ara: "
+  [MSG_NO_ITEMS]="Öğe bulunamadı"
+  [USAGE_ERROR]="Kullanım: {SCRIPT} <json-dosya> [fuzzel parametreleri...]"
+  [FILE_NOT_FOUND]="Hata: Dosya bulunamadı -> {FILE}"
+  [PROMPT_ACTION]="Eylem: "
 )
 
 declare -A i18n_CONNECTION_CHECK=(
-  [MSG_ONLINE]="Online"
-  [MSG_OFFLINE]="Offline"
-  [MSG_CHECKING]="Checking connection..."
-  [TOOLTIP_NO_WIFI_NO_INTERNET]="Wi-Fi device not found\nInternet connection status: {CONNECTIVITY}\nClick: Open Network Manager"
+  [MSG_ONLINE]="Çevrimiçi"
+  [MSG_OFFLINE]="Çevrimdışı"
+  [MSG_CHECKING]="Bağlantı kontrol ediliyor..."
+  [TOOLTIP_NO_WIFI_NO_INTERNET]="Wi-Fi aygıtı bulunamadı\nİnternet bağlantısı durumu: {CONNECTIVITY}\nTıkla: Ağ Yöneticisini aç"
 )
 
 declare -A i18n_SYSLOG_NOTIFY=(
-  [TITLE_MULTIPLE]="Log entries ({COUNT} entries)"
-  [TITLE_SINGLE]="New log entry"
-  [BUTTON_OPEN_LOG]="Open Log File"
+  [TITLE_MULTIPLE]="Log kayıtları ({COUNT} kayıt)"
+  [TITLE_SINGLE]="Yeni log kaydı"
+  [BUTTON_OPEN_LOG]="Log Dosyasını Aç"
   [NOTIFY_APP]="syslog"
 )
 
 declare -A i18n_SYSLOG_BOOT_REPORT=(
-  [TITLE_MULTIPLE]="Errors Since Boot ({COUNT} entries)"
-  [TITLE_SINGLE]="Error Since Boot"
-  [BUTTON_OPEN_LOG]="Open Log File"
+  [TITLE_MULTIPLE]="Açılıştan Bu Yana Hatalar ({COUNT} kayıt)"
+  [TITLE_SINGLE]="Açılıştan Bu Yana Hata"
+  [BUTTON_OPEN_LOG]="Log Dosyasını Aç"
   [NOTIFY_APP]="syslog"
 )
 
 declare -A i18n_NET_MONITOR=(
-  [USAGE_ERROR]="Usage: {SCRIPT} --ethernet <pattern1,pattern2,...> --other <pattern1,pattern2,...>"
-  [UNKNOWN_PARAMETER]="Unknown parameter: {PARAM}"
+  [USAGE_ERROR]="Kullanım: {SCRIPT} --ethernet <desen1,desen2,...> --other <desen1,desen2,...>"
+  [UNKNOWN_PARAMETER]="Bilinmeyen parametre: {PARAM}"
   [LABEL_ETHERNET]="Ethernet:"
-  [LABEL_OTHER]="Other:"
+  [LABEL_OTHER]="Diğer:"
 )
 
 declare -A i18n_WIFI_MONITOR=(
-  [DEVICE_DISCONNECTED]=$'Device: {DEVICE}\nStatus: Not connected'
-  [DEVICE_CONNECTED]=$'Device: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSignal: %{SIGNAL}'
+  [DEVICE_DISCONNECTED]=$'Aygıt: {DEVICE}\nDurum: Bağlı değil'
+  [DEVICE_CONNECTED]=$'Aygıt: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSinyal: %{SIGNAL}'
 )
 
 declare -A i18n_CHECK_GROUPS=(
-  [NOTIFY_TITLE]="Group Check"
-  [NOTIFY_MSG]="Missing group membership"
-  [NOTIFY_ACTION]="Add groups"
-  [MISSING_GROUPS]="You are not a member of: {GROUPS}"
+  [NOTIFY_TITLE]="Grup Kontrolü"
+  [NOTIFY_MSG]="Grup üyeliği eksik"
+  [NOTIFY_ACTION]="Grup ekle"
+  [MISSING_GROUPS]="Üye olmadığınız gruplar: {GROUPS}"
 )
 
 declare -A i18n_FIX_GROUPS=(
-  [NOTIFY_TITLE]="Group Check"
-  [TITLE_SUCCESS]="Groups added"
-  [MSG_SUCCESS]="Log out and log back in for this to take effect."
-  [TITLE_FAILED]="Operation cancelled or failed"
+  [NOTIFY_TITLE]="Grup Kontrolü"
+  [TITLE_SUCCESS]="Gruplar eklendi"
+  [MSG_SUCCESS]="Değişikliklerin etkili olması için çıkış yapıp tekrar giriş yapın."
+  [TITLE_FAILED]="İşlem iptal edildi veya başarısız oldu"
 )
 
 declare -A i18n_TOGGLE_AUTO_THEME=(
-  [NOTIFY_TITLE]="Auto Theme"
-  [MSG_ON]="Automatic theme changes enabled"
-  [MSG_OFF]="Automatic theme changes disabled"
+  [NOTIFY_TITLE]="Otomatik Tema"
+  [MSG_ON]="Otomatik tema değişiklikleri etkinleştirildi"
+  [MSG_OFF]="Otomatik tema değişiklikleri devre dışı bırakıldı"
 )
 
 declare -A i18n_LOG_MONITOR=(
-  [NOTIFY_TITLE]="Log Monitor"
-  [MSG_ON]="Log error notifications enabled"
-  [MSG_OFF]="Log error notifications disabled"
+  [NOTIFY_TITLE]="Log İzleyici"
+  [MSG_ON]="Hata log bildirimleri etkinleştirildi"
+  [MSG_OFF]="Hata log bildirimleri devre dışı bırakıldı"
 )
 
 declare -A i18n_SYSTEM_INFO=(
-  [LABEL_SYSTEM]="System"
-  [LABEL_KERNEL]="Kernel"
-  [LABEL_CPU]="CPU"
-  [LABEL_GPU]="GPU"
+  [LABEL_SYSTEM]="Sistem"
+  [LABEL_KERNEL]="Çekirdek"
+  [LABEL_CPU]="İşlemci"
+  [LABEL_GPU]="Grafik Kartı"
   [LABEL_RAM]="RAM"
   [LABEL_DISK]="Disk"
 )
 
 declare -A i18n_SETTINGS_MENU=(
-  [PROMPT_ACTION]="Action: "
-  [MSG_NO_ITEMS]="No items found"
+  [PROMPT_ACTION]="Eylem: "
+  [MSG_NO_ITEMS]="Öğe bulunamadı"
 )
 
 declare -A i18n_FONT_SETTINGS=(
-  [PROMPT_SELECT]="Select font: "
-  [NOTIFY_TITLE]="Font Settings"
-  [MSG_FONT_CHANGED]="Font changed to {FONT}"
-  [MSG_FONT_UNCHANGED]="Font {FONT} is already selected"
-  [MSG_FONT_FAILED]="Failed to change font to {FONT}"
+  [PROMPT_SELECT]="Yazı tipi seç: "
+  [NOTIFY_TITLE]="Yazı Tipi Ayarları"
+  [MSG_FONT_CHANGED]="Yazı tipi {FONT} olarak değiştirildi"
+  [MSG_FONT_UNCHANGED]="Yazı tipi {FONT} zaten seçili"
+  [MSG_FONT_FAILED]="Yazı tipi {FONT} olarak değiştirilemedi"
 )
 
 declare -A i18n_CHANGE_FONT_SIZE=(
-  [USAGE_ERROR]="Usage: {SCRIPT} <size>"
-  [ERROR_INVALID_SIZE]="Error: Font size must be between {MIN} and {MAX}"
-  [ERROR_SETTINGS_NOT_FOUND]="Error: Settings file not found: {FILE}"
-  [MSG_SUCCESS]="Success"
+  [USAGE_ERROR]="Kullanım: {SCRIPT} <boyut>"
+  [ERROR_INVALID_SIZE]="Hata: Font büyüklüğü {MIN} ile {MAX} arasında olmalı"
+  [ERROR_SETTINGS_NOT_FOUND]="Hata: Ayarlar dosyası bulunamadı: {FILE}"
+  [MSG_SUCCESS]="Başarılı"
 )
 
 declare -A i18n_LANGUAGE_SETTINGS=(
-  [PROMPT_SELECT]="Select: "
-  [NOTIFY_TITLE]="Language"
-  [MSG_CHANGED]="Changed to: {LANG}"
-  [MSG_FAILED]="Failed to change language to: {LANG}"
+  [PROMPT_SELECT]="Seç: "
+  [NOTIFY_TITLE]="Dil"
+  [MSG_CHANGED]="Değiştirildi: {LANG}"
+  [MSG_FAILED]="Dil değiştirilemedi: {LANG}"
 )
 
 declare -A i18n_KEYBOARD_SETTINGS=(
-  [PROMPT_SELECT]="Select keyboard layout: "
-  [NOTIFY_TITLE]="Keyboard Layout"
-  [MSG_CHANGED]="Layout: {LAYOUT}"
-  [MSG_VARIANT]="Variant: {VARIANT}"
-  [MSG_FAILED]="Failed to change keyboard layout"
-  [MSG_UNCHANGED]="Keyboard layout is already set"
-  [ERROR_DATA_NOT_FOUND]="Keyboard data files not found. Please run generate-keyboard-data.sh"
-  [ERROR_SELECTION_NOT_FOUND]="Selection not found in keyboard database"
-  [ERROR_CONFIG_NOT_FOUND]="Keyboard config file not found"
+  [PROMPT_SELECT]="Klavye düzeni seç: "
+  [NOTIFY_TITLE]="Klavye Düzeni"
+  [MSG_CHANGED]="Düzen: {LAYOUT}"
+  [MSG_VARIANT]="Varyant: {VARIANT}"
+  [MSG_FAILED]="Klavye düzeni değiştirilemedi"
+  [MSG_UNCHANGED]="Klavye düzeni zaten ayarlanmış"
+  [ERROR_DATA_NOT_FOUND]="Klavye veri dosyaları bulunamadı. Lütfen generate-keyboard-data.sh betiğini çalıştırın"
+  [ERROR_SELECTION_NOT_FOUND]="Seçim klavye veritabanında bulunamadı"
+  [ERROR_CONFIG_NOT_FOUND]="Klavye yapılandırma dosyası bulunamadı"
 )
 
 declare -A I18N_REMOVABLE_STORAGE_MONITOR=(
-  [NEW_STORAGE]="New storage device"
-  [ACTION_OPEN]="Open"
-  [ACTION_MOUNT]="Mount"
-  [ACTION_DEFAULT]="Open"
-  [TOOLTIP_EMPTY]="No removable storage devices"
-  [TOOLTIP_PRESENT]="Removable storage devices"
-  [TOOLTIP_RIGHT_CLICK_INFO]="Right click: Eject device"
+  [NEW_STORAGE]="Yeni depolama birimi"
+  [ACTION_OPEN]="Aç"
+  [ACTION_MOUNT]="Bağla"
+  [ACTION_DEFAULT]="Aç"
+  [TOOLTIP_EMPTY]="Çıkarılabilir depolama aygıtı yok"
+  [TOOLTIP_PRESENT]="Çıkarılabilir depolama aygıtları"
+  [TOOLTIP_RIGHT_CLICK_INFO]="Sağ tık: Aygıtı çıkar"
 )
 
 declare -A I18N_REMOVABLE_MENU=(
-  [MENU_TITLE]="Storage"
-  [NO_PARTITIONS]="No removable partitions"
-  [MOUNT_FAILED]="Mount failed"
+  [MENU_TITLE]="Depolava"
+  [NO_PARTITIONS]="Çıkarılabilir bölüm yok"
+  [MOUNT_FAILED]="Bağlama başarısız"
   [MOUNT_FAILED_MSG]="{DEVICE}"
 )
 
 declare -A I18N_REMOVABLE_EJECT_MENU=(
-  [NO_DEVICES]="No connected removable devices"
-  [EJECT_TITLE]="Eject"
-  [EJECT_SUCCESS]="{DEVICE} can be safely removed"
-  [EJECT_PARTIAL]="{DEVICE} unmounted (power-off may not be supported, safe to remove)"
-  [EJECT_FAILED]="Eject failed"
-  [EJECT_FAILED_MSG]="Could not unmount (may be busy): {DEVICES}"
+  [NO_DEVICES]="Bağlı çıkarılabilir aygıt yok"
+  [EJECT_TITLE]="Çıkar"
+  [EJECT_SUCCESS]="{DEVICE} güvenle çıkarılabilir"
+  [EJECT_PARTIAL]="{DEVICE} ayrıldı (power-off desteklenmiyor olabilir, çıkarmak güvenli)"
+  [EJECT_FAILED]="Çıkarma başarısız"
+  [EJECT_FAILED_MSG]="Ayrılamayan (meşgul olabilir): {DEVICES}"
 )
