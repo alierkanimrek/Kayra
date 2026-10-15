@@ -10,5 +10,8 @@ chmod +x $HOME/.local/bin/*
 # Dil yapılandırmasını başlat
 [ -x "$HOME/.local/bin/set-language.sh" ] && $HOME/.local/bin/set-language.sh -q $(locale | grep LANG= | cut -d= -f2 | cut -d_ -f1)
 
+# İlk giriş betiğini çalıştır
+[ -x "$HOME/.local/bin/first-login.sh" ] && "$HOME/.local/bin/first-login.sh"
+
 # Sway'i dbus ile başlatıp logları yazdıralım (Sway -d parametresini artık sorunsuz alır)
 exec dbus-run-session sway > "$HOME/.local/var/log/sway.log" 2>&1
