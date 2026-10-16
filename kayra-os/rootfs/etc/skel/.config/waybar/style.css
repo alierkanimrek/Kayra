@@ -55,7 +55,9 @@ tooltip label {
 #custom-app-menu,
 #custom-user-info,
 #custom-system-info,
-#custom-removable-monitor{
+#custom-removable-monitor,
+#wireplumber,
+#wireplumber.mic{
     color: @color-fg;
     background-color: transparent;
     border: none;
@@ -82,7 +84,9 @@ battery:hover,
 #custom-app-menu:hover,
 #custom-user-info:hover,
 #custom-system-info:hover,
-#custom-removable-monitor:hover{
+#custom-removable-monitor:hover,
+#wireplumber.muted,
+#wireplumber-mic.muted{
     color: @color-fg-hover;
 }
 

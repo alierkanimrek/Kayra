@@ -14,6 +14,8 @@
     ],
     "modules-right": [
         "tray",
+        "wireplumber",
+        "wireplumber#mic",
 	"custom/clipboard",
 	"custom/removable-monitor",
 	"custom/network",
@@ -194,6 +196,30 @@
 	"tooltip": true,
 	"tooltip-format": "Kapasite: {capacity}% ({time})",
 	"tooltip-format-charging": "Şarj Oluyor: {capacity}% (Dolmaya kalan: {time})"
+},
+
+"wireplumber": {
+    "format": "{icon}",
+    "format-muted": "\ue04f",
+    "format-icons": ["\ue04d", "\ue04d", "\ue050"],
+    "max-volume": 100,
+    "scroll-step": 5,
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click-right": "pwvucontrol -t 1",
+    "tooltip-format": "%{volume} - {node_name}"
+},
+
+
+"wireplumber#mic": {
+    "node-type": "Audio/Source",
+    "format": "{icon}",
+    "format-muted": "\ue02b",
+    "format-icons": ["\ue029", "\ue029", "\ue029"],
+    "max-volume": 100,
+    "scroll-step": 5,
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+    "on-click-right": "pwvucontrol -t 2",
+    "tooltip-format": "%{volume} - {node_name}"
 },
 
 "custom/spacer": {

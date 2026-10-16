@@ -17,6 +17,7 @@ git
 python
 python3-pipx
 grim
+pwvucontrol
 
 # Sanal İstemci
 spice-vdagent
