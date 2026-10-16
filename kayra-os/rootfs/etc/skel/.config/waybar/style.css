@@ -85,8 +85,8 @@ battery:hover,
 #custom-user-info:hover,
 #custom-system-info:hover,
 #custom-removable-monitor:hover,
-#wireplumber.muted,
-#wireplumber-mic.muted{
+#wireplumber:hover,
+#wireplumber-mic:hover{
     color: @color-fg-hover;
 }
 
@@ -147,7 +147,9 @@ battery:hover,
 
 /* Okunmamış bildirim: uyarı rengiyle vurgulanır */
 #custom-notification.notification,
-#custom-notification.dnd-notification {
+#custom-notification.dnd-notification,
+#wireplumber.muted,
+#wireplumber.mic-muted {
     color: @color-warning;
 }
 
