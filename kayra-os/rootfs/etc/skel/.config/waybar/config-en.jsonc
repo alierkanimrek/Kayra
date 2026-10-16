@@ -23,6 +23,7 @@
 	"custom/connection-warning",
 	"custom/notification",
 	"battery",
+	"clock",
 	"custom/spacer",
         "group/power-drawer"
     ],
@@ -220,6 +221,17 @@
     "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
     "on-click-right": "pwvucontrol -t 2",
     "tooltip-format": "%{volume} - {node_name}"
+},
+
+"clock": {
+    "format": "{:%H:%M}",
+    "format-alt": "{:%d.%m.%Y}",
+    "tooltip-format": "{:%d %B %Y, %A}",
+    "on-click": "",
+    "actions": {
+        "on-click": "",
+        "on-click-right": "toggle"
+    }
 },
 
 "custom/spacer": {
