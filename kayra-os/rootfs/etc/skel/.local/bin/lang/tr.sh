@@ -33,6 +33,7 @@ declare -A appearance_menu=(
   ["Yazı Tipi Büyüklüğü"]="font-size-settings.sh"
   ["Temayı değiştir"]="/usr/bin/nwg-look"
   ["Otomatik Tema"]="toggle-auto-theme.sh"
+  ["Duvar Kağıdı"]="change-wallpaper.sh"
 )
 
 declare -A i18n_HOME_USAGE=(

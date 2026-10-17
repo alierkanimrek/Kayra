@@ -28,7 +28,7 @@ set $filemanager thunar
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg $HOME/.local/share/backgrounds/kayra_desktop.png fill
+include ~/.config/sway/background.conf
 #
 # Example configuration:
 #
