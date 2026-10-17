@@ -4,3 +4,5 @@ export LC_ALL=en_US.UTF-8
 
 export QT_SCALE_FACTOR=1.25
 export PATH="~/.local/bin:$PATH"
+
+export GRIM_DEFAULT_DIR="$HOME/Pictures/screenshots"

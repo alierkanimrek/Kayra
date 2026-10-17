@@ -223,8 +223,8 @@ bindsym $mod+r mode "resize"
     bindsym --locked XF86AudioStop exec playerctl stop
 
     # Special keys to adjust brightness via brightnessctl
-    bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
-    bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+    bindsym --locked XF86MonBrightnessDown exec "brightnessctl set 5%- ; gjs -m .local/bin/show-backlight-testing-image.gjs"
+    bindsym --locked XF86MonBrightnessUp exec "brightnessctl set 5%+ ; gjs -m .local/bin/show-backlight-testing-image.gjs"
 
     # Special key to take a screenshot with grim
     bindsym Print exec grim

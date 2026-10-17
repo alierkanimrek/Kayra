@@ -2,7 +2,7 @@
 mkdir -p ~/Workspace/{code/docker-stacks,writing,music,design,content,research}
 mkdir -p ~/Resources/{fonts,templates,presets,virt/{isos,disks},images,vectors,audio,video,documents,3d,daw}
 mkdir -p ~/Exports/{software,documents,audio,graphics,videos}
-mkdir -p ~/{Documents,Music,Pictures,Videos,Public}
+mkdir -p ~/{Documents,Music,Pictures/{screehshots},Videos,Public}
 
 # 2. Eski Downloads içeriğini Resources'a taşı ve sembolik bağ kur
 if [ -d ~/Downloads ] && [ ! -L ~/Downloads ]; then

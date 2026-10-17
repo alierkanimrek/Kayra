@@ -10,7 +10,7 @@ const IMAGE = GLib.build_filenamev([
 ]);
 
 const APP_ID = 'local.imgshow';
-const SHOW_MS = 2000;
+const SHOW_MS = 3000;
 
 const app = new Gtk.Application({ application_id: APP_ID });
 let win = null;
