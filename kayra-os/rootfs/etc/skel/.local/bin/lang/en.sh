@@ -132,6 +132,10 @@ declare -A i18n_WIFI_MONITOR=(
   [DEVICE_CONNECTED]=$'Device: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSignal: %{SIGNAL}'
 )
 
+declare -A i18n_MEMORY_MONITOR=(
+  [MEMORY_AVAILABLE]=$'Available memory: %{RATIO}'
+)
+
 declare -A i18n_CHECK_GROUPS=(
   [NOTIFY_TITLE]="Group Check"
   [NOTIFY_MSG]="Missing group membership"

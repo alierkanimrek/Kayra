@@ -13,6 +13,7 @@
         "sway/window"
     ],
     "modules-right": [
+        "custom/memory-monitor",
 	"custom/removable-monitor",
 	"custom/connection-warning",
 	"custom/notification",
@@ -232,6 +233,15 @@
         "on-click": "",
         "on-click-right": "toggle"
     }
+},
+
+"custom/memory-monitor": {
+    "exec": "$HOME/.local/bin/memory-monitor.sh",
+    "return-type": "json",
+    "hide-empty-text": true,
+    "tooltip": true,
+    "restart-interval": 0,
+    "on-click": "gnome-system-monitor -r",
 },
 
 "custom/spacer": {

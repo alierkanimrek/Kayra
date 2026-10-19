@@ -132,6 +132,10 @@ declare -A i18n_WIFI_MONITOR=(
   [DEVICE_CONNECTED]=$'Aygıt: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSinyal: %{SIGNAL}'
 )
 
+declare -A i18n_MEMORY_MONITOR=(
+  [MEMORY_AVAILABLE]=$'Kullanılabilir bellek: %{RATIO}'
+)
+
 declare -A i18n_CHECK_GROUPS=(
   [NOTIFY_TITLE]="Grup Kontrolü"
   [NOTIFY_MSG]="Grup üyeliği eksik"

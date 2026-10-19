@@ -151,7 +151,8 @@ battery:hover,
 #custom-notification.notification,
 #custom-notification.dnd-notification,
 #wireplumber.muted,
-#wireplumber.mic-muted {
+#wireplumber.mic-muted,
+#custom-memory-monitor{
     color: @color-warning;
 }
 
