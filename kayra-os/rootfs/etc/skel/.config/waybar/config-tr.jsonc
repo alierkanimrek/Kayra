@@ -13,15 +13,15 @@
         "sway/window"
     ],
     "modules-right": [
+	"custom/removable-monitor",
+	"custom/connection-warning",
+	"custom/notification",
         "tray",
         "wireplumber",
         "wireplumber#mic",
 	"custom/clipboard",
-	"custom/removable-monitor",
 	"custom/network",
 	"custom/wifi",
-	"custom/connection-warning",
-	"custom/notification",
 	"battery",
         "clock",
 	"custom/spacer",
@@ -235,7 +235,8 @@
 },
 
 "custom/spacer": {
-	"format": " "
+	"format": " ",
+	 "tooltip": false
 }
 
 }
