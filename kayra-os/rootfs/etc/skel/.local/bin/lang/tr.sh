@@ -235,3 +235,21 @@ declare -A I18N_REMOVABLE_EJECT_MENU=(
   [EJECT_FAILED]="Çıkarma başarısız"
   [EJECT_FAILED_MSG]="Ayrılamayan (meşgul olabilir): {DEVICES}"
 )
+
+
+
+declare -A i18n_WAYBAR_CONFIG=(
+  [LOCK_TOOLTIP]="Kilitle"
+  [LOGOUT_TOOLTIP]="Oturumu Kapat"
+  [REBOOT_TOOLTIP]="Yeniden Başlat"
+  [SHUTDOWN_TOOLTIP]="Kapat"
+  [APP_MENU_TOOLTIP]="Uygulama Menüsü"
+  [CLIPBOARD_TOOLTIP]="Sol tık: Pano Geçmişi\nSağ tık: Geçmişi Temizle"
+  [BATTERY_TOOLTIP]="Kapasite: {capacity}% ({time})"
+  [BATTERY_TOOLTIP_CHARGING]="Şarj Oluyor: {capacity}% (Dolmaya kalan: {time})"
+  [BATTERY_EVENT_WARNING]="Düşük Pil"
+  [BATTERY_EVENT_CRITICAL]="Çok Düşük Pil"
+  [BATTERY_EVENT_FULL]="Pil Dolu!"
+  [BATTERY_EVENT_DISCHARGING]="Güç Anahtarı Boşalıyor"
+  [BATTERY_EVENT_CHARGING]="Güç Anahtarı Şarj Oluyor"
+)

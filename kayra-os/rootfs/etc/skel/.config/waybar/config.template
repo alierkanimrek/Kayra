@@ -1,0 +1,249 @@
+// -*- mode: jsonc -*-
+{
+    "height": 30,
+    "spacing": 4,
+    "modules-left": [
+        "custom/app-menu",
+        "sway/workspaces",
+        "sway/mode",
+        "sway/scratchpad",
+        "custom/media"
+    ],
+    "modules-center": [
+        "sway/window"
+    ],
+    "modules-right": [
+        "custom/memory-monitor",
+        "custom/removable-monitor",
+        "custom/connection-warning",
+        "custom/notification",
+        "tray",
+        "wireplumber",
+        "wireplumber#mic",
+        "custom/clipboard",
+        "custom/network",
+        "custom/wifi",
+        "battery",
+        "clock",
+        "custom/spacer",
+        "group/power-drawer"
+    ],
+    "tray": {
+        "spacing": 10
+    },
+
+    "group/power-drawer": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 0,
+            "transition-left-to-right": false
+        },
+        "modules": [
+            "custom/power-trigger",
+            "custom/user-info",
+            "custom/system-info",
+            "custom/lock",
+            "custom/logout",
+            "custom/reboot",
+            "custom/shutdown"
+        ]
+    },
+    "custom/power-trigger": {
+        "format": "",
+        "tooltip": false
+    },
+
+    "custom/lock": {
+        "format": "", // lock
+        "tooltip": true,
+        "tooltip-format": "{{LOCK_TOOLTIP}}",
+        "on-click": "loginctl lock-session"
+    },
+
+    "custom/logout": {
+        "format": "", // logout
+        "tooltip": true,
+        "tooltip-format": "{{LOGOUT_TOOLTIP}}",
+        "on-click": "loginctl terminate-user $USER"
+    },
+
+    "custom/reboot": {
+        "format": "", // reload / reboot
+        "tooltip": true,
+        "tooltip-format": "{{REBOOT_TOOLTIP}}",
+        "on-click": "loginctl reboot"
+    },
+
+    "custom/shutdown": {
+        "format": "", // power
+        "tooltip": true,
+        "tooltip-format": "{{SHUTDOWN_TOOLTIP}}",
+        "on-click": "loginctl poweroff"
+    },
+
+    "custom/notification": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "",
+            "none": "",
+            "dnd-notification": "",
+            "dnd-none": "",
+            "inhibited-notification": "",
+            "inhibited-none": ""
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
+
+    "custom/connection-warning": {
+        "exec": "$HOME/.local/bin/connection-check.sh",
+        "return-type": "json",
+        "restart-interval": 30,
+        "tooltip": true,
+        "escape": true,
+        "on-click": "nm-connection-editor"
+    },
+
+    "custom/network": {
+        "exec": "$HOME/.local/bin/net-monitor.sh --ethernet \"en*\" --other \"docker*,veth*,br-*,virbr*\"",
+        "return-type": "json",
+        "restart-interval": 30,
+        "tooltip": true,
+        "on-click": "nm-connection-editor"
+    },
+
+    "custom/wifi": {
+        "exec": "$HOME/.local/bin/wifi-monitor.sh",
+        "exec-if": "nmcli -t -f TYPE device status | grep -q '^wifi$'",
+        "return-type": "json",
+        "restart-interval": 0,
+        "tooltip": true,
+        "escape": true,
+        "on-click": "$HOME/.local/bin/wifi-menu.sh",
+        "on-click-right": "nm-connection-editor"
+    },
+    "custom/removable-monitor": {
+        "exec": "$HOME/.local/bin/removable-storage-monitor.sh",
+        "return-type": "json",
+        "restart-interval": 0,
+        "tooltip": true,
+        "escape": true,
+        "on-click": "$HOME/.local/bin/removable-menu.sh",
+        "on-click-right": "$HOME/.local/bin/removable-eject-menu.sh"
+    },
+
+    "custom/clipboard": {
+        "format": "",
+        "on-click": "pkill fuzzel; cliphist list | fuzzel --dmenu --anchor=top-right --log-no-syslog | cliphist decode | wl-copy",
+        "on-click-right": "cliphist wipe",
+        "tooltip": true,
+        "tooltip-format": "{{CLIPBOARD_TOOLTIP}}"
+    },
+
+    "custom/app-menu": {
+        "format": "",
+        "tooltip": true,
+        "tooltip-format": "{{APP_MENU_TOOLTIP}}",
+        "on-click": "pkill fuzzel; fuzzel --anchor=top-left --log-no-syslog"
+    },
+
+    "custom/user-info": {
+        "format": "{}",
+        "exec": "$HOME/.local/bin/user-info.sh",
+        "return-type": "json",
+        "interval": 30,
+        "tooltip": true,
+        "on-click": "$HOME/.local/bin/user-menu.sh",
+        "escape": false
+    },
+
+    "custom/system-info": {
+        "format": "{}",
+        "exec": "$HOME/.local/bin/system-info.sh",
+        "return-type": "json",
+        "interval": 30,
+        "tooltip": true,
+        "on-click": "$HOME/.local/bin/settings-menu.sh",
+        "escape": false
+    },
+    "battery": {
+        "bat": "BAT1",
+        "interval": 60,
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "events": {
+            "on-discharging-warning": "notify-send -u normal '{{BATTERY_EVENT_WARNING}}'",
+            "on-discharging-critical": "notify-send -u critical '{{BATTERY_EVENT_CRITICAL}}'",
+            "on-charging-100": "notify-send -u normal '{{BATTERY_EVENT_FULL}}'",
+            "on-discharging": "notify-send -u normal '{{BATTERY_EVENT_DISCHARGING}}'",
+            "on-charging": "notify-send -u normal '{{BATTERY_EVENT_CHARGING}}'"
+        },
+        "format": "{icon}",
+        "format-charging": "{icon}",
+        "format-icons": {
+            "default": ["", "", "", "", "", "", ""],
+            "charging": ["","󿼾", "󿼽", "󿼻", "󿼺", ""]
+        },
+        "max-length": 25,
+        "tooltip": true,
+        "tooltip-format": "{{BATTERY_TOOLTIP}}",
+        "tooltip-format-charging": "{{BATTERY_TOOLTIP_CHARGING}}"
+    },
+
+    "wireplumber": {
+        "format": "{icon}",
+        "format-muted": "\ue04f",
+        "format-icons": ["\ue04d", "\ue04d", "\ue050"],
+        "max-volume": 100,
+        "scroll-step": 5,
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-click-right": "pwvucontrol -t 1",
+        "tooltip-format": "%{volume} - {node_name}"
+    },
+
+
+    "wireplumber#mic": {
+        "node-type": "Audio/Source",
+        "format": "{icon}",
+        "format-muted": "\ue02b",
+        "format-icons": ["\ue029", "\ue029", "\ue029"],
+        "max-volume": 100,
+        "scroll-step": 5,
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+        "on-click-right": "pwvucontrol -t 2",
+        "tooltip-format": "%{volume} - {node_name}"
+    },
+
+    "clock": {
+        "format": "{:%H:%M}",
+        "format-alt": "{:%d.%m.%Y}",
+        "tooltip-format": "{:%d %B %Y, %A}",
+        "on-click": "",
+        "actions": {
+            "on-click": "",
+            "on-click-right": "toggle"
+        }
+    },
+
+    "custom/memory-monitor": {
+        "exec": "$HOME/.local/bin/memory-monitor.sh",
+        "return-type": "json",
+        "hide-empty-text": true,
+        "tooltip": true,
+        "restart-interval": 0,
+        "on-click": "gnome-system-monitor -r",
+    },
+
+    "custom/spacer": {
+        "format": " ",
+        "tooltip": false
+    }
+
+}

@@ -235,3 +235,21 @@ declare -A I18N_REMOVABLE_EJECT_MENU=(
   [EJECT_FAILED]="Eject failed"
   [EJECT_FAILED_MSG]="Could not unmount (may be busy): {DEVICES}"
 )
+
+
+
+declare -A i18n_WAYBAR_CONFIG=(
+  [LOCK_TOOLTIP]="Lock"
+  [LOGOUT_TOOLTIP]="Logout"
+  [REBOOT_TOOLTIP]="Reboot"
+  [SHUTDOWN_TOOLTIP]="Shutdown"
+  [APP_MENU_TOOLTIP]="App Menu"
+  [CLIPBOARD_TOOLTIP]="Left click: Clipboard History\nRight click: Clear History"
+  [BATTERY_TOOLTIP]="Capacity: {capacity}% ({time})"
+  [BATTERY_TOOLTIP_CHARGING]="Charging: {capacity}% (Time remaining: {time})"
+  [BATTERY_EVENT_WARNING]="Low Battery"
+  [BATTERY_EVENT_CRITICAL]="Very Low Battery"
+  [BATTERY_EVENT_FULL]="Battery Full!"
+  [BATTERY_EVENT_DISCHARGING]="Power Switch Discharging"
+  [BATTERY_EVENT_CHARGING]="Power Switch Charging"
+)

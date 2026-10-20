@@ -96,13 +96,8 @@ fi
 ln -sf "$LANG_CODE.sh" "$LANG_DIR/current.sh"
 log "INFO" "Language set to: $LANG_CODE"
 
-# Update waybar config if it exists
-if [ -d "$CONFIG_DIR" ]; then
-    if [ -f "$CONFIG_DIR/config-$LANG_CODE.jsonc" ]; then
-        ln -sf "config-$LANG_CODE.jsonc" "$CONFIG_DIR/config.jsonc"
-        log "INFO" "Waybar config updated for language: $LANG_CODE"
-    fi
-fi
+# Update waybar config using template generator
+bash "$HOME/.local/bin/waybar-config-builder.sh"
 
 # Update ~/.profile with LANG and LC_ALL
 PROFILE_FILE="$HOME/.profile"
