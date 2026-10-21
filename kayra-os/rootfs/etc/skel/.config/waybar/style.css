@@ -26,7 +26,7 @@ window#waybar {
 tooltip {
     background-color: @color-surface;
     border: 1px solid @color-fg;
-    border-radius: 6px;
+    border-radius: 0px 0px 6px 6px;
 }
 
 tooltip label {
@@ -62,8 +62,8 @@ tooltip label {
     color: @color-fg;
     background-color: transparent;
     border: none;
-	padding: 0 3px;
-	margin: 0 1px;
+	padding: 0 0px;
+	margin: 0 3px;
 }
 
 /* Ortak Hover: fare üzerine gelince beyaz parlama */
