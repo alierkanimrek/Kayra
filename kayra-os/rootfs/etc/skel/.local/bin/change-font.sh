@@ -10,10 +10,13 @@
 
 set -euo pipefail
 export LC_ALL=C
+export KLOG_SCRIPT="$(basename "$0")"
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Configuration files to modify (add your own file paths here)
 FILES=(
-    "$HOME/.config/waybar/style.css"
+    "$HOME/.config/waybar/theme.css"
     "$HOME/.config/alacritty/alacritty.toml"
     "$HOME/.config/fuzzel/fuzzel.ini"
     "$HOME/.config/swaync/style.css"
@@ -31,25 +34,25 @@ NEW_TEXT="$1"
 
 # Check that settings.conf exists
 if [[ ! -f "$SETTINGS_FILE" ]]; then
-    echo "Error: $SETTINGS_FILE not found." >&2
+    $BIN_DIR/klog.sh "ERROR" "$SETTINGS_FILE not found." 
     exit 1
 fi
 
 # Source settings file and get current font value
 source "$SETTINGS_FILE" || {
-    echo "Error: $SETTINGS_FILE not found." >&2
+    $BIN_DIR/klog.sh "ERROR" "$SETTINGS_FILE not found." 
     exit 1
 }
 
 OLD_TEXT="$font"
 
 if [[ -z "$OLD_TEXT" ]]; then
-    echo "Error: no text to replace found in $SETTINGS_FILE." >&2
+    $BIN_DIR/klog.sh "ERROR" "Error: no text to replace found in $SETTINGS_FILE."
     exit 1
 fi
 
 if [[ "$OLD_TEXT" == "$NEW_TEXT" ]]; then
-    echo "Old text and new text are identical, nothing to do."
+    $BIN_DIR/klog.sh "INFO" "Old font and new font are identical, nothing to do."
     exit 0
 fi
 
@@ -60,12 +63,12 @@ FAILED=0
 
 for file in "${FILES[@]}"; do
     if [[ ! -f "$file" ]]; then
-        echo "Warning: '$file' not found, skipping." >&2
+        $BIN_DIR/klog.sh "WARN" " '$file' not found, skipping."
         continue
     fi
 
     if ! grep -qF -- "$OLD_TEXT" "$file"; then
-        echo "Warning: text '$OLD_TEXT' not found in '$file', skipping."
+        $BIN_DIR/klog.sh "INFO" "Font '$OLD_TEXT' not found in '$file', skipping."
         continue
     fi
 
@@ -74,9 +77,9 @@ for file in "${FILES[@]}"; do
     NEW_ESC=$(printf '%s' "$NEW_TEXT" | sed -e 's/[\/&]/\\&/g')
 
     if sed -i "s/${OLD_ESC}/${NEW_ESC}/g" "$file"; then
-        echo "Updated: $file"
+        $BIN_DIR/klog.sh "DEBUG" "Updated: $file"
     else
-        echo "Error: failed to update '$file'." >&2
+        $BIN_DIR/klog.sh "ERROR" "Failed to update '$file'."
         FAILED=1
     fi
 done
@@ -85,8 +88,8 @@ if [[ "$FAILED" -eq 0 ]]; then
     # Escape special characters for safe sed replacement
     NEW_ESC=$(printf '%s' "$NEW_TEXT" | sed -e 's/[\/&]/\\&/g')
     sed -i "s/^font=.*/font=\"${NEW_ESC}\"/" "$SETTINGS_FILE"
-    echo "Success: new text saved to $SETTINGS_FILE."
+    $BIN_DIR/klog.sh "INFO" "$NEW_TEXT font succesfuly applied."
 else
-    echo "Some files failed to update, $SETTINGS_FILE was not changed." >&2
+    $BIN_DIR/klog.sh "ERROR" "Some files failed to update, $SETTINGS_FILE was not changed."
     exit 1
 fi

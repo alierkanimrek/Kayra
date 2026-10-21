@@ -6,12 +6,15 @@
 
 set -euo pipefail
 export LC_ALL=C
+export KLOG_SCRIPT="$(basename "$0")"
+
+BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_CHANGE_FONT_SIZE
 
 if [[ $# -ne 1 ]]; then
-    echo "$(i18n_template "${MSG[USAGE_ERROR]}" SCRIPT="$(basename "$0")")" >&2
+    echo "Usage: change-font-size.sh <size 8...48>" >&2
     exit 1
 fi
 
@@ -19,7 +22,7 @@ SIZE="$1"
 
 # Validate size is a number between 8 and 48
 if ! [[ "$SIZE" =~ ^[0-9]+$ ]] || (( SIZE < 8 || SIZE > 48 )); then
-    echo "$(i18n_template "${MSG[ERROR_INVALID_SIZE]}" MIN="8" MAX="48")" >&2
+    echo "# Usage: change-font-size.sh <size>)" >&2
     exit 1
 fi
 
@@ -36,21 +39,23 @@ if [[ -f "$SETTINGS_FILE" ]]; then
     else
         echo "font_size=$SIZE" >> "$SETTINGS_FILE"
     fi
-    echo "${MSG[MSG_SUCCESS]}"
+    $BIN_DIR/klog.sh "DEBUG" "Font size changed to $SIZE in kayra $SETTINGS_FILE"
 else
-    echo "$(i18n_template "${MSG[ERROR_SETTINGS_NOT_FOUND]}" FILE="$SETTINGS_FILE")" >&2
+    $BIN_DIR/klog.sh "ERROR" "SETTINGS_FILE not fonud."
     exit 1
 fi
 
 # Update Waybar theme.css
 if [[ -f "$WAYBAR_THEME" ]]; then
     sed -i "s/font-size: [0-9]*px;/font-size: ${SIZE}px;/" "$WAYBAR_THEME"
+    $BIN_DIR/klog.sh "DEBUG" "Font size changed to $SIZE in waybar $WAYBAR_THEME"
 fi
 
 # Update Fuzzel config (remove old size and add new one)
 if [[ -f "$FUZZEL_CONFIG" ]]; then
     if grep -q "^font=" "$FUZZEL_CONFIG"; then
         sed -i "s/^font=\(.*\):pixelsize=[0-9]*/font=\1:pixelsize=$SIZE/" "$FUZZEL_CONFIG"
+        $BIN_DIR/klog.sh "DEBUG" "Font size changed to $SIZE in $FUZZEL_CONFIG"
     fi
 fi
 
@@ -65,13 +70,17 @@ if [[ -f "$SWAYNC_THEME" ]]; then
             sed -i "/^\* {/,/^}/{/font-family:/a\    font-size: ${SIZE}px;
 }" "$SWAYNC_THEME"
         fi
+        $BIN_DIR/klog.sh "DEBUG" "Font size changed to $SIZE in swaync $SWAYNC_THEME"
     fi
 fi
 
 # Update Alacritty config (TOML format: size = 12.0)
 #if [[ -f "$ALACRITTY_CONFIG" ]]; then
 #    sed -i "s/^size = [0-9.]*$/size = ${SIZE}.0/" "$ALACRITTY_CONFIG"
+#    $BIN_DIR/klog.sh "DEBUG" "Font size changed to $SIZE in $ALACRITTY_CONFIG"
 #fi
+
+$BIN_DIR/klog.sh "INFO" "Font size changed to $SIZE"
 
 # Reload Waybar
 pkill -SIGUSR2 waybar 2>/dev/null || true

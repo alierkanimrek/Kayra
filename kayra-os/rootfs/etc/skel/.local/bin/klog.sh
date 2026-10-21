@@ -20,4 +20,6 @@ mkdir -p "$(dirname "$LOG")" 2>/dev/null
 printf '%s [%s] [%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" \
     "${KLOG_SCRIPT:-$(basename "$0")}" "$MSG" "$*" >> "$LOG" 2>/dev/null
 
+echo $*
+
 exit 0
