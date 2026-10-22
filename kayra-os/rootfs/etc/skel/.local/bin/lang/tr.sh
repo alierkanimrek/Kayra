@@ -253,3 +253,9 @@ declare -A i18n_WAYBAR_CONFIG=(
   [BATTERY_EVENT_DISCHARGING]="Güç Anahtarı Boşalıyor"
   [BATTERY_EVENT_CHARGING]="Güç Anahtarı Şarj Oluyor"
 )
+
+declare -A i18n_XBPS_MANAGER=(
+  [NO_DATA]="Yazılım verileri indirilmemiş"
+  [ACTION_DOWNLOAD]="Verileri indir"
+  [LOCK_MSG]="Devam eden yazılım işlemleri var, sonuçlanmasını bekleyin lütfen"
+)

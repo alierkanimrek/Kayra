@@ -253,3 +253,9 @@ declare -A i18n_WAYBAR_CONFIG=(
   [BATTERY_EVENT_DISCHARGING]="Power Switch Discharging"
   [BATTERY_EVENT_CHARGING]="Power Switch Charging"
 )
+
+declare -A i18n_XBPS_MANAGER=(
+  [NO_DATA]="Software data not downloaded"
+  [ACTION_DOWNLOAD]="Download data"
+  [LOCK_MSG]="Ongoing software operations exist, please wait for them to complete"
+)
