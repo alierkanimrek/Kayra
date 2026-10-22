@@ -1,9 +1,7 @@
 #!/bin/sh
-# ~/.local/bin/klog
-# Kullanım: klog SEVIYE MESAJ
-LOG="$HOME/.local/var/log/kayra.log"
+# ~/.local/bin/klog — kaynak olarak yüklenir, log() ile kullanılır
 
-. "$HOME/.local/bin/settings-conf.sh" 2>/dev/null
+. "$HOME/.local/bin/settings-conf.sh" 2>/dev/null || true
 
 lvl() {
     case "$1" in
@@ -11,15 +9,15 @@ lvl() {
     esac
 }
 
-MSG=$(printf '%s' "$1" | tr '[:lower:]' '[:upper:]'); shift
-CONF=$(conf_get log_level 2>/dev/null | tr '[:lower:]' '[:upper:]')
-
-[ "$(lvl "$MSG")" -lt "$(lvl "$CONF")" ] && exit 0
-
-mkdir -p "$(dirname "$LOG")" 2>/dev/null
-printf '%s [%s] [%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" \
-    "${KLOG_SCRIPT:-$(basename "$0")}" "$MSG" "$*" >> "$LOG" 2>/dev/null
-
-echo $*
-
-exit 0
+log() {
+    local lvl="$1"
+    shift
+    local msg="$*"
+    local script="${KLOG_SCRIPT:-$(basename "$0")}"
+    local conf_level=$(conf_get log_level 2>/dev/null | tr '[:lower:]' '[:upper:]')
+    [ -z "$conf_level" ] && conf_level="INFO"
+    [ "$(lvl "$lvl")" -lt "$(lvl "$conf_level")" ] && return 0
+    mkdir -p "$HOME/.local/var/log" 2>/dev/null || true
+    printf '%s [%s] [%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$script" "$lvl" "$msg" >> "$HOME/.local/var/log/kayra.log"
+    echo "$msg"
+}

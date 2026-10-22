@@ -8,7 +8,8 @@
 
 set -euo pipefail
 export LC_ALL=C
-export KLOG_SCRIPT="$(basename "$0")"
+
+source "$(dirname "$0")/klog.sh"
 
 BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
 LANG_DIR="$BIN_DIR/lang"
@@ -25,20 +26,20 @@ declare -A LOCALE_MAP=(
 # Verify language file exists, fallback to English if not
 if [ ! -f "$LANG_DIR/$LANG_CODE.sh" ]; then
     if [ ! -f "$LANG_DIR/en.sh" ]; then
-        $BIN_DIR/klog.sh "ERROR" "Language '$LANG_CODE' not found and fallback 'en.sh' missing"
+        log "ERROR" "Language '$LANG_CODE' not found and fallback 'en.sh' missing"
         exit 1
     fi
-    $BIN_DIR/klog.sh  "WARN" "Warning: Language '$LANG_CODE' not found, falling back to English"
+    log  "WARN" "Warning: Language '$LANG_CODE' not found, falling back to English"
     LANG_CODE="en"
 fi
 
 # Update language symlink
 ln -sf "$LANG_CODE.sh" "$LANG_DIR/current.sh"
-$BIN_DIR/klog.sh  "DEBUG" "Kayra language set to: $LANG_CODE"
+log  "DEBUG" "Kayra language set to: $LANG_CODE"
 
 # Update waybar config using template generator
 bash "$HOME/.local/bin/waybar-config-builder.sh"
-$BIN_DIR/klog.sh  "DEBUG" "Waybar language set to: $LANG_CODE"
+log  "DEBUG" "Waybar language set to: $LANG_CODE"
 
 # Update ~/.profile with LANG and LC_ALL
 PROFILE_FILE="$HOME/.profile"
@@ -58,7 +59,7 @@ if [ -f "$PROFILE_FILE" ]; then
     else
         echo "export LC_ALL=$LOCALE_STRING" >> "$PROFILE_FILE"
     fi
-    $BIN_DIR/klog.sh  "DEBUG" "Updated ~/.profile with LANG and LC_ALL: $LOCALE_STRING"
+    log  "DEBUG" "Updated ~/.profile with LANG and LC_ALL: $LOCALE_STRING"
 else
     # Create .profile if it doesn't exist
     cat > "$PROFILE_FILE" << 'EOFPROFILE'
@@ -69,10 +70,10 @@ EOFPROFILE
     # Update the values using sed to properly escape special characters
     sed -i "s/^export LANG=$/export LANG=$LOCALE_ESCAPED/" "$PROFILE_FILE"
     sed -i "s/^export LC_ALL=$/export LC_ALL=$LOCALE_ESCAPED/" "$PROFILE_FILE"
-    $BIN_DIR/klog.sh  "INFO" "Created ~/.profile with LANG and LC_ALL: $LOCALE_STRING"
+    log  "INFO" "Created ~/.profile with LANG and LC_ALL: $LOCALE_STRING"
 fi
 
-$BIN_DIR/klog.sh  "INFO" "Language set to: $LANG_CODE"
+log  "INFO" "Language set to: $LANG_CODE"
 
 # Signal waybar to reload configuration if it's running
 swaymsg reload

@@ -6,6 +6,8 @@
 
 set -uo pipefail
 
+source "$(dirname "$0")/klog.sh"
+
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_WAYBAR_CONFIG
 
@@ -40,11 +42,10 @@ PLACEHOLDERS=(
     done < "$TEMPLATE"
 } > "$OUT"
 
-echo "Waybar config created: $OUT "
-ls -la "$OUT"
+log DEBUG "Waybar config created: $OUT "
 
 if [[ ! -f "$OUT" ]]; then
-    echo "Error: $OUT not created" >&2
+    log "ERROR" "$OUT not created"
     exit 1
 fi
 

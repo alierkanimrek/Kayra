@@ -10,9 +10,8 @@
 
 set -euo pipefail
 export LC_ALL=C
-export KLOG_SCRIPT="$(basename "$0")"
 
-BIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$(dirname "$0")/klog.sh"
 
 # Configuration files to modify (add your own file paths here)
 FILES=(
@@ -34,25 +33,25 @@ NEW_TEXT="$1"
 
 # Check that settings.conf exists
 if [[ ! -f "$SETTINGS_FILE" ]]; then
-    $BIN_DIR/klog.sh "ERROR" "$SETTINGS_FILE not found." 
+    log "ERROR" "$SETTINGS_FILE not found." 
     exit 1
 fi
 
 # Source settings file and get current font value
 source "$SETTINGS_FILE" || {
-    $BIN_DIR/klog.sh "ERROR" "$SETTINGS_FILE not found." 
+    log "ERROR" "$SETTINGS_FILE not found." 
     exit 1
 }
 
 OLD_TEXT="$font"
 
 if [[ -z "$OLD_TEXT" ]]; then
-    $BIN_DIR/klog.sh "ERROR" "Error: no text to replace found in $SETTINGS_FILE."
+    log "ERROR" "Error: no text to replace found in $SETTINGS_FILE."
     exit 1
 fi
 
 if [[ "$OLD_TEXT" == "$NEW_TEXT" ]]; then
-    $BIN_DIR/klog.sh "INFO" "Old font and new font are identical, nothing to do."
+    log "INFO" "Old font and new font are identical, nothing to do."
     exit 0
 fi
 
@@ -63,12 +62,12 @@ FAILED=0
 
 for file in "${FILES[@]}"; do
     if [[ ! -f "$file" ]]; then
-        $BIN_DIR/klog.sh "WARN" " '$file' not found, skipping."
+        log "WARN" " '$file' not found, skipping."
         continue
     fi
 
     if ! grep -qF -- "$OLD_TEXT" "$file"; then
-        $BIN_DIR/klog.sh "INFO" "Font '$OLD_TEXT' not found in '$file', skipping."
+        log "INFO" "Font '$OLD_TEXT' not found in '$file', skipping."
         continue
     fi
 
@@ -77,9 +76,9 @@ for file in "${FILES[@]}"; do
     NEW_ESC=$(printf '%s' "$NEW_TEXT" | sed -e 's/[\/&]/\\&/g')
 
     if sed -i "s/${OLD_ESC}/${NEW_ESC}/g" "$file"; then
-        $BIN_DIR/klog.sh "DEBUG" "Updated: $file"
+        log "DEBUG" "Updated: $file"
     else
-        $BIN_DIR/klog.sh "ERROR" "Failed to update '$file'."
+        log "ERROR" "Failed to update '$file'."
         FAILED=1
     fi
 done
@@ -88,8 +87,8 @@ if [[ "$FAILED" -eq 0 ]]; then
     # Escape special characters for safe sed replacement
     NEW_ESC=$(printf '%s' "$NEW_TEXT" | sed -e 's/[\/&]/\\&/g')
     sed -i "s/^font=.*/font=\"${NEW_ESC}\"/" "$SETTINGS_FILE"
-    $BIN_DIR/klog.sh "INFO" "$NEW_TEXT font succesfuly applied."
+    log "INFO" "$NEW_TEXT font succesfuly applied."
 else
-    $BIN_DIR/klog.sh "ERROR" "Some files failed to update, $SETTINGS_FILE was not changed."
+    log "ERROR" "Some files failed to update, $SETTINGS_FILE was not changed."
     exit 1
 fi
