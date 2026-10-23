@@ -7,6 +7,8 @@ declare -A i18n=(
   [SUCCESS]="Success"
   [ERROR]="Error"
   [FAILED]="Failed"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A user_menu=(
@@ -14,6 +16,8 @@ declare -A user_menu=(
   ["Add to Group"]="group-add.sh --anchor=top-right"
   ["Remove from Group"]="group-remove.sh --anchor=top-right"
   ["Home Directory Usage"]="home-usage.sh"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A settings_menu=(
@@ -22,10 +26,14 @@ declare -A settings_menu=(
   ["Keyboard"]="keyboard-settings.sh"
   ["Display"]="display-settings.sh"
   ["System"]="system-menu.sh"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A system_menu=(
   ["Log Monitor"]="toggle-log-monitor.sh"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A appearance_menu=(
@@ -34,12 +42,16 @@ declare -A appearance_menu=(
   ["Change Theme"]="/usr/bin/nwg-look"
   ["Auto Theme"]="toggle-auto-theme.sh"
   ["Wallpaper"]="change-wallpaper.sh"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_HOME_USAGE=(
   [NOTIFY_TITLE]="Home directory size"
   [NOTIFY_MSG]="{HOME} directory uses {USAGE} of storage."
   [NOTIFY_BUTTON]="Open Baobab"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_CHANGE_PASSWD=(
@@ -52,6 +64,8 @@ declare -A i18n_CHANGE_PASSWD=(
   [MSG_MISMATCH]="New passwords do not match."
   [MSG_SUCCESS]="Password changed successfully."
   [MSG_FAILED]="Password change failed. Current password may be incorrect."
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_WIFI_MENU=(
@@ -66,11 +80,15 @@ declare -A i18n_WIFI_MENU=(
   [MSG_CONNECTED]="Connected"
   [MSG_CONNECT_FAILED]="Connection failed (password may be incorrect)"
   [MSG_HIDDEN]="<Hidden Network>"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_USER_INFO=(
   [LABEL_GROUPS]="Groups:"
   [LABEL_SUPERVISOR]="Supervisor"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_GROUP_MANAGEMENT=(
@@ -89,6 +107,8 @@ declare -A i18n_GROUP_MANAGEMENT=(
   [EXCEPTION_GROUP]="'{GROUP}' is an exception group, {USER} user cannot be removed from this group."
   [GROUP_REMOVED]="{USER} user removed from '{GROUP}' group."
   [REMOVE_FAILED]="Failed to remove from '{GROUP}' group."
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_USER_MENU=(
@@ -97,6 +117,8 @@ declare -A i18n_USER_MENU=(
   [USAGE_ERROR]="Usage: {SCRIPT} <json-file> [fuzzel parameters...]"
   [FILE_NOT_FOUND]="Error: File not found -> {FILE}"
   [PROMPT_ACTION]="Action: "
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_CONNECTION_CHECK=(
@@ -104,6 +126,8 @@ declare -A i18n_CONNECTION_CHECK=(
   [MSG_OFFLINE]="Offline"
   [MSG_CHECKING]="Checking connection..."
   [TOOLTIP_NO_WIFI_NO_INTERNET]="Wi-Fi device not found\nInternet connection status: {CONNECTIVITY}\nClick: Open Network Manager"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_SYSLOG_NOTIFY=(
@@ -111,6 +135,8 @@ declare -A i18n_SYSLOG_NOTIFY=(
   [TITLE_SINGLE]="New log entry"
   [BUTTON_OPEN_LOG]="Open Log File"
   [NOTIFY_APP]="syslog"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_SYSLOG_BOOT_REPORT=(
@@ -118,6 +144,8 @@ declare -A i18n_SYSLOG_BOOT_REPORT=(
   [TITLE_SINGLE]="Error Since Boot"
   [BUTTON_OPEN_LOG]="Open Log File"
   [NOTIFY_APP]="syslog"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_NET_MONITOR=(
@@ -125,15 +153,21 @@ declare -A i18n_NET_MONITOR=(
   [UNKNOWN_PARAMETER]="Unknown parameter: {PARAM}"
   [LABEL_ETHERNET]="Ethernet:"
   [LABEL_OTHER]="Other:"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_WIFI_MONITOR=(
   [DEVICE_DISCONNECTED]=$'Device: {DEVICE}\nStatus: Not connected'
   [DEVICE_CONNECTED]=$'Device: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSignal: %{SIGNAL}'
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_MEMORY_MONITOR=(
   [MEMORY_AVAILABLE]=$'Available memory: %{RATIO}'
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_CHECK_GROUPS=(
@@ -141,6 +175,8 @@ declare -A i18n_CHECK_GROUPS=(
   [NOTIFY_MSG]="Missing group membership"
   [NOTIFY_ACTION]="Add groups"
   [MISSING_GROUPS]="You are not a member of: {GROUPS}"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_FIX_GROUPS=(
@@ -148,18 +184,24 @@ declare -A i18n_FIX_GROUPS=(
   [TITLE_SUCCESS]="Groups added"
   [MSG_SUCCESS]="Log out and log back in for this to take effect."
   [TITLE_FAILED]="Operation cancelled or failed"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_TOGGLE_AUTO_THEME=(
   [NOTIFY_TITLE]="Auto Theme"
   [MSG_ON]="Automatic theme changes enabled"
   [MSG_OFF]="Automatic theme changes disabled"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_LOG_MONITOR=(
   [NOTIFY_TITLE]="Log Monitor"
   [MSG_ON]="Log error notifications enabled"
   [MSG_OFF]="Log error notifications disabled"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_SYSTEM_INFO=(
@@ -169,11 +211,15 @@ declare -A i18n_SYSTEM_INFO=(
   [LABEL_GPU]="GPU"
   [LABEL_RAM]="RAM"
   [LABEL_DISK]="Disk"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_SETTINGS_MENU=(
   [PROMPT_ACTION]="Action: "
   [MSG_NO_ITEMS]="No items found"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_FONT_SETTINGS=(
@@ -182,6 +228,8 @@ declare -A i18n_FONT_SETTINGS=(
   [MSG_FONT_CHANGED]="Font changed to {FONT}"
   [MSG_FONT_UNCHANGED]="Font {FONT} is already selected"
   [MSG_FONT_FAILED]="Failed to change font to {FONT}"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_CHANGE_FONT_SIZE=(
@@ -189,6 +237,8 @@ declare -A i18n_CHANGE_FONT_SIZE=(
   [ERROR_INVALID_SIZE]="Error: Font size must be between {MIN} and {MAX}"
   [ERROR_SETTINGS_NOT_FOUND]="Error: Settings file not found: {FILE}"
   [MSG_SUCCESS]="Success"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_LANGUAGE_SETTINGS=(
@@ -196,6 +246,8 @@ declare -A i18n_LANGUAGE_SETTINGS=(
   [NOTIFY_TITLE]="Language"
   [MSG_CHANGED]="Changed to: {LANG}"
   [MSG_FAILED]="Failed to change language to: {LANG}"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_KEYBOARD_SETTINGS=(
@@ -208,6 +260,8 @@ declare -A i18n_KEYBOARD_SETTINGS=(
   [ERROR_DATA_NOT_FOUND]="Keyboard data files not found. Please run generate-keyboard-data.sh"
   [ERROR_SELECTION_NOT_FOUND]="Selection not found in keyboard database"
   [ERROR_CONFIG_NOT_FOUND]="Keyboard config file not found"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A I18N_REMOVABLE_STORAGE_MONITOR=(
@@ -218,6 +272,8 @@ declare -A I18N_REMOVABLE_STORAGE_MONITOR=(
   [TOOLTIP_EMPTY]="No removable storage devices"
   [TOOLTIP_PRESENT]="Removable storage devices"
   [TOOLTIP_RIGHT_CLICK_INFO]="Right click: Eject device"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A I18N_REMOVABLE_MENU=(
@@ -225,6 +281,8 @@ declare -A I18N_REMOVABLE_MENU=(
   [NO_PARTITIONS]="No removable partitions"
   [MOUNT_FAILED]="Mount failed"
   [MOUNT_FAILED_MSG]="{DEVICE}"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A I18N_REMOVABLE_EJECT_MENU=(
@@ -234,6 +292,8 @@ declare -A I18N_REMOVABLE_EJECT_MENU=(
   [EJECT_PARTIAL]="{DEVICE} unmounted (power-off may not be supported, safe to remove)"
   [EJECT_FAILED]="Eject failed"
   [EJECT_FAILED_MSG]="Could not unmount (may be busy): {DEVICES}"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 
@@ -252,10 +312,26 @@ declare -A i18n_WAYBAR_CONFIG=(
   [BATTERY_EVENT_FULL]="Battery Full!"
   [BATTERY_EVENT_DISCHARGING]="Power Switch Discharging"
   [BATTERY_EVENT_CHARGING]="Power Switch Charging"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_XBPS_MANAGER=(
   [NO_DATA]="Software data not downloaded"
   [ACTION_DOWNLOAD]="Download data"
   [LOCK_MSG]="Ongoing software operations exist, please wait for them to complete"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
+  [REMOVE_OK]="Package removed successfully"
+  [REMOVE_FAIL]="Failed to remove package"
+  [INSTALL_CONFIRM]="Install %s?"
+  [INSTALL_OK]="Installed"
+  [INSTALL_FAIL]="Install failed"
+  [ACTION_INSTALL]="Install"
+  [GIT_FETCH_ERR]="Git fetch error"
+  [GIT_STATUS_ERR]="Git status error"
+  [GIT_BEHIND]="Behind detected"
+  [CD_ERR]="Directory change error"
 )

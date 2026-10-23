@@ -9,12 +9,12 @@ declare -n MSG=i18n_XBPS_MANAGER
 source "$(dirname "$0")/klog.sh"
 
 PACKAGES_DIR="/var/spool/void-packages"
-LOCK_FILE="$PACKAGES_DIR/xbps.lock"
+LOCK_FILE="/tmp/xbps.lock"
 RUN_FILE="$PACKAGES_DIR/xbps-src"
 
 if [[ -f "$LOCK_FILE" ]]; then
     lock_content=$(cat "$LOCK_FILE" 2>/dev/null || true)
-    notify-send -i applications-engineering "${MSG[LOCK_MSG]}" "$lock_content"
+    notify-send -i applications-engineering "${MSG[LOCK_MSG]}\n$lock_content"
     exit 0
 fi
 

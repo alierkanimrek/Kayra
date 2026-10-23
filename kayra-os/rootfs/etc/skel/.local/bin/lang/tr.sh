@@ -7,6 +7,8 @@ declare -A i18n=(
   [SUCCESS]="Başarı"
   [ERROR]="Hata"
   [FAILED]="Başarısız"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A user_menu=(
@@ -14,6 +16,8 @@ declare -A user_menu=(
   ["Gruba ekle"]="group-add.sh --anchor=top-right"
   ["Gruptan çıkar"]="group-remove.sh --anchor=top-right"
   ["Ev Dizini Kullanımı"]="home-usage.sh"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A settings_menu=(
@@ -22,10 +26,14 @@ declare -A settings_menu=(
   ["Klavye"]="keyboard-settings.sh"
   ["Ekran"]="display-settings.sh"
   ["Sistem"]="system-menu.sh"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A system_menu=(
   ["Log İzleyici"]="toggle-log-monitor.sh"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A appearance_menu=(
@@ -34,12 +42,16 @@ declare -A appearance_menu=(
   ["Temayı değiştir"]="/usr/bin/nwg-look"
   ["Otomatik Tema"]="toggle-auto-theme.sh"
   ["Duvar Kağıdı"]="change-wallpaper.sh"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_HOME_USAGE=(
   [NOTIFY_TITLE]="Ev dizini boyutu"
   [NOTIFY_MSG]="{HOME} Dizini {USAGE} yer kaplıyor."
   [NOTIFY_BUTTON]="Baobab'ı Aç"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_CHANGE_PASSWD=(
@@ -52,6 +64,8 @@ declare -A i18n_CHANGE_PASSWD=(
   [MSG_MISMATCH]="Yeni şifreler birbiriyle eşleşmiyor."
   [MSG_SUCCESS]="Şifre başarıyla değiştirildi."
   [MSG_FAILED]="Şifre değiştirilemedi. Mevcut şifre hatalı olabilir."
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_WIFI_MENU=(
@@ -66,11 +80,15 @@ declare -A i18n_WIFI_MENU=(
   [MSG_CONNECTED]="Bağlandı"
   [MSG_CONNECT_FAILED]="Bağlantı başarısız (şifre yanlış olabilir)"
   [MSG_HIDDEN]="<Gizli Ağ>"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_USER_INFO=(
   [LABEL_GROUPS]="Gruplar:"
   [LABEL_SUPERVISOR]="Yönetici"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_GROUP_MANAGEMENT=(
@@ -89,6 +107,8 @@ declare -A i18n_GROUP_MANAGEMENT=(
   [EXCEPTION_GROUP]="'{GROUP}' istisna grubudur, {USER} kullanıcısı bu gruptan çıkarılamaz."
   [GROUP_REMOVED]="{USER} kullanıcısı '{GROUP}' grubundan çıkarıldı."
   [REMOVE_FAILED]="'{GROUP}' grubundan çıkarma işlemi başarısız oldu."
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_USER_MENU=(
@@ -97,6 +117,8 @@ declare -A i18n_USER_MENU=(
   [USAGE_ERROR]="Kullanım: {SCRIPT} <json-dosya> [fuzzel parametreleri...]"
   [FILE_NOT_FOUND]="Hata: Dosya bulunamadı -> {FILE}"
   [PROMPT_ACTION]="Eylem: "
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_CONNECTION_CHECK=(
@@ -104,6 +126,8 @@ declare -A i18n_CONNECTION_CHECK=(
   [MSG_OFFLINE]="Çevrimdışı"
   [MSG_CHECKING]="Bağlantı kontrol ediliyor..."
   [TOOLTIP_NO_WIFI_NO_INTERNET]="Wi-Fi aygıtı bulunamadı\nİnternet bağlantısı durumu: {CONNECTIVITY}\nTıkla: Ağ Yöneticisini aç"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_SYSLOG_NOTIFY=(
@@ -111,6 +135,8 @@ declare -A i18n_SYSLOG_NOTIFY=(
   [TITLE_SINGLE]="Yeni log kaydı"
   [BUTTON_OPEN_LOG]="Log Dosyasını Aç"
   [NOTIFY_APP]="syslog"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_SYSLOG_BOOT_REPORT=(
@@ -118,6 +144,8 @@ declare -A i18n_SYSLOG_BOOT_REPORT=(
   [TITLE_SINGLE]="Açılıştan Bu Yana Hata"
   [BUTTON_OPEN_LOG]="Log Dosyasını Aç"
   [NOTIFY_APP]="syslog"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_NET_MONITOR=(
@@ -125,15 +153,21 @@ declare -A i18n_NET_MONITOR=(
   [UNKNOWN_PARAMETER]="Bilinmeyen parametre: {PARAM}"
   [LABEL_ETHERNET]="Ethernet:"
   [LABEL_OTHER]="Diğer:"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_WIFI_MONITOR=(
   [DEVICE_DISCONNECTED]=$'Aygıt: {DEVICE}\nDurum: Bağlı değil'
   [DEVICE_CONNECTED]=$'Aygıt: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSinyal: %{SIGNAL}'
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_MEMORY_MONITOR=(
   [MEMORY_AVAILABLE]=$'Kullanılabilir bellek: %{RATIO}'
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_CHECK_GROUPS=(
@@ -141,6 +175,8 @@ declare -A i18n_CHECK_GROUPS=(
   [NOTIFY_MSG]="Grup üyeliği eksik"
   [NOTIFY_ACTION]="Grup ekle"
   [MISSING_GROUPS]="Üye olmadığınız gruplar: {GROUPS}"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_FIX_GROUPS=(
@@ -148,18 +184,24 @@ declare -A i18n_FIX_GROUPS=(
   [TITLE_SUCCESS]="Gruplar eklendi"
   [MSG_SUCCESS]="Değişikliklerin etkili olması için çıkış yapıp tekrar giriş yapın."
   [TITLE_FAILED]="İşlem iptal edildi veya başarısız oldu"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_TOGGLE_AUTO_THEME=(
   [NOTIFY_TITLE]="Otomatik Tema"
   [MSG_ON]="Otomatik tema değişiklikleri etkinleştirildi"
   [MSG_OFF]="Otomatik tema değişiklikleri devre dışı bırakıldı"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_LOG_MONITOR=(
   [NOTIFY_TITLE]="Log İzleyici"
   [MSG_ON]="Hata log bildirimleri etkinleştirildi"
   [MSG_OFF]="Hata log bildirimleri devre dışı bırakıldı"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_SYSTEM_INFO=(
@@ -169,11 +211,15 @@ declare -A i18n_SYSTEM_INFO=(
   [LABEL_GPU]="Grafik Kartı"
   [LABEL_RAM]="RAM"
   [LABEL_DISK]="Disk"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_SETTINGS_MENU=(
   [PROMPT_ACTION]="Eylem: "
   [MSG_NO_ITEMS]="Öğe bulunamadı"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_FONT_SETTINGS=(
@@ -182,6 +228,8 @@ declare -A i18n_FONT_SETTINGS=(
   [MSG_FONT_CHANGED]="Yazı tipi {FONT} olarak değiştirildi"
   [MSG_FONT_UNCHANGED]="Yazı tipi {FONT} zaten seçili"
   [MSG_FONT_FAILED]="Yazı tipi {FONT} olarak değiştirilemedi"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_CHANGE_FONT_SIZE=(
@@ -189,6 +237,8 @@ declare -A i18n_CHANGE_FONT_SIZE=(
   [ERROR_INVALID_SIZE]="Hata: Font büyüklüğü {MIN} ile {MAX} arasında olmalı"
   [ERROR_SETTINGS_NOT_FOUND]="Hata: Ayarlar dosyası bulunamadı: {FILE}"
   [MSG_SUCCESS]="Başarılı"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_LANGUAGE_SETTINGS=(
@@ -196,6 +246,8 @@ declare -A i18n_LANGUAGE_SETTINGS=(
   [NOTIFY_TITLE]="Dil"
   [MSG_CHANGED]="Değiştirildi: {LANG}"
   [MSG_FAILED]="Dil değiştirilemedi: {LANG}"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_KEYBOARD_SETTINGS=(
@@ -208,6 +260,8 @@ declare -A i18n_KEYBOARD_SETTINGS=(
   [ERROR_DATA_NOT_FOUND]="Klavye veri dosyaları bulunamadı. Lütfen generate-keyboard-data.sh betiğini çalıştırın"
   [ERROR_SELECTION_NOT_FOUND]="Seçim klavye veritabanında bulunamadı"
   [ERROR_CONFIG_NOT_FOUND]="Klavye yapılandırma dosyası bulunamadı"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A I18N_REMOVABLE_STORAGE_MONITOR=(
@@ -218,6 +272,8 @@ declare -A I18N_REMOVABLE_STORAGE_MONITOR=(
   [TOOLTIP_EMPTY]="Çıkarılabilir depolama aygıtı yok"
   [TOOLTIP_PRESENT]="Çıkarılabilir depolama aygıtları"
   [TOOLTIP_RIGHT_CLICK_INFO]="Sağ tık: Aygıtı çıkar"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A I18N_REMOVABLE_MENU=(
@@ -225,6 +281,8 @@ declare -A I18N_REMOVABLE_MENU=(
   [NO_PARTITIONS]="Çıkarılabilir bölüm yok"
   [MOUNT_FAILED]="Bağlama başarısız"
   [MOUNT_FAILED_MSG]="{DEVICE}"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A I18N_REMOVABLE_EJECT_MENU=(
@@ -234,6 +292,8 @@ declare -A I18N_REMOVABLE_EJECT_MENU=(
   [EJECT_PARTIAL]="{DEVICE} ayrıldı (power-off desteklenmiyor olabilir, çıkarmak güvenli)"
   [EJECT_FAILED]="Çıkarma başarısız"
   [EJECT_FAILED_MSG]="Ayrılamayan (meşgul olabilir): {DEVICES}"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 
@@ -252,10 +312,26 @@ declare -A i18n_WAYBAR_CONFIG=(
   [BATTERY_EVENT_FULL]="Pil Dolu!"
   [BATTERY_EVENT_DISCHARGING]="Güç Anahtarı Boşalıyor"
   [BATTERY_EVENT_CHARGING]="Güç Anahtarı Şarj Oluyor"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_XBPS_MANAGER=(
   [NO_DATA]="Yazılım verileri indirilmemiş"
   [ACTION_DOWNLOAD]="Verileri indir"
   [LOCK_MSG]="Devam eden yazılım işlemleri var, sonuçlanmasını bekleyin lütfen"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
+  [REMOVE_CONFIRM]="%s Yazılımını kaldırmak istiyor musunuz?"
+  [ACTION_REMOVE]="Kaldır"
+  [REMOVE_OK]="Paket başarıyla kaldırıldı"
+  [REMOVE_FAIL]="Paket kaldırılırken hata oluştu"
+  [INSTALL_CONFIRM]="%s kurulumu?"
+  [INSTALL_OK]="Kuruldu"
+  [INSTALL_FAIL]="Kurulum başarısız"
+  [ACTION_INSTALL]="Kur"
+  [GIT_FETCH_ERR]="Git fetch hatası"
+  [GIT_STATUS_ERR]="Git status hatası"
+  [GIT_BEHIND]="Geri kalındı"
+  [CD_ERR]="Dizin değiştirilemedi"
 )
