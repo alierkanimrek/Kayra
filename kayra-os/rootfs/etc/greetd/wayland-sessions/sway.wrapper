@@ -4,6 +4,7 @@ export XDG_SESSION_TYPE=wayland
 export XDG_CURRENT_DESKTOP=sway
 mkdir -p $HOME/.local/var/log
 rm $HOME/.local/var/log/sway.log
+rm $HOME/.local/var/log/kayra.log
 chmod +x $HOME/.local/bin/*
 [ -f "$HOME/.profile" ] && . "$HOME/.profile"
 
