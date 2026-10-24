@@ -18,6 +18,6 @@ log() {
     [ -z "$conf_level" ] && conf_level="INFO"
     [ "$(lvl "$lvl")" -lt "$(lvl "$conf_level")" ] && return 0
     mkdir -p "$HOME/.local/var/log" 2>/dev/null || true
-    printf '%s [%s] [%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$script" "$lvl" "$msg" >> "$HOME/.local/var/log/kayra.log"
+    printf '%s [%s] [%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$script" "$lvl" "$(echo -e $msg)" >> "$HOME/.local/var/log/kayra.log"
     echo "$msg"
 }

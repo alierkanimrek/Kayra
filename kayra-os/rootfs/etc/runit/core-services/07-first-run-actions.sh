@@ -47,5 +47,6 @@ ln -s /etc/sv/uuidd /etc/runit/runsvdir/current
 mkdir -p /var/spool/void-packages
 chown root:users /var/spool/void-packages
 chmod 770 /var/spool/void-packages
+git config --global --add safe.directory /var/spool/void-packages
 
 touch "$MARKER"

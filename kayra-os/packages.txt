@@ -3,6 +3,8 @@
 
 # Temel Sistem
 base-system
+void-repo-nonfree
+void-repo-multilib-nonfree
 mesa-dri
 socklog-void
 daemontools

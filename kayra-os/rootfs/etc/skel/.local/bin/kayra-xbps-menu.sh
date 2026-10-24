@@ -13,7 +13,7 @@ LOCK_FILE="/tmp/xbps.lock"
 
 if [[ -f "$LOCK_FILE" ]]; then
     lock_content=$(cat "$LOCK_FILE" 2>/dev/null || true)
-    notify-send -i applications-engineering "${MSG[LOCK_MSG]}\n $lock_content"
+    notify-send "Yazılım Deposu" "${MSG[LOCK_MSG]}\n $lock_content"
     exit 0
 fi
 
