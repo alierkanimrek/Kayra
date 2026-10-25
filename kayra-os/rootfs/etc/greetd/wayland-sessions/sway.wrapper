@@ -8,9 +8,6 @@ rm $HOME/.local/var/log/kayra.log
 chmod +x $HOME/.local/bin/*
 [ -f "$HOME/.profile" ] && . "$HOME/.profile"
 
-# Dil yapılandırmasını başlat
-[ -x "$HOME/.local/bin/set-language.sh" ] && $HOME/.local/bin/set-language.sh $(locale | grep LANG= | cut -d= -f2 | cut -d_ -f1)
-
 # İlk giriş betiğini çalıştır
 [ -x "$HOME/.local/bin/first-login.sh" ] && "$HOME/.local/bin/first-login.sh"
 
