@@ -53,12 +53,25 @@ include ~/.config/sway/background.conf
 #
 # Example configuration:
 #
-#   input type:touchpad {
-#       dwt enabled
-#       tap enabled
-#       natural_scroll enabled
-#       middle_emulation enabled
-#   }
+input "type:touchpad" {
+    # Dokunarak tıklamayı aç (Tap-to-click)
+    tap enabled
+    
+    # Doğal kaydırmayı aç (Tekerlek yönü tersi - Mac tarzı)
+    natural_scroll enabled
+    
+    # Yazı yazarken touchpad'i kilitle (Yanlışlıkla tıklamaları önler)
+    dwt enabled
+    
+    # Tıklama haritası (Sol-Sağ-Orta tık için parmak kombinasyonu)
+    # lrm = 1 parmak sol tık, 2 parmak sağ tık, 3 parmak orta tık
+    tap_button_map lrm
+    
+    # İmleç hızlandırma profili (Hassas bir kontrol için)
+    accel_profile "adaptive"
+    pointer_accel 0.3
+}
+
 #
 # Keyboard input settings
 include ~/.config/sway/input-keyboard.conf
