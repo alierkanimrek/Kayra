@@ -4,6 +4,7 @@
     "spacing": 4,
     "modules-left": [
         "custom/app-menu",
+        "custom/xbps-lock-monitor",        
         "sway/workspaces",
         "sway/mode",
         "sway/scratchpad",
@@ -149,7 +150,8 @@
         "format": "",
         "tooltip": true,
         "tooltip-format": "{{APP_MENU_TOOLTIP}}",
-        "on-click": "pkill fuzzel; fuzzel --anchor=top-left --log-no-syslog"
+        "on-click": "pkill fuzzel; fuzzel --anchor=top-left --log-no-syslog",
+        "on-click-right": "$HOME/.local/bin/kayra-xbps-manager.sh"
     },
 
     "custom/user-info": {
@@ -240,7 +242,15 @@
         "restart-interval": 0,
         "on-click": "gnome-system-monitor -r",
     },
-
+    
+    "custom/xbps-lock-monitor": {
+        "exec": "$HOME/.local/bin/xbps-lock-monitor.sh",
+        "return-type": "json",
+        "hide-empty-text": true,
+        "tooltip": true,
+        "restart-interval": 0
+    },
+    
     "custom/spacer": {
         "format": " ",
         "tooltip": false

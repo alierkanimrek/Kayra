@@ -16,8 +16,6 @@ declare -A user_menu=(
   ["Add to Group"]="group-add.sh --anchor=top-right"
   ["Remove from Group"]="group-remove.sh --anchor=top-right"
   ["Home Directory Usage"]="home-usage.sh"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
 )
 
 declare -A settings_menu=(
@@ -26,14 +24,10 @@ declare -A settings_menu=(
   ["Keyboard"]="keyboard-settings.sh"
   ["Display"]="display-settings.sh"
   ["System"]="system-menu.sh"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
 )
 
 declare -A system_menu=(
   ["Log Monitor"]="toggle-log-monitor.sh"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
 )
 
 declare -A appearance_menu=(
@@ -42,8 +36,6 @@ declare -A appearance_menu=(
   ["Change Theme"]="/usr/bin/nwg-look"
   ["Auto Theme"]="toggle-auto-theme.sh"
   ["Wallpaper"]="change-wallpaper.sh"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_HOME_USAGE=(
@@ -303,7 +295,7 @@ declare -A i18n_WAYBAR_CONFIG=(
   [LOGOUT_TOOLTIP]="Logout"
   [REBOOT_TOOLTIP]="Reboot"
   [SHUTDOWN_TOOLTIP]="Shutdown"
-  [APP_MENU_TOOLTIP]="App Menu"
+  [APP_MENU_TOOLTIP]="App Menu\nRight click: Install/Remove Applications"
   [CLIPBOARD_TOOLTIP]="Left click: Clipboard History\nRight click: Clear History"
   [BATTERY_TOOLTIP]="Capacity: {capacity}% ({time})"
   [BATTERY_TOOLTIP_CHARGING]="Charging: {capacity}% (Time remaining: {time})"

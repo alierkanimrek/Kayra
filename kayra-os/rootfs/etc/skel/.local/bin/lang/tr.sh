@@ -16,8 +16,6 @@ declare -A user_menu=(
   ["Gruba ekle"]="group-add.sh --anchor=top-right"
   ["Gruptan çıkar"]="group-remove.sh --anchor=top-right"
   ["Ev Dizini Kullanımı"]="home-usage.sh"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
 )
 
 declare -A settings_menu=(
@@ -26,14 +24,10 @@ declare -A settings_menu=(
   ["Klavye"]="keyboard-settings.sh"
   ["Ekran"]="display-settings.sh"
   ["Sistem"]="system-menu.sh"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
 )
 
 declare -A system_menu=(
   ["Log İzleyici"]="toggle-log-monitor.sh"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
 )
 
 declare -A appearance_menu=(
@@ -42,8 +36,6 @@ declare -A appearance_menu=(
   ["Temayı değiştir"]="/usr/bin/nwg-look"
   ["Otomatik Tema"]="toggle-auto-theme.sh"
   ["Duvar Kağıdı"]="change-wallpaper.sh"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_HOME_USAGE=(
@@ -303,7 +295,7 @@ declare -A i18n_WAYBAR_CONFIG=(
   [LOGOUT_TOOLTIP]="Oturumu Kapat"
   [REBOOT_TOOLTIP]="Yeniden Başlat"
   [SHUTDOWN_TOOLTIP]="Kapat"
-  [APP_MENU_TOOLTIP]="Uygulama Menüsü"
+  [APP_MENU_TOOLTIP]="Uygulama Menüsü\nSağ tık: Yazılımları kur/kaldır"
   [CLIPBOARD_TOOLTIP]="Sol tık: Pano Geçmişi\nSağ tık: Geçmişi Temizle"
   [BATTERY_TOOLTIP]="Kapasite: {capacity}% ({time})"
   [BATTERY_TOOLTIP_CHARGING]="Şarj Oluyor: {capacity}% (Dolmaya kalan: {time})"

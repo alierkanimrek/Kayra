@@ -21,6 +21,6 @@ PACKAGE_LIST_CMD="find $PACKAGES_DIR/srcpkgs -maxdepth 1 -mindepth 1 -type d -pr
 
 mapfile -t pkg_list < <(eval "$PACKAGE_LIST_CMD" 2>/dev/null || true)
 if [[ ${#pkg_list[@]} -gt 0 ]]; then
-    selected=$(printf '%s\n' "${pkg_list[@]}" | fuzzel --dmenu --hide-before-typing)
+    selected=$(printf '%s\n' "${pkg_list[@]}" | fuzzel --dmenu --anchor=top-left --hide-before-typing --log-no-syslog)
     [[ -n "$selected" ]] && "$(dirname "$0")/kayra-xbps.sh" "$selected"
 fi
