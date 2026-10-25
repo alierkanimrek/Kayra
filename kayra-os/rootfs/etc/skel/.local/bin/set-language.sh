@@ -43,7 +43,8 @@ log  "DEBUG" "Waybar language set to: $LANG_CODE"
 
 # Update ~/.profile with LANG and LC_ALL
 PROFILE_FILE="$HOME/.profile"
-LOCALE_STRING="${LOCALE_MAP[$LANG_CODE]}"
+# Eşleşmeyen dil kodu için set -u altında "unbound variable" hatası vermemesi adına yedek
+LOCALE_STRING="${LOCALE_MAP[$LANG_CODE]:-${LOCALE_MAP[en]}}"
 LOCALE_ESCAPED=$(printf '%s\n' "$LOCALE_STRING" | sed -e 's/[\/&]/\\&/g')
 
 if [ -f "$PROFILE_FILE" ]; then
@@ -76,4 +77,5 @@ fi
 log  "INFO" "Language set to: $LANG_CODE"
 
 # Signal waybar to reload configuration if it's running
-swaymsg reload
+# (sway dışında çalıştırılırsa betik yanlışlıkla hata koduyla çıkmasın)
+swaymsg reload 2>/dev/null || true

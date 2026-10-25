@@ -3,13 +3,13 @@
 #   ./tema-izle.sh --once   tek seferlik JSON yazdırır
 #   ./tema-izle.sh          tema değişince JSON yazdırmaya devam eder
 # Çıktı: {"theme":"...","dark":true,"bg":"#...","fg":"#..."}
-source $HOME/.local/bin/single-instance.sh
+source "$HOME/.local/bin/single-instance.sh"
 single_instance
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_WIFI_MONITOR
 
-source $HOME/.local/bin/settings-conf.sh
+source "$HOME/.local/bin/settings-conf.sh"
 
 CFG="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-4.0"
 

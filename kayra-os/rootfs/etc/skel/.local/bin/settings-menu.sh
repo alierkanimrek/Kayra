@@ -21,7 +21,7 @@ line_count=$(printf '%s\n' "${!settings_menu[@]}" | grep -c "^...*")
 pkill -x fuzzel 2>/dev/null || true
 
 # Get selection from fuzzel dmenu
-SELECTED_KEY=$(printf '%s\n' "${!settings_menu[@]}" | tac | fuzzel --dmenu --anchor=top-right --log-no-syslog  --lines="$line_count" "$@" --prompt="${MSG[PROMPT_ACTION]}")
+SELECTED_KEY=$(printf '%s\n' "${!settings_menu[@]}" | tac | fuzzel --dmenu --anchor=top-right --log-no-syslog  --lines="$line_count" "$@" --prompt="${MSG[PROMPT_ACTION]}") || true
 
 [ -z "$SELECTED_KEY" ] && exit 0
 
@@ -29,5 +29,7 @@ SELECTED_KEY=$(printf '%s\n' "${!settings_menu[@]}" | tac | fuzzel --dmenu --anc
 COMMAND="$HOME/.local/bin/${settings_menu[$SELECTED_KEY]}"
 
 if [ -n "$COMMAND" ] && [ "$COMMAND" != "null" ]; then
-    eval "$COMMAND" &
+    # eval yerine kelime bölme (menü değeri "betik.sh --arg" biçiminde)
+    read -r -a _cmd <<< "$COMMAND"
+    "${_cmd[@]}" &
 fi

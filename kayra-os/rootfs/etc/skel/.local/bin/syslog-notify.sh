@@ -15,12 +15,12 @@
 # Design: check the log file every INTERVAL seconds; collect new lines that
 # appeared after the last seen timestamp; send all new entries in a single notification.
 
-source $HOME/.local/bin/single-instance.sh
+source "$HOME/.local/bin/single-instance.sh"
 single_instance
 
 set -euo pipefail
 
-source $HOME/.local/bin/settings-conf.sh
+source "$HOME/.local/bin/settings-conf.sh"
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_SYSLOG_NOTIFY

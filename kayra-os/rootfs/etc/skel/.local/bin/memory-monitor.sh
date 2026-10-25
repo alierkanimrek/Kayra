@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source $HOME/.local/bin/single-instance.sh
+source "$HOME/.local/bin/single-instance.sh"
 single_instance
 
 source "$(dirname "$0")/i18n.sh"

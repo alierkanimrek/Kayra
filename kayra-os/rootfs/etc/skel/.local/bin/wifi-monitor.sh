@@ -16,7 +16,7 @@
 #
 # Dependencies: nmcli (NetworkManager), jq, iproute2 (ip monitor).
 
-source $HOME/.local/bin/single-instance.sh
+source "$HOME/.local/bin/single-instance.sh"
 single_instance
 
 source "$(dirname "$0")/i18n.sh"

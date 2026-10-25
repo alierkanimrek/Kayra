@@ -4,6 +4,11 @@ WAYBAR_THEME_CSS="$HOME/.config/waybar/theme.css"
 FUZZEL_INI="$HOME/.config/fuzzel/fuzzel.ini"
 SWAYNC_THEME_DIR="$HOME/.config/swaync/"
 
+# Argüman zorunlu: yoksa jq'ya boş girdi verilir ve hiçbir şey yapılmaz
+if [[ $# -ne 1 ]]; then
+    echo "Usage: change-theme.sh <json>" >&2
+    exit 1
+fi
 json="$1"
 bg=$(echo "$json" | jq -r '.bg // empty')
 fg=$(echo "$json" | jq -r '.fg // empty')
@@ -16,7 +21,7 @@ sfg=$(echo "$json" | jq -r '.selected_fg // empty')
 [ -n "$fg" ] && sed -i -E "s/^([[:space:]]*@define-color[[:space:]]+color-fg[[:space:]]+)[^;]*;/\1$fg;/" "$WAYBAR_THEME_CSS"
 [ -n "$sbg" ] && sed -i -E "s/^([[:space:]]*@define-color[[:space:]]+color-fg-hover[[:space:]]+)[^;]*;/\1$sbg;/" "$WAYBAR_THEME_CSS"
 
-cp $WAYBAR_THEME_CSS $SWAYNC_THEME_DIR
+cp "$WAYBAR_THEME_CSS" "$SWAYNC_THEME_DIR"
 
 # fuzzel/fuzzel.ini (alpha ff eklenerek)
 f() { echo "${1#\#}ff"; }

@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-source $HOME/.local/bin/settings-conf.sh
+source "$HOME/.local/bin/settings-conf.sh"
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_SYSLOG_BOOT_REPORT

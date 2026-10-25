@@ -2,7 +2,7 @@
 # usbwatch: çıkarılabilir (rm=true) aygıtları izler, waybar için JSON basar,
 # yeni takılan bölümler için notify-send gönderir.
 
-source $HOME/.local/bin/single-instance.sh
+source "$HOME/.local/bin/single-instance.sh"
 single_instance
 
 export LC_CTYPE=en_US.UTF-8
