@@ -122,6 +122,15 @@ declare -A i18n_CONNECTION_CHECK=(
   [ACTION_REMOVE]="Remove"
 )
 
+declare -A i18n_KAYRA_LOG_MONITOR=(
+  [NOTIFY_TITLE]="Kayra hatası bulundu"
+  [NOTIFY_APP]="kayra-log-monitor"
+  [BUTTON_OPEN_LOG]="Log Dosyasını Aç"
+  [BUTTON_DISABLE]="Bu bildirimleri kapat"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
+)
+
 declare -A i18n_SYSLOG_NOTIFY=(
   [TITLE_MULTIPLE]="Log kayıtları ({COUNT} kayıt)"
   [TITLE_SINGLE]="Yeni log kaydı"
@@ -212,6 +221,14 @@ declare -A i18n_SETTINGS_MENU=(
   [MSG_NO_ITEMS]="Öğe bulunamadı"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
+)
+
+declare -A i18n_SYSTEM_MENU=(
+  [PROMPT_ACTION]="Ayar: "
+  [MSG_NO_ITEMS]="Ayar bulunamadı"
+  [LABEL_auto_theme]="Otomatik Tema Değişimi"
+  [LABEL_error_log_notify]="Sistem Log Uyarıları"
+  [LABEL_kayra_error_log_notify]="Kayra Log Uyarıları"
 )
 
 declare -A i18n_FONT_SETTINGS=(

@@ -122,6 +122,15 @@ declare -A i18n_CONNECTION_CHECK=(
   [ACTION_REMOVE]="Remove"
 )
 
+declare -A i18n_KAYRA_LOG_MONITOR=(
+  [NOTIFY_TITLE]="Kayra error detected"
+  [NOTIFY_APP]="kayra-log-monitor"
+  [BUTTON_OPEN_LOG]="Open Log File"
+  [BUTTON_DISABLE]="Disable these notifications"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
+)
+
 declare -A i18n_SYSLOG_NOTIFY=(
   [TITLE_MULTIPLE]="Log entries ({COUNT} entries)"
   [TITLE_SINGLE]="New log entry"
@@ -212,6 +221,14 @@ declare -A i18n_SETTINGS_MENU=(
   [MSG_NO_ITEMS]="No items found"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
+)
+
+declare -A i18n_SYSTEM_MENU=(
+  [PROMPT_ACTION]="Setting: "
+  [MSG_NO_ITEMS]="No settings found"
+  [LABEL_auto_theme]="Automatic Theme Switching"
+  [LABEL_error_log_notify]="System Log Warnings"
+  [LABEL_kayra_error_log_notify]="Kayra Log Warnings"
 )
 
 declare -A i18n_FONT_SETTINGS=(
