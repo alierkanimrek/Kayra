@@ -23,6 +23,7 @@ declare -A settings_menu=(
   ["Dil"]="language-settings.sh"
   ["Klavye"]="keyboard-settings.sh"
   ["Ekran"]="display-settings.sh"
+  ["Aygıtlar"]="show-devices.sh"
   ["Sistem"]="system-menu.sh"
 )
 
@@ -229,6 +230,27 @@ declare -A i18n_SYSTEM_MENU=(
   [LABEL_auto_theme]="Otomatik Tema Değişimi"
   [LABEL_error_log_notify]="Sistem Log Uyarıları"
   [LABEL_kayra_error_log_notify]="Kayra Log Uyarıları"
+)
+
+declare -A i18n_SHOW_DEVICES=(
+  [PROMPT_DEVICE]="Aygıt: "
+  [MSG_NO_DEVICES]="Aygıt bulunamadı"
+  [MSG_NO_DATA]="Aygıt verisi bulunamadı"
+  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
+  [MSG_NO_JQ]="jq kurulu değil"
+)
+
+declare -A i18n_SHOW_DEVICE_MODS=(
+  [MSG_MESG]="Modüller"
+  [PROMPT_MODULE]="Modül: "
+  [MSG_NO_MODULES]="Bu aygıt için modül bulunamadı"
+  [MSG_NO_DATA]="Aygıt verisi bulunamadı"
+  [MSG_DEVICE_NOT_FOUND]="Aygıt bulunamadı: "
+  [MSG_BAD_DEVICE]="Bilinmeyen aygıt: "
+  [MSG_ALREADY_IN_USE]="{MODULE} modülü zaten kullanımda."
+  [MSG_USAGE]="Kullanım: show-device-mods.sh <aygıt>"
+  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
+  [MSG_NO_JQ]="jq kurulu değil"
 )
 
 declare -A i18n_FONT_SETTINGS=(

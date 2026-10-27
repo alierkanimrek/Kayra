@@ -23,6 +23,7 @@ declare -A settings_menu=(
   ["Language"]="language-settings.sh"
   ["Keyboard"]="keyboard-settings.sh"
   ["Display"]="display-settings.sh"
+  ["Devices"]="show-devices.sh"
   ["System"]="system-menu.sh"
 )
 
@@ -229,6 +230,27 @@ declare -A i18n_SYSTEM_MENU=(
   [LABEL_auto_theme]="Automatic Theme Switching"
   [LABEL_error_log_notify]="System Log Warnings"
   [LABEL_kayra_error_log_notify]="Kayra Log Warnings"
+)
+
+declare -A i18n_SHOW_DEVICES=(
+  [PROMPT_DEVICE]="Device: "
+  [MSG_NO_DEVICES]="No devices found"
+  [MSG_NO_DATA]="No device data found"
+  [MSG_NO_FUZZEL]="fuzzel is not installed"
+  [MSG_NO_JQ]="jq is not installed"
+)
+
+declare -A i18n_SHOW_DEVICE_MODS=(
+  [MSG_MESG]="Modules"
+  [PROMPT_MODULE]="Module: "
+  [MSG_NO_MODULES]="No modules found for this device"
+  [MSG_NO_DATA]="No device data found"
+  [MSG_DEVICE_NOT_FOUND]="Device not found: "
+  [MSG_BAD_DEVICE]="Unknown device: "
+  [MSG_ALREADY_IN_USE]="Module {MODULE} is already in use."
+  [MSG_USAGE]="Usage: show-device-mods.sh <device-key>"
+  [MSG_NO_FUZZEL]="fuzzel is not installed"
+  [MSG_NO_JQ]="jq is not installed"
 )
 
 declare -A i18n_FONT_SETTINGS=(
