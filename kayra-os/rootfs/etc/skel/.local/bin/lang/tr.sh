@@ -25,6 +25,7 @@ declare -A settings_menu=(
   ["Ekran"]="display-settings.sh"
   ["Aygıtlar"]="show-devices.sh"
   ["Sistem"]="system-menu.sh"
+  ["Servisler"]="show-services.sh"
 )
 
 declare -A system_menu=(
@@ -251,6 +252,24 @@ declare -A i18n_SHOW_DEVICE_MODS=(
   [MSG_USAGE]="Kullanım: show-device-mods.sh <aygıt>"
   [MSG_NO_FUZZEL]="fuzzel kurulu değil"
   [MSG_NO_JQ]="jq kurulu değil"
+)
+
+declare -A i18n_SHOW_SERVICES=(
+  [MSG_MESG]="Servisler"
+  [PROMPT_SERVICE]="Servis: "
+  [MSG_NO_SERVICES]="Servis bulunamadı"
+  [LABEL_DISABLED]="devre dışı"
+  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
+)
+
+declare -A i18n_TOGGLE_SERVICE=(
+  [NOTIFY_TITLE]="Servisler"
+  [MSG_STARTED]="{SERVICE} servisi başlatıldı"
+  [MSG_STOPPED]="{SERVICE} servisi durduruldu"
+  [MSG_ENABLED]="{SERVICE} servisi etkinleştirildi ve başlatıldı"
+  [MSG_FAILED]="{SERVICE} servisi değiştirilemedi"
+  [MSG_NOT_FOUND]="Servis bulunamadı: {SERVICE}"
+  [MSG_USAGE]="Kullanım: toggle-service.sh <servis-adı>"
 )
 
 declare -A i18n_FONT_SETTINGS=(

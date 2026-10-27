@@ -25,6 +25,7 @@ declare -A settings_menu=(
   ["Display"]="display-settings.sh"
   ["Devices"]="show-devices.sh"
   ["System"]="system-menu.sh"
+  ["Services"]="show-services.sh"
 )
 
 declare -A system_menu=(
@@ -251,6 +252,24 @@ declare -A i18n_SHOW_DEVICE_MODS=(
   [MSG_USAGE]="Usage: show-device-mods.sh <device-key>"
   [MSG_NO_FUZZEL]="fuzzel is not installed"
   [MSG_NO_JQ]="jq is not installed"
+)
+
+declare -A i18n_SHOW_SERVICES=(
+  [MSG_MESG]="Services"
+  [PROMPT_SERVICE]="Service: "
+  [MSG_NO_SERVICES]="No services found"
+  [LABEL_DISABLED]="disabled"
+  [MSG_NO_FUZZEL]="fuzzel is not installed"
+)
+
+declare -A i18n_TOGGLE_SERVICE=(
+  [NOTIFY_TITLE]="Services"
+  [MSG_STARTED]="Service {SERVICE} started"
+  [MSG_STOPPED]="Service {SERVICE} stopped"
+  [MSG_ENABLED]="Service {SERVICE} enabled and started"
+  [MSG_FAILED]="Failed to toggle service {SERVICE}"
+  [MSG_NOT_FOUND]="Service not found: {SERVICE}"
+  [MSG_USAGE]="Usage: toggle-service.sh <service-name>"
 )
 
 declare -A i18n_FONT_SETTINGS=(
