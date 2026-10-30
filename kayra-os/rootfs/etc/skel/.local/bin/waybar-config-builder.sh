@@ -2,14 +2,18 @@
 # waybar-config-builder.sh
 # .config/waybar/config.jsonc oluşturur.
 # i18n yapılarını (lang/current.sh) kullanır; config.template'den okur.
-# Python / harici bağımlılık yok; bash echo / printf / while kullanılır.
+# Python / harici bağımlılık yok; bash echo / printf ve template-lib.sh kullanılır.
 
 set -uo pipefail
+
+export LC_ALL=C.UTF-8
 
 source "$(dirname "$0")/klog.sh"
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_WAYBAR_CONFIG
+
+source "$(dirname "$0")/template-lib.sh"
 
 CONFIG_DIR="$HOME/.config/waybar"
 TEMPLATE="$CONFIG_DIR/config.template"
@@ -26,20 +30,23 @@ PLACEHOLDERS=(
   BATTERY_EVENT_DISCHARGING BATTERY_EVENT_CHARGING
 )
 
-# Basit print komutları ile oluştur (while + bash substitution)
+if [[ ! -f "$TEMPLATE" ]]; then
+    log "ERROR" "Template not found: $TEMPLATE"
+    exit 1
+fi
+
+# Template metnini oku ve tüm yer tutucuları i18n mesajlarıyla değiştir
+template_text="$(<"$TEMPLATE")"
+
+for ph in "${PLACEHOLDERS[@]}"; do
+    template_text="$(template_replace "$template_text" "$ph" "${MSG[$ph]}")"
+done
+
+# Başlık: i18n mesajlarını kullan
 {
-    # Başlık: i18n mesajlarını kullan
     echo "// Waybar config - built by waybar-config-builder.sh"
     echo ""
-
-    while IFS= read -r line || [[ -n "$line" ]]; do
-        for ph in "${PLACEHOLDERS[@]}"; do
-            pat="{{${ph}}}"
-            # Bash substitution; pattern değişkenle vererek {{}} parse hatası önlenir
-            line="${line//$pat/${MSG[$ph]}}"
-        done
-        printf '%s\n' "$line"
-    done < "$TEMPLATE"
+    printf '%s\n' "$template_text"
 } > "$OUT"
 
 log DEBUG "Waybar config created: $OUT "
@@ -50,4 +57,3 @@ if [[ ! -f "$OUT" ]]; then
 fi
 
 exit 0
-
