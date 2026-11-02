@@ -11,33 +11,37 @@ declare -A i18n=(
   [ACTION_REMOVE]="Kaldır"
 )
 
+# User menu labels (icons and commands are defined in user-menu.sh)
 declare -A user_menu=(
-  ["Şifreyi değiştir"]="change-passwd.sh"
-  ["Gruba ekle"]="group-add.sh --anchor=top-right"
-  ["Gruptan çıkar"]="group-remove.sh --anchor=top-right"
-  ["Ev Dizini Kullanımı"]="home-usage.sh"
+  [ADD_TO_GROUP]="Gruba ekle"
+  [REMOVE_FROM_GROUP]="Gruptan çıkar"
+  [CHANGE_PASSWORD]="Şifreyi değiştir"
+  [HOME_USAGE]="Ev Dizini Kullanımı"
 )
 
+# Settings menu labels (icons and commands are defined in settings-menu.sh)
 declare -A settings_menu=(
-  ["Görünüm ve Tema"]="appearance-settings.sh"
-  ["Dil"]="language-settings.sh"
-  ["Klavye"]="keyboard-settings.sh"
-  ["Ekran"]="display-settings.sh"
-  ["Aygıtlar"]="show-devices.sh"
-  ["Sistem"]="system-menu.sh"
-  ["Servisler"]="show-services.sh"
+  [APPEARANCE_THEME]="Görünüm ve Tema"
+  [LANGUAGE]="Dil"
+  [KEYBOARD]="Klavye"
+  [DISPLAY]="Ekran"
+  [DEVICES]="Aygıtlar"
+  [SYSTEM]="Sistem"
+  [SERVICES]="Servisler"
 )
 
+# System menu labels (icons and commands are defined in the system menu script)
 declare -A system_menu=(
-  ["Log İzleyici"]="toggle-log-monitor.sh"
+  [LOG_MONITOR]="Log İzleyici"
 )
 
+# Appearance menu labels (icons and commands are defined in appearance-settings.sh)
 declare -A appearance_menu=(
-  ["Yazı Tipi"]="font-settings.sh"
-  ["Yazı Tipi Büyüklüğü"]="font-size-settings.sh"
-  ["Temayı değiştir"]="/usr/bin/nwg-look"
-  ["Otomatik Tema"]="toggle-auto-theme.sh"
-  ["Duvar Kağıdı"]="change-wallpaper.sh"
+  [FONT]="Yazı Tipi"
+  [FONT_SIZE]="Yazı Tipi Büyüklüğü"
+  [CHANGE_THEME]="Temayı değiştir"
+  [AUTO_THEME]="Otomatik Tema"
+  [WALLPAPER]="Duvar Kağıdı"
 )
 
 declare -A i18n_HOME_USAGE=(

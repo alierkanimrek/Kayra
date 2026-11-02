@@ -11,33 +11,37 @@ declare -A i18n=(
   [ACTION_REMOVE]="Remove"
 )
 
+# User menu labels (icons and commands are defined in user-menu.sh)
 declare -A user_menu=(
-  ["Change Password"]="change-passwd.sh"
-  ["Add to Group"]="group-add.sh --anchor=top-right"
-  ["Remove from Group"]="group-remove.sh --anchor=top-right"
-  ["Home Directory Usage"]="home-usage.sh"
+  [ADD_TO_GROUP]="Add to Group"
+  [REMOVE_FROM_GROUP]="Remove from Group"
+  [CHANGE_PASSWORD]="Change Password"
+  [HOME_USAGE]="Home Directory Usage"
 )
 
+# Settings menu labels (icons and commands are defined in settings-menu.sh)
 declare -A settings_menu=(
-  ["Appearance & Theme"]="appearance-settings.sh"
-  ["Language"]="language-settings.sh"
-  ["Keyboard"]="keyboard-settings.sh"
-  ["Display"]="display-settings.sh"
-  ["Devices"]="show-devices.sh"
-  ["System"]="system-menu.sh"
-  ["Services"]="show-services.sh"
+  [APPEARANCE_THEME]="Appearance & Theme"
+  [LANGUAGE]="Language"
+  [KEYBOARD]="Keyboard"
+  [DISPLAY]="Display"
+  [DEVICES]="Devices"
+  [SYSTEM]="System"
+  [SERVICES]="Services"
 )
 
+# System menu labels (icons and commands are defined in the system menu script)
 declare -A system_menu=(
-  ["Log Monitor"]="toggle-log-monitor.sh"
+  [LOG_MONITOR]="Log Monitor"
 )
 
+# Appearance menu labels (icons and commands are defined in appearance-settings.sh)
 declare -A appearance_menu=(
-  ["Font"]="font-settings.sh"
-  ["Font Size"]="font-size-settings.sh"
-  ["Change Theme"]="/usr/bin/nwg-look"
-  ["Auto Theme"]="toggle-auto-theme.sh"
-  ["Wallpaper"]="change-wallpaper.sh"
+  [FONT]="Font"
+  [FONT_SIZE]="Font Size"
+  [CHANGE_THEME]="Change Theme"
+  [AUTO_THEME]="Auto Theme"
+  [WALLPAPER]="Wallpaper"
 )
 
 declare -A i18n_HOME_USAGE=(
