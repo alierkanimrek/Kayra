@@ -7,12 +7,17 @@
 # labels by their key (FONT, FONT_SIZE, ...).
 #
 # Usage: appearance-settings.sh [fuzzel parameters...]
+#
+# Used commands: fuzzel, pkill, awk, printf, notify-send (via notify.sh)
 
 set -euo pipefail
 export LC_ALL=C.UTF-8
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_SETTINGS_MENU
+
+source "$(dirname "$0")/klog.sh"
+source "$(dirname "$0")/notify.sh"
 
 # Display order of the menu entries
 declare -a ORDER=(
@@ -60,20 +65,36 @@ SELECTED=$(printf '%s\n' "${LINES[@]}" | fuzzel --dmenu --anchor=top-right --log
 [ -z "$SELECTED" ] && exit 0
 
 # Run the command of the selected text
-case "${SELECTED#* }" in
+SELECTED_LABEL="${SELECTED#* }"
+TARGET_COMMAND=""
+
+case "$SELECTED_LABEL" in
     "${appearance_menu[FONT]}")
-        "$HOME/.local/bin/font-settings.sh" &
+        TARGET_COMMAND="$HOME/.local/bin/font-settings.sh"
         ;;
     "${appearance_menu[FONT_SIZE]}")
-        "$HOME/.local/bin/font-size-settings.sh" &
+        TARGET_COMMAND="$HOME/.local/bin/font-size-settings.sh"
         ;;
     "${appearance_menu[CHANGE_THEME]}")
-        /usr/bin/nwg-look &
+        TARGET_COMMAND="/usr/bin/nwg-look"
         ;;
     "${appearance_menu[AUTO_THEME]}")
-        "$HOME/.local/bin/toggle-auto-theme.sh" &
+        TARGET_COMMAND="$HOME/.local/bin/toggle-auto-theme.sh"
         ;;
     "${appearance_menu[WALLPAPER]}")
-        "$HOME/.local/bin/change-wallpaper.sh" &
+        TARGET_COMMAND="$HOME/.local/bin/change-wallpaper.sh"
         ;;
 esac
+
+[ -z "$TARGET_COMMAND" ] && exit 0
+
+if [ ! -x "$TARGET_COMMAND" ]; then
+    log ERROR "Menu command is missing: $TARGET_COMMAND"
+    notify_error "${MSG[NOTIFY_TITLE]}" \
+        "$(i18n_template "${MSG[MSG_SCRIPT_MISSING]}" SCRIPT="$TARGET_COMMAND")"
+    exit 1
+fi
+
+log INFO "Starting menu command: $TARGET_COMMAND"
+
+"$TARGET_COMMAND" &

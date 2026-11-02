@@ -1,10 +1,3 @@
 {
-  "scripts": {
-    "fix-groups": {
-      "exec": "~/.local/bin/fix-groups.sh",
-      "app-name": "Group Check",
-      "summary": "^Missing group membership$",
-      "run-on": "action"
-    }
-  }
+  "scripts": {}
 }

@@ -116,6 +116,8 @@ declare -A i18n_USER_MENU=(
   [FILE_NOT_FOUND]="Error: File not found -> {FILE}"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
+  [NOTIFY_TITLE]="User Menu"
+  [MSG_SCRIPT_MISSING]="Menu command not found: {SCRIPT}"
 )
 
 declare -A i18n_CONNECTION_CHECK=(
@@ -190,6 +192,7 @@ declare -A i18n_FIX_GROUPS=(
   [TITLE_SUCCESS]="Groups added"
   [MSG_SUCCESS]="Log out and log back in for this to take effect."
   [TITLE_FAILED]="Operation cancelled or failed"
+  [MSG_FAILED]="Failed to add the missing groups."
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
@@ -225,6 +228,8 @@ declare -A i18n_SETTINGS_MENU=(
   [MSG_NO_ITEMS]="No items found"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
+  [NOTIFY_TITLE]="Appearance Settings"
+  [MSG_SCRIPT_MISSING]="Menu command not found: {SCRIPT}"
 )
 
 declare -A i18n_SYSTEM_MENU=(
@@ -232,6 +237,11 @@ declare -A i18n_SYSTEM_MENU=(
   [LABEL_auto_theme]="Automatic Theme Switching"
   [LABEL_error_log_notify]="System Log Warnings"
   [LABEL_kayra_error_log_notify]="Kayra Log Warnings"
+  [NOTIFY_TITLE]="System Settings"
+  [MSG_TOGGLED]="{LABEL}: {STATE}"
+  [STATE_ON]="enabled"
+  [STATE_OFF]="disabled"
+  [ACTION_UNDO]="Undo"
 )
 
 declare -A i18n_SHOW_DEVICES=(
@@ -393,6 +403,10 @@ declare -A i18n_XBPS_MANAGER=(
 )
 
 declare -A i18n_POWER_MENU=(
+  [ITEM_SHUTDOWN]="Shutdown"
+  [ITEM_REBOOT]="Reboot"
+  [ITEM_LOGOUT]="Logout"
+  [ITEM_LOCK]="Lock"
   [NOTIFY_TITLE]="Power Menu"
   [LOCK_MSG]="Wait for the software changes to complete."
   [MSG_BLOCKED]="This action is blocked."

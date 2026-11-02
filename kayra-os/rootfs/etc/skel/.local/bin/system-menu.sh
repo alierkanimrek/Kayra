@@ -9,6 +9,8 @@
 # Add a setting: put its key in SETTING_KEYS, and its translated label as
 # [LABEL_<key>] in i18n_SYSTEM_MENU (lang/en.sh, lang/tr.sh).
 #
+# Used commands: fuzzel, pkill, grep, sed, printf, notify-send (via notify.sh)
+#
 
 set -euo pipefail
 export LC_ALL=C.UTF-8
@@ -21,6 +23,10 @@ source "$SCRIPT_DIR/settings-conf.sh"
 # Localization strings
 source "$SCRIPT_DIR/i18n.sh"
 declare -n MSG=i18n_SYSTEM_MENU
+
+# Logging and notifications
+source "$SCRIPT_DIR/klog.sh"
+source "$SCRIPT_DIR/notify.sh"
 
 # ------------------------------------------------------------------
 # Settings registry - add new boolean settings here
@@ -122,6 +128,26 @@ done
 [ "$SELECTED_INDEX" -lt 0 ] && exit 0
 
 TARGET_KEY="${MENU_KEYS[$SELECTED_INDEX]}"
-setting_toggle "$TARGET_KEY" >/dev/null
+NEW_VALUE=$(setting_toggle "$TARGET_KEY")
+
+log INFO "Setting $TARGET_KEY toggled to $NEW_VALUE"
+
+TARGET_LABEL="${MSG[LABEL_${TARGET_KEY}]:-${SETTING_LABELS[$TARGET_KEY]:-$TARGET_KEY}}"
+
+STATE_LABEL="${MSG[STATE_ON]}"
+[ "$NEW_VALUE" = "false" ] && STATE_LABEL="${MSG[STATE_OFF]}"
+
+# The notification is sent in the background, the menu script does not wait
+# for the user. The undo button switches the setting back.
+(
+    ACTION=$(notify_action "${MSG[NOTIFY_TITLE]}" \
+        "$(i18n_template "${MSG[MSG_TOGGLED]}" LABEL="$TARGET_LABEL" STATE="$STATE_LABEL")" \
+        "undo=${MSG[ACTION_UNDO]}")
+
+    if [ "$ACTION" = "undo" ]; then
+        setting_toggle "$TARGET_KEY" >/dev/null
+        log INFO "Setting $TARGET_KEY toggled back by the user"
+    fi
+) &
 
 exit 0

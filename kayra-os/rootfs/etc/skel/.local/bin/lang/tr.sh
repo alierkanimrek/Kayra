@@ -116,6 +116,8 @@ declare -A i18n_USER_MENU=(
   [FILE_NOT_FOUND]="Hata: Dosya bulunamadı -> {FILE}"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
+  [NOTIFY_TITLE]="Kullanıcı Menüsü"
+  [MSG_SCRIPT_MISSING]="Menü komutu bulunamadı: {SCRIPT}"
 )
 
 declare -A i18n_CONNECTION_CHECK=(
@@ -190,6 +192,7 @@ declare -A i18n_FIX_GROUPS=(
   [TITLE_SUCCESS]="Gruplar eklendi"
   [MSG_SUCCESS]="Değişikliklerin etkili olması için çıkış yapıp tekrar giriş yapın."
   [TITLE_FAILED]="İşlem iptal edildi veya başarısız oldu"
+  [MSG_FAILED]="Eksik gruplar eklenemedi."
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
@@ -225,6 +228,8 @@ declare -A i18n_SETTINGS_MENU=(
   [MSG_NO_ITEMS]="Öğe bulunamadı"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
+  [NOTIFY_TITLE]="Görünüm Ayarları"
+  [MSG_SCRIPT_MISSING]="Menü komutu bulunamadı: {SCRIPT}"
 )
 
 declare -A i18n_SYSTEM_MENU=(
@@ -232,6 +237,11 @@ declare -A i18n_SYSTEM_MENU=(
   [LABEL_auto_theme]="Otomatik Tema Değişimi"
   [LABEL_error_log_notify]="Sistem Log Uyarıları"
   [LABEL_kayra_error_log_notify]="Kayra Log Uyarıları"
+  [NOTIFY_TITLE]="Sistem Ayarları"
+  [MSG_TOGGLED]="{LABEL}: {STATE}"
+  [STATE_ON]="etkin"
+  [STATE_OFF]="devre dışı"
+  [ACTION_UNDO]="Geri al"
 )
 
 declare -A i18n_SHOW_DEVICES=(
@@ -393,6 +403,10 @@ declare -A i18n_XBPS_MANAGER=(
 )
 
 declare -A i18n_POWER_MENU=(
+  [ITEM_SHUTDOWN]="Kapat"
+  [ITEM_REBOOT]="Yeniden Başlat"
+  [ITEM_LOGOUT]="Oturumu Kapat"
+  [ITEM_LOCK]="Kilitle"
   [NOTIFY_TITLE]="Güç Menüsü"
   [LOCK_MSG]="Yazılım değişikliklerinin tamamlanmasını bekleyin"
   [MSG_BLOCKED]="Bu işlem engellendi."

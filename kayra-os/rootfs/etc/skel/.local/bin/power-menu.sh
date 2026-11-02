@@ -23,6 +23,7 @@ source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_POWER_MENU
 
 source "$(dirname "$0")/klog.sh"
+source "$(dirname "$0")/notify.sh"
 
 # The current user is used for the logout action.
 CURRENT_USER="${USER:-$(id -un)}"
@@ -36,7 +37,8 @@ ICON_REBOOT=$(printf '%b' '\U000E042')
 ICON_LOGOUT=$(printf '%b' '\U000E9BA')
 ICON_LOCK=$(printf '%b' '\U000E897')
 
-# Menu entries in display order.
+# Stable action ids in display order. The visible labels are read from
+# i18n_POWER_MENU (ITEM_<ACTION_ID>) so the menu follows the active language.
 declare -a MENU_ITEMS=(
     "Shutdown"
     "Reboot"
@@ -49,15 +51,6 @@ declare -a MENU_ITEMS=(
 declare -a CHECK_FUNCTIONS=(
     check_xbps_lock
 )
-
-# Send a notification with the given body.
-notify_send() {
-    local title="$1"
-    local body="$2"
-    local urgency="${3:-normal}"
-
-    notify-send -u "$urgency" "$title" "$body" >/dev/null 2>&1 || true
-}
 
 # Control layer check: a running software operation blocks the action.
 check_xbps_lock() {
@@ -82,7 +75,7 @@ control_layer() {
     for check_fn in "${CHECK_FUNCTIONS[@]}"; do
         if ! deny_message="$("$check_fn" "$action")"; then
             [[ -n "$deny_message" ]] || deny_message="${MSG[MSG_BLOCKED]}"
-            notify_send "${MSG[NOTIFY_TITLE]}" "$deny_message" "critical"
+            notify_error "${MSG[NOTIFY_TITLE]}" "$deny_message"
             log WARN "Power action '$action' blocked by $check_fn: $deny_message"
             return 1
         fi
@@ -124,36 +117,69 @@ run_action() {
             ;;
         *)
             log WARN "Unknown power action: $action"
-            notify_send "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_UNKNOWN_ACTION]}" "critical"
+            notify_error "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_UNKNOWN_ACTION]}"
             ;;
     esac
 }
 
-# Build the fuzzel input list with icons.
-build_menu_lines() {
+# Print the stable action id for a localized menu label. Fails when the label
+# does not belong to any known menu entry.
+resolve_action() {
+    local label="$1"
     local item
 
     for item in "${MENU_ITEMS[@]}"; do
+        if [[ "$label" == "${MSG[ITEM_${item^^}]}" ]]; then
+            echo "$item"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+# Build the fuzzel input list with icons and localized labels. The result is
+# stored in the global MENU_LINES array so the width can be calculated from it.
+declare -a MENU_LINES=()
+
+build_menu_lines() {
+    local item
+    local label
+
+    MENU_LINES=()
+
+    for item in "${MENU_ITEMS[@]}"; do
+        label="${MSG[ITEM_${item^^}]}"
         case "$item" in
-            Shutdown) echo "$ICON_SHUTDOWN $item" ;;
-            Reboot)   echo "$ICON_REBOOT $item" ;;
-            Logout)   echo "$ICON_LOGOUT $item" ;;
-            Lock)     echo "$ICON_LOCK $item" ;;
-            *)        echo "$item" ;;
+            Shutdown) MENU_LINES+=("$ICON_SHUTDOWN $label") ;;
+            Reboot)   MENU_LINES+=("$ICON_REBOOT $label") ;;
+            Logout)   MENU_LINES+=("$ICON_LOGOUT $label") ;;
+            Lock)     MENU_LINES+=("$ICON_LOCK $label") ;;
+            *)        MENU_LINES+=("$label") ;;
         esac
     done
 }
 
+# Build the menu entries once, then calculate the window width.
+build_menu_lines
+
+# Window width of the longest menu entry (icon counted as 3 characters).
+MAX_WIDTH=$(printf '%s\n' "${MENU_LINES[@]}" | awk '{ n = length($0) - 1 + 3; if (n > m) m = n } END { print m+0 }')
+
 # Close any existing fuzzel process before opening the menu.
 pkill -x fuzzel 2>/dev/null || true
 
-SELECTED_LINE=$(build_menu_lines | fuzzel --dmenu --log-no-syslog --minimal-lines --hide-prompt) || true
+SELECTED_LINE=$(printf '%s\n' "${MENU_LINES[@]}" | fuzzel --dmenu --log-no-syslog --minimal-lines --lines="${#MENU_LINES[@]}" --width="$MAX_WIDTH" --hide-prompt) || true
 
 [[ -z "$SELECTED_LINE" ]] && exit 0
 
-# Strip the icon and keep the action name.
-SELECTED_ACTION="${SELECTED_LINE##* }"
+# Strip the icon and keep the localized label.
+SELECTED_LABEL="${SELECTED_LINE#* }"
 
-[[ -z "$SELECTED_ACTION" ]] && exit 0
+[[ -z "$SELECTED_LABEL" ]] && exit 0
+
+# Translate the label back to the stable action id used by run_action.
+# An unknown label reaches the fallback branch of run_action.
+SELECTED_ACTION="$(resolve_action "$SELECTED_LABEL")" || true
 
 run_action "$SELECTED_ACTION"
