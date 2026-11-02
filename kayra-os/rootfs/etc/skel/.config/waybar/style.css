@@ -26,8 +26,9 @@ window#waybar {
 tooltip {
     background-color: @color-surface;
     border: 1px solid @color-fg;
-    border-radius: 6px;
+    border-radius: 0px 0px 6px 6px;
 }
+
 
 tooltip label {
     color: @color-fg;
@@ -42,12 +43,8 @@ tooltip label {
 #window,
 #tray,
 #battery,
-#custom-power,
 #custom-power-trigger,
-#custom-lock,
-#custom-logout,
-#custom-reboot,
-#custom-shutdown,
+#custom-power-button,
 #custom-notification,
 #custom-network,
 #custom-clipboard,
@@ -62,8 +59,8 @@ tooltip label {
     color: @color-fg;
     background-color: transparent;
     border: none;
-	padding: 0 3px;
-	margin: 0 1px;
+	padding: 0 0px;
+	margin: 0 3px;
 }
 
 /* Ortak Hover: fare üzerine gelince beyaz parlama */
@@ -72,12 +69,8 @@ battery:hover,
 #scratchpad:hover,
 #custom-media:hover,
 #custom-clipboard:hover,
-#custom-power:hover,
+#custom-power-button:hover,
 #custom-power-trigger:hover,
-#custom-lock:hover,
-#custom-logout:hover,
-#custom-reboot:hover,
-#custom-shutdown:hover,
 #custom-notification:hover,
 #custom-network:hover,
 #custom-wifi:hover,
@@ -88,8 +81,7 @@ battery:hover,
 #custom-removable-monitor:hover,
 #wireplumber:hover,
 #wireplumber-mic:hover,
-#clock:hover,
-#custom-xbps-lock-monitor:hover{
+#clock:hover{
     color: @color-fg-hover;
 }
 
@@ -153,8 +145,7 @@ battery:hover,
 #custom-notification.dnd-notification,
 #wireplumber.muted,
 #wireplumber.mic-muted,
-#custom-memory-monitor,
-#custom-xbps-lock-monitor{
+#custom-memory-monitor{
     color: @color-warning;
 }
 

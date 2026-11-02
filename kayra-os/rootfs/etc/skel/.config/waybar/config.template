@@ -43,10 +43,7 @@
             "custom/power-trigger",
             "custom/user-info",
             "custom/system-info",
-            "custom/lock",
-            "custom/logout",
-            "custom/reboot",
-            "custom/shutdown"
+            "custom/power-button"
         ]
     },
     "custom/power-trigger": {
@@ -54,32 +51,10 @@
         "tooltip": false
     },
 
-    "custom/lock": {
-        "format": "", // lock
-        "tooltip": true,
-        "tooltip-format": "{{LOCK_TOOLTIP}}",
-        "on-click": "loginctl lock-session"
-    },
-
-    "custom/logout": {
-        "format": "", // logout
-        "tooltip": true,
-        "tooltip-format": "{{LOGOUT_TOOLTIP}}",
-        "on-click": "loginctl terminate-user $USER"
-    },
-
-    "custom/reboot": {
-        "format": "", // reload / reboot
-        "tooltip": true,
-        "tooltip-format": "{{REBOOT_TOOLTIP}}",
-        "on-click": "loginctl reboot"
-    },
-
-    "custom/shutdown": {
+    "custom/power-button": {
         "format": "", // power
-        "tooltip": true,
-        "tooltip-format": "{{SHUTDOWN_TOOLTIP}}",
-        "on-click": "loginctl poweroff"
+        "tooltip": false,
+        "on-click": "$HOME/.local/bin/power-menu.sh"
     },
 
     "custom/notification": {

@@ -106,7 +106,7 @@ fi
 pkill -x fuzzel 2>/dev/null || true
 
 # --- Show the menu ------------------------------------------------
-SELECTED=$(printf '%s\n' "${MENU_LINES[@]}" | fuzzel --dmenu --log-no-syslog --hide-prompt "$@" --prompt="${MSG[PROMPT_ACTION]:-Setting: }") || true
+SELECTED=$(printf '%s\n' "${MENU_LINES[@]}" | fuzzel --dmenu --log-no-syslog --hide-prompt "$@") || true
 
 [ -z "$SELECTED" ] && exit 0
 

@@ -110,7 +110,6 @@ declare -A i18n_USER_MENU=(
   [MSG_NO_ITEMS]="Öğe bulunamadı"
   [USAGE_ERROR]="Kullanım: {SCRIPT} <json-dosya> [fuzzel parametreleri...]"
   [FILE_NOT_FOUND]="Hata: Dosya bulunamadı -> {FILE}"
-  [PROMPT_ACTION]="Eylem: "
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
@@ -219,14 +218,12 @@ declare -A i18n_SYSTEM_INFO=(
 )
 
 declare -A i18n_SETTINGS_MENU=(
-  [PROMPT_ACTION]="Eylem: "
   [MSG_NO_ITEMS]="Öğe bulunamadı"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_SYSTEM_MENU=(
-  [PROMPT_ACTION]="Ayar: "
   [MSG_NO_ITEMS]="Ayar bulunamadı"
   [LABEL_auto_theme]="Otomatik Tema Değişimi"
   [LABEL_error_log_notify]="Sistem Log Uyarıları"
@@ -267,6 +264,7 @@ declare -A i18n_TOGGLE_SERVICE=(
   [MSG_STARTED]="{SERVICE} servisi başlatıldı"
   [MSG_STOPPED]="{SERVICE} servisi durduruldu"
   [MSG_ENABLED]="{SERVICE} servisi etkinleştirildi ve başlatıldı"
+  [MSG_PROTECTED]="{SERVICE} servisi durdurulamaz"
   [MSG_FAILED]="{SERVICE} servisi değiştirilemedi"
   [MSG_NOT_FOUND]="Servis bulunamadı: {SERVICE}"
   [MSG_USAGE]="Kullanım: toggle-service.sh <servis-adı>"
@@ -388,4 +386,11 @@ declare -A i18n_XBPS_MANAGER=(
   [LOCK_UPDATE_INFO]="Yazılım deposu güncel paket bilgileri indiriliyor."
   [LOCK_BUILD]="Yazılım derleniyor: %s"
   [DOWNLOAD_OK]="Yazılım bilgileri indirildi, kurulum için hazır."
+)
+
+declare -A i18n_POWER_MENU=(
+  [NOTIFY_TITLE]="Güç Menüsü"
+  [LOCK_MSG]="Yazılım değişikliklerinin tamamlanmasını bekleyin"
+  [MSG_BLOCKED]="Bu işlem engellendi."
+  [MSG_UNKNOWN_ACTION]="Bilinmeyen işlem seçildi."
 )

@@ -110,7 +110,6 @@ declare -A i18n_USER_MENU=(
   [MSG_NO_ITEMS]="No items found"
   [USAGE_ERROR]="Usage: {SCRIPT} <json-file> [fuzzel parameters...]"
   [FILE_NOT_FOUND]="Error: File not found -> {FILE}"
-  [PROMPT_ACTION]="Action: "
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
@@ -219,14 +218,12 @@ declare -A i18n_SYSTEM_INFO=(
 )
 
 declare -A i18n_SETTINGS_MENU=(
-  [PROMPT_ACTION]="Action: "
   [MSG_NO_ITEMS]="No items found"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
 
 declare -A i18n_SYSTEM_MENU=(
-  [PROMPT_ACTION]="Setting: "
   [MSG_NO_ITEMS]="No settings found"
   [LABEL_auto_theme]="Automatic Theme Switching"
   [LABEL_error_log_notify]="System Log Warnings"
@@ -267,6 +264,7 @@ declare -A i18n_TOGGLE_SERVICE=(
   [MSG_STARTED]="Service {SERVICE} started"
   [MSG_STOPPED]="Service {SERVICE} stopped"
   [MSG_ENABLED]="Service {SERVICE} enabled and started"
+  [MSG_PROTECTED]="Service {SERVICE} can not be stopped"
   [MSG_FAILED]="Failed to toggle service {SERVICE}"
   [MSG_NOT_FOUND]="Service not found: {SERVICE}"
   [MSG_USAGE]="Usage: toggle-service.sh <service-name>"
@@ -388,4 +386,13 @@ declare -A i18n_XBPS_MANAGER=(
   [LOCK_UPDATE_INFO]="Updating software repo package info."
   [LOCK_BUILD]="Building software: %s"
   [DOWNLOAD_OK]="Software data downloaded, ready for installation."
+)
+
+declare -A i18n_POWER_MENU=(
+  [NOTIFY_TITLE]="Power Menu"
+  [LOCK_MSG]="Wait for the software changes to complete."
+  [MSG_BLOCKED]="This action is blocked."
+  [MSG_UNKNOWN_ACTION]="Unknown action selected."
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
 )

@@ -21,7 +21,7 @@ line_count=$(printf '%s\n' "${!user_menu[@]}" | grep -c "^...*")
 pkill -x fuzzel 2>/dev/null || true
 
 # Get selection from fuzzel dmenu
-SELECTED_KEY=$(printf '%s\n' "${!user_menu[@]}" | tac | fuzzel --dmenu --anchor=top-right --log-no-syslog  --lines="$line_count" "$@" --prompt="${MSG[PROMPT_ACTION]}") || true
+SELECTED_KEY=$(printf '%s\n' "${!user_menu[@]}" | tac | fuzzel --dmenu --anchor=top-right --log-no-syslog --minimal-lines --hide-prompt) || true
 
 [ -z "$SELECTED_KEY" ] && exit 0
 
