@@ -4,6 +4,7 @@
 # Temel Sistem
 base-system
 void-repo-nonfree
+void-repo-multilib
 void-repo-multilib-nonfree
 mesa-dri
 socklog-void
@@ -20,6 +21,7 @@ python
 python3-pipx
 grim
 pwvucontrol
+chrony
 
 # Sanal İstemci
 spice-vdagent
