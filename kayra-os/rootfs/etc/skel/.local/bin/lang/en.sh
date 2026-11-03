@@ -303,7 +303,17 @@ declare -A i18n_CHANGE_FONT_SIZE=(
   [ACTION_REMOVE]="Remove"
 )
 
+declare -A i18n_SET_LANGUAGE=(
+  [NOTIFY_TITLE]="Language"
+  [MSG_CHANGED]="Changed to: {LANG}"
+  [MSG_FAILED]="Failed to change language to: {LANG}"
+  [MSG_NO_LANG_DATA]="The language data for {LANG} was not found. The English data is used, the system locale is set to {LOCALE}."
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
+)
+
 declare -A i18n_LANGUAGE_SETTINGS=(
+  [MSG_NO_LANGUAGES]="No language files were found."
   [PROMPT_SELECT]="Select: "
   [NOTIFY_TITLE]="Language"
   [MSG_CHANGED]="Changed to: {LANG}"

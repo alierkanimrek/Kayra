@@ -20,8 +20,8 @@ declare -n MSG=i18n_HOME_USAGE
 source "$(dirname "$0")/klog.sh"
 source "$(dirname "$0")/notify.sh"
 
-# Icon shown on the notification.
-NOTIFY_ICON="drive-harddisk"
+# Icon shown on the notification (Material Symbols codepoint).
+NOTIFY_ICON="\U000F3DC"
 
 # Calculate the $HOME size in human readable format.
 HOME_SIZE="$(du -sh "$HOME" 2>/dev/null | awk '{print $1}')"

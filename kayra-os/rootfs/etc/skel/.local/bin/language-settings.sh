@@ -1,93 +1,127 @@
 #!/usr/bin/env bash
 #
-# Language Settings - Display available languages and apply selection
-# Gets available languages from system locales and allows switching
-
-set -euo pipefail
-export LC_CTYPE=en_US.UTF-8
+# language-settings.sh - Display the available languages and apply the selection.
+#
+# The available languages come from the system locales (locale -av). The
+# current language is read from ~/.profile. The current language is marked
+# with a filled circle, the other languages with an empty circle.
+#
+# The locale code of the selected entry is handed over to set-language.sh.
+# The mapping of the locale code to the language data file (lang/<code>.sh)
+# and to the locale string is done there.
+#
+# Usage: language-settings.sh [fuzzel parameters...]
+#
+# Dependencies:
+#   - fuzzel      (xbps-install -S fuzzel)
+#   - libnotify   (for notify-send, xbps-install -S libnotify)
+#
+# Used commands: fuzzel, pkill, locale, awk, grep, cut, tr, set-language.sh
+#
+set -uo pipefail
+export LC_ALL=C.UTF-8
 
 source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_LANGUAGE_SETTINGS
 
-# Get current language from ~/.profile
-# Extract language code from locale string (first 2 chars)
-PROFILE_FILE="$HOME/.profile"
-CURRENT_LANG="en"  # Default fallback
+source "$(dirname "$0")/klog.sh"
+source "$(dirname "$0")/notify.sh"
 
-if [ -f "$PROFILE_FILE" ]; then
-    # Source .profile to get LANG variable directly
-    source "$PROFILE_FILE" 2>/dev/null
-    # Extract first 2 characters as language code
-    CURRENT_LANG="${LANG:0:2}"
-    # Fallback to "en" if extraction failed
-    [ -z "$CURRENT_LANG" ] && CURRENT_LANG="en"
+SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
+PROFILE_FILE="$HOME/.profile"
+SET_LANGUAGE="$SCRIPT_DIR/set-language.sh"
+
+# Icon shown on the notification (Material Symbols codepoint).
+NOTIFY_ICON="\U000F799"
+
+# Menu icons: filled circle for the current language, empty circle for the
+# other languages.
+ICON_CURRENT=$(LC_ALL=C.UTF-8 printf '%b' '\U000025CF')
+ICON_OTHER=$(LC_ALL=C.UTF-8 printf '%b' '\U000025CB')
+
+# Available locales from the system: "<locale code>|<language name>".
+LOCALE_LIST=$(locale -av 2>/dev/null | awk '
+    /^locale:/ { loc = $2; next }
+    /language \|/ {
+        name = $0
+        sub(/.*language \| /, "", name)
+        gsub(/^[ \t]+|[ \t]+$/, "", name)
+        if (loc != "" && loc ~ /^[a-z][a-z]/) print loc "|" name
+    }
+')
+
+# Current language code, read from ~/.profile (the first two characters of
+# the LANG value, e.g. "en_US.UTF-8" -> "en").
+CURRENT_CODE="en"
+if [[ -f "$PROFILE_FILE" ]]; then
+    PROFILE_LANG="$(grep -m1 '^export LANG=' "$PROFILE_FILE" 2>/dev/null | cut -d= -f2- | tr -d '"'"'" | tr -d '[:space:]')"
+    [[ -z "$PROFILE_LANG" ]] && PROFILE_LANG="$(grep -m1 '^export LC_ALL=' "$PROFILE_FILE" 2>/dev/null | cut -d= -f2- | tr -d '"'"'" | tr -d '[:space:]')"
+    [[ -n "$PROFILE_LANG" ]] && CURRENT_CODE="${PROFILE_LANG:0:2}"
+fi
+[[ -z "$CURRENT_CODE" ]] && CURRENT_CODE="en"
+
+if [[ -z "$LOCALE_LIST" ]]; then
+    log ERROR "No system locales found"
+    notify_error "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_NO_LANGUAGES]}"
+    exit 1
 fi
 
-# Extract available languages from locale -av
-# Only includes locales with 'language' field (filters out C.utf8, POSIX, etc.)
-# Format: locale_code = language_name
-# Example: en_US.utf8 = American English
-LANGUAGES=$(locale -av | awk '/^locale:/{loc=$2} /language \|/{gsub(/.*language \| /,""); print loc " = " $0}' | sed 's/ .*archive.*//')
+# Build the menu lines and keep the locale code of every entry.
+declare -a LINES=()
+declare -a CODES=()
 
-# Parse and create menu array
-declare -A lang_menu
-declare -a lang_codes
-declare -a lang_names
+while IFS='|' read -r loc_code loc_name; do
+    [[ -z "$loc_code" ]] && continue
 
-while IFS= read -r line; do
-    # Extract locale code and language name
-    # en_US.utf8 = American English
-    locale_code=$(echo "$line" | cut -d' ' -f1)
-    language_name=$(echo "$line" | cut -d'=' -f2 | sed 's/^ //')
-
-    # Extract short code from locale: first 2 characters (en_US.utf8 -> en)
-    short_code="${locale_code:0:2}"
-
-    # Store for menu
-    lang_menu["$language_name"]="$short_code"
-    lang_codes+=("$short_code")
-    lang_names+=("$language_name")
-done <<< "$LANGUAGES"
-
-# Get current language's full name for highlighting
-CURRENT_NAME=""
-for name in "${lang_names[@]}"; do
-    if [[ "${lang_menu[$name]}" == "$CURRENT_LANG" ]]; then
-        CURRENT_NAME="$name"
-        break
+    short_code="${loc_code:0:2}"
+    if [[ "$short_code" == "$CURRENT_CODE" ]]; then
+        LINES+=("$ICON_CURRENT $loc_name")
+    else
+        LINES+=("$ICON_OTHER $loc_name")
     fi
-done
+    CODES+=("$loc_code")
+done <<< "$LOCALE_LIST"
 
 # Close any existing fuzzel processes
 pkill -x fuzzel 2>/dev/null || true
 
-# Show fuzzel menu with current language marked with *
-SELECTED=$(
-  (if [ -n "$CURRENT_NAME" ]; then
-     printf '* %s\n' "$CURRENT_NAME"
-   fi
-   printf '%s\n' "${lang_names[@]}" | grep -v "^${CURRENT_NAME}$" 2>/dev/null || true) | \
-  fuzzel --dmenu --log-no-syslog --anchor=top-right "$@" --prompt="${MSG[PROMPT_SELECT]}"
-) || exit 0
+# Window width of the longest menu entry (icon counted as 3 characters)
+MAX_WIDTH=$(printf '%s\n' "${LINES[@]}" | awk '{ n = length($0) - 1 + 3; if (n > m) m = n } END { print m+0 }')
 
-# Exit if user cancelled
+# Get the selection from the fuzzel menu
+SELECTED=$(printf '%s\n' "${LINES[@]}" | fuzzel --dmenu --anchor=top-right --log-no-syslog \
+    --minimal-lines --lines="${#LINES[@]}" --width="$MAX_WIDTH" --hide-prompt "$@") || true
+
+# Exit if the user cancelled the menu
 [[ -z "$SELECTED" ]] && exit 0
 
-# Remove the marker if present
-SELECTED="${SELECTED#\* }"
+# Index of the selected entry and its locale code
+SEL_INDEX=$(printf '%s\n' "${LINES[@]}" | awk -v sel="$SELECTED" '$0 == sel { print NR - 1; exit }')
+[[ -z "$SEL_INDEX" ]] && exit 0
 
-# Check if selection is same as current
-if [[ "$SELECTED" == "$CURRENT_NAME" ]]; then
+SELECTED_LOCALE="${CODES[$SEL_INDEX]}"
+[[ -z "$SELECTED_LOCALE" ]] && exit 0
+
+# Do nothing when the selected language is already active
+if [[ "${SELECTED_LOCALE:0:2}" == "$CURRENT_CODE" ]]; then
+    log INFO "Language ${SELECTED_LOCALE} is already active"
     exit 0
 fi
 
-# Get language code for selection
-SELECTED_CODE="${lang_menu[$SELECTED]}"
+if [[ ! -x "$SET_LANGUAGE" ]]; then
+    log ERROR "Language script is missing: $SET_LANGUAGE"
+    notify_error "${MSG[NOTIFY_TITLE]}" \
+        "$(i18n_template "${MSG[MSG_FAILED]}" LANG="$SELECTED_LOCALE")"
+    exit 1
+fi
 
-# Apply language change
-if ~/.local/bin/set-language.sh "$SELECTED_CODE" 2>&1; then
-    notify-send -i preferences-desktop-locale "${MSG[NOTIFY_TITLE]}" "$(i18n_template "${MSG[MSG_CHANGED]}" "LANG=$SELECTED")"
+log INFO "Changing the language to $SELECTED_LOCALE"
+
+if "$SET_LANGUAGE" "$SELECTED_LOCALE"; then
+    log INFO "Language changed to $SELECTED_LOCALE"
 else
-    notify-send -u critical "${MSG[NOTIFY_TITLE]}" "$(i18n_template "${MSG[MSG_FAILED]}" "LANG=$SELECTED")"
+    log ERROR "Failed to change the language to $SELECTED_LOCALE"
+    notify_error "${MSG[NOTIFY_TITLE]}" \
+        "$(i18n_template "${MSG[MSG_FAILED]}" LANG="$SELECTED_LOCALE")"
     exit 1
 fi
