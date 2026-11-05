@@ -130,21 +130,15 @@
     },
 
     "custom/user-info": {
-        "format": "{}",
-        "exec": "$HOME/.local/bin/user-info.sh",
-        "return-type": "json",
-        "interval": 30,
-        "tooltip": true,
+        "format": "\ue853",
+        "tooltip": false,
         "on-click": "$HOME/.local/bin/user-menu.sh",
         "escape": false
     },
 
     "custom/system-info": {
-        "format": "{}",
-        "exec": "$HOME/.local/bin/system-info.sh",
-        "return-type": "json",
-        "interval": 30,
-        "tooltip": true,
+        "format": "\ue8b8",
+        "tooltip": false,
         "on-click": "$HOME/.local/bin/settings-menu.sh",
         "escape": false
     },
