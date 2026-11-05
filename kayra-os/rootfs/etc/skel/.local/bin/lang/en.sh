@@ -67,16 +67,18 @@ declare -A i18n_CHANGE_PASSWD=(
 )
 
 declare -A i18n_WIFI_MENU=(
-  [NOTIFY_DEVICE_NOT_FOUND]="Wifi device not found"
+  [NOTIFY_TITLE]="Wi-Fi"
+  [NOTIFY_DEVICE_NOT_FOUND]="Wi-Fi device not found"
   [NOTIFY_NO_NETWORKS]="No networks found nearby"
-  [PROMPT_SELECT]="Select wifi network"
+  [NOTIFY_COMMAND_NOT_FOUND]="Required command not found: {COMMAND}"
+  [PROMPT_SELECT]="Select a Wi-Fi network"
   [PROMPT_PASSWORD]="Password: {SSID}"
   [PROMPT_LABEL]="wifi> "
   [PROMPT_PASSWORD_LABEL]="password> "
-  [MSG_DISCONNECTED]="Disconnected"
-  [MSG_DISCONNECT_FAILED]="Failed to disconnect"
-  [MSG_CONNECTED]="Connected"
-  [MSG_CONNECT_FAILED]="Connection failed (password may be incorrect)"
+  [MSG_DISCONNECTED]="Disconnected from {SSID}"
+  [MSG_DISCONNECT_FAILED]="Failed to disconnect from {SSID}"
+  [MSG_CONNECTED]="Connected to {SSID}"
+  [MSG_CONNECT_FAILED]="Failed to connect to {SSID} (the password may be incorrect)"
   [MSG_HIDDEN]="<Hidden Network>"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
@@ -167,7 +169,7 @@ declare -A i18n_NET_MONITOR=(
 
 declare -A i18n_WIFI_MONITOR=(
   [DEVICE_DISCONNECTED]=$'Device: {DEVICE}\nStatus: Not connected'
-  [DEVICE_CONNECTED]=$'Device: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSignal: %{SIGNAL}'
+  [DEVICE_CONNECTED]=$'Device: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSignal: {SIGNAL}'
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
@@ -325,15 +327,14 @@ declare -A i18n_LANGUAGE_SETTINGS=(
 declare -A i18n_KEYBOARD_SETTINGS=(
   [PROMPT_SELECT]="Select keyboard layout: "
   [NOTIFY_TITLE]="Keyboard Layout"
-  [MSG_CHANGED]="Layout: {LAYOUT}"
+  [MSG_CHANGED]="Keyboard layout changed: {LAYOUT}"
   [MSG_VARIANT]="Variant: {VARIANT}"
-  [MSG_FAILED]="Failed to change keyboard layout"
-  [MSG_UNCHANGED]="Keyboard layout is already set"
+  [MSG_FAILED]="Failed to change the keyboard layout"
+  [MSG_UNCHANGED]="The keyboard layout is already set"
   [ERROR_DATA_NOT_FOUND]="Keyboard data files not found. Please run generate-keyboard-data.sh"
-  [ERROR_SELECTION_NOT_FOUND]="Selection not found in keyboard database"
+  [ERROR_SELECTION_NOT_FOUND]="Selection not found in the keyboard database"
   [ERROR_CONFIG_NOT_FOUND]="Keyboard config file not found"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
+  [ERROR_NO_SELECTION]="No keyboard layout was given"
 )
 
 declare -A I18N_REMOVABLE_STORAGE_MONITOR=(

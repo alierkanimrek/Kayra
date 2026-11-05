@@ -67,16 +67,18 @@ declare -A i18n_CHANGE_PASSWD=(
 )
 
 declare -A i18n_WIFI_MENU=(
-  [NOTIFY_DEVICE_NOT_FOUND]="Wifi aygıtı bulunamadı"
+  [NOTIFY_TITLE]="Wi-Fi"
+  [NOTIFY_DEVICE_NOT_FOUND]="Wi-Fi aygıtı bulunamadı"
   [NOTIFY_NO_NETWORKS]="Yakında ağ bulunamadı"
-  [PROMPT_SELECT]="Wifi ağı seç"
+  [NOTIFY_COMMAND_NOT_FOUND]="Gerekli komut bulunamadı: {COMMAND}"
+  [PROMPT_SELECT]="Bir Wi-Fi ağı seç"
   [PROMPT_PASSWORD]="Şifre: {SSID}"
   [PROMPT_LABEL]="wifi> "
   [PROMPT_PASSWORD_LABEL]="şifre> "
-  [MSG_DISCONNECTED]="Bağlantı kesildi"
-  [MSG_DISCONNECT_FAILED]="Bağlantı kesilemedi"
-  [MSG_CONNECTED]="Bağlandı"
-  [MSG_CONNECT_FAILED]="Bağlantı başarısız (şifre yanlış olabilir)"
+  [MSG_DISCONNECTED]="{SSID} bağlantısı kesildi"
+  [MSG_DISCONNECT_FAILED]="{SSID} bağlantısı kesilemedi"
+  [MSG_CONNECTED]="{SSID} ağına bağlanıldı"
+  [MSG_CONNECT_FAILED]="{SSID} ağına bağlanılamadı (şifre yanlış olabilir)"
   [MSG_HIDDEN]="<Gizli Ağ>"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
@@ -167,7 +169,7 @@ declare -A i18n_NET_MONITOR=(
 
 declare -A i18n_WIFI_MONITOR=(
   [DEVICE_DISCONNECTED]=$'Aygıt: {DEVICE}\nDurum: Bağlı değil'
-  [DEVICE_CONNECTED]=$'Aygıt: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSinyal: %{SIGNAL}'
+  [DEVICE_CONNECTED]=$'Aygıt: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSinyal: {SIGNAL}'
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
@@ -325,15 +327,14 @@ declare -A i18n_LANGUAGE_SETTINGS=(
 declare -A i18n_KEYBOARD_SETTINGS=(
   [PROMPT_SELECT]="Klavye düzeni seç: "
   [NOTIFY_TITLE]="Klavye Düzeni"
-  [MSG_CHANGED]="Düzen: {LAYOUT}"
+  [MSG_CHANGED]="Klavye düzeni değiştirildi: {LAYOUT}"
   [MSG_VARIANT]="Varyant: {VARIANT}"
   [MSG_FAILED]="Klavye düzeni değiştirilemedi"
   [MSG_UNCHANGED]="Klavye düzeni zaten ayarlanmış"
   [ERROR_DATA_NOT_FOUND]="Klavye veri dosyaları bulunamadı. Lütfen generate-keyboard-data.sh betiğini çalıştırın"
   [ERROR_SELECTION_NOT_FOUND]="Seçim klavye veritabanında bulunamadı"
   [ERROR_CONFIG_NOT_FOUND]="Klavye yapılandırma dosyası bulunamadı"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
+  [ERROR_NO_SELECTION]="Klavye düzeni verilmedi"
 )
 
 declare -A I18N_REMOVABLE_STORAGE_MONITOR=(
