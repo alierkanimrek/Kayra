@@ -21,7 +21,7 @@ source "$(dirname "$0")/klog.sh"
 source "$(dirname "$0")/notify.sh"
 
 # Required system groups. Add a group here when the desktop needs it.
-REQUIRED_GROUPS=(users audio video input socklog)
+REQUIRED_GROUPS=(users audio video input socklog lpadmin bluetooth)
 
 # The user whose membership is checked.
 TARGET_USER="${SUDO_USER:-${USER:-$(id -un)}}"

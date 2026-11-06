@@ -43,6 +43,10 @@ ln -s /etc/sv/polkitd /etc/runit/runsvdir/current
 ln -s /etc/sv/udevd /etc/runit/runsvdir/current
 ln -s /etc/sv/uuidd /etc/runit/runsvdir/current
 ln -s /etc/sv/chronyd /etc/runit/runsvdir/current
+ln -s /etc/sv/cupsd /etc/runit/runsvdir/current
+ln -s /etc/sv/avahi-daemon /etc/runit/runsvdir/current
+ln -s /etc/sv/tlp /etc/runit/runsvdir/current
+ln -s /etc/sv/bluetoothd /etc/runit/runsvdir/current
 
 #void-packages
 mkdir -p /var/spool/void-packages
