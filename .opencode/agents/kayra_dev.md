@@ -11,7 +11,7 @@ Rules:
 - Use "export LC_ALL=C.UTF-8".
 - Write code comments and variable names in English.
 - Do not use the `read` and `eval` commands.
-- Research efficient alternatives for loops or text extraction operations, such as using `awk` instead of `for` loops.
+- Research efficient alternatives for loops or text extraction operations, such as using `awk` or `sed` instead of `for` loops.
 - Use the `jq` command for outputs that will be read by Waybar modules.
 - For logging, use the function in the klog.sh script. Keep log messages embedded in the code in English.
 - To receive user messages and notifications in an i18n structure, use the function in the i18n.sh script; read the explanations at the beginning of the script for usage. Write messages in both English and Turkish.
