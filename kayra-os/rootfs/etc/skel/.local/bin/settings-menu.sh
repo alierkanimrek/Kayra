@@ -33,7 +33,7 @@ declare -A ICONS=(
     [DISPLAY]="E30C"
     [DEVICES]="E1B1"
     [SYSTEM]="E8B8"
-    [SERVICES]="F10C"
+    [SERVICES]="E726"
 )
 
 # Check if settings_menu array exists

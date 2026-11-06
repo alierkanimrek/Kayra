@@ -22,16 +22,31 @@
 # password is asked when such a service would be stopped.
 #
 # The runit control commands need root privileges, they are executed
-# through pkexec, so a polkit password dialog is shown while toggling.
+# through pkexec, so a polkit password dialog is shown while toggling. The
+# root helper is the permanent script sv-toggle-helper.sh.
+#
+# Important instructions:
+#   * Only a plain service name is accepted, a name with a path would leave
+#     the service directory.
+#   * The result of the helper is read from its output: STARTED, STOPPED,
+#     ENABLED, PROTECTED, NOTFOUND or FAILED.
+#   * The log messages are in English, the notification texts come from the
+#     language file (i18n_TOGGLE_SERVICE).
 #
 # Usage: toggle-service.sh <service-name>
 #
-export LC_ALL=C.UTF-8
+# Used commands: pkexec, pgrep, notify-send (via notify.sh)
+#
+
 set -uo pipefail
 
+export LC_ALL=C.UTF-8
+
 SCRIPT_DIR="$(cd -- "$(dirname -- "$(readlink -f "$0")")" && pwd)"
+
 SV_DIR="/etc/sv"
 SERVICE_DIR="/var/service"
+HELPER="$SCRIPT_DIR/sv-toggle-helper.sh"
 
 # Services that must stay running, they can not be stopped.
 PROTECTED_SERVICES=(
@@ -42,9 +57,16 @@ PROTECTED_SERVICES=(
     polkitd
 )
 
-# shellcheck source=/dev/null
 source "$SCRIPT_DIR/i18n.sh"
 declare -n MSG=i18n_TOGGLE_SERVICE
+
+source "$SCRIPT_DIR/klog.sh"
+source "$SCRIPT_DIR/notify.sh"
+source "$SCRIPT_DIR/sv-lib.sh"
+
+# Icon of the notifications (Material Symbols codepoint).
+ICON_SERVICE=$(printf '%b' '\U000E726')   # services
+NOTIFY_ICON="$ICON_SERVICE"
 
 # Returns the message of a key, the fallback is used when the key is
 # missing. The fallback is passed as a separate argument, a placeholder
@@ -55,14 +77,14 @@ msg_text() {
     printf '%s' "$value"
 }
 
-# shellcheck source=/dev/null
-[ -f "$SCRIPT_DIR/klog.sh" ] && . "$SCRIPT_DIR/klog.sh"
-if ! command -v log >/dev/null 2>&1; then
-    log() { printf '%s\n' "$*"; }
-fi
+# Returns the message of a key with the service name in it.
+msg_service() {
+    i18n_template "$(msg_text "$1" "$2")" "SERVICE=$SERVICE"
+}
 
 SERVICE="${1:-}"
 if [ -z "$SERVICE" ]; then
+    log ERROR "No service name given"
     echo "$(msg_text MSG_USAGE 'Usage: toggle-service.sh <service-name>')" >&2
     exit 1
 fi
@@ -71,196 +93,80 @@ fi
 case "$SERVICE" in
     */*|.|..)
         log ERROR "Invalid service name: $SERVICE"
-        echo "$(i18n_template "$(msg_text MSG_NOT_FOUND 'Service not found: {SERVICE}')" "SERVICE=$SERVICE")" >&2
+        echo "$(msg_service MSG_NOT_FOUND 'Service not found: {SERVICE}')" >&2
         exit 1
         ;;
 esac
 
 if [ ! -d "$SV_DIR/$SERVICE" ]; then
     log WARN "Service directory not found: $SV_DIR/$SERVICE"
-    echo "$(i18n_template "$(msg_text MSG_NOT_FOUND 'Service not found: {SERVICE}')" "SERVICE=$SERVICE")" >&2
+    echo "$(msg_service MSG_NOT_FOUND 'Service not found: {SERVICE}')" >&2
     exit 1
 fi
 
-# ------------------------------------------------------------------
-# Checks that do not need root privileges
-# ------------------------------------------------------------------
-# Checks if the service is one of the protected services.
-is_protected() {
-    local name="$1" service
-    for service in "${PROTECTED_SERVICES[@]}"; do
-        [ "$service" = "$name" ] && return 0
-    done
-    return 1
-}
-
-# Checks if the service is running without root privileges: the program
-# that the run script starts is searched in the process table.
-service_is_running() {
-    local name="$1" run_file line token base
-
-    run_file="$SV_DIR/$name/run"
-    [ -r "$run_file" ] || return 1
-
-    line=$(grep -E '^[[:space:]]*exec[[:space:]]+' "$run_file" 2>/dev/null | tail -n 1)
-    [ -n "$line" ] || return 1
-    line="${line#exec }"
-
-    for token in $line; do
-        # Skip redirections, options, user:group pairs and wrappers.
-        case "$token" in
-            *'>'*|'<'*) continue ;;
-            -*) continue ;;
-            *:*) continue ;;
-            /*) base="${token##*/}" ;;
-            *) base="$token" ;;
-        esac
-        case "$base" in
-            exec|chpst|env|set|su|sh|bash) continue ;;
-        esac
-
-        pgrep -x "$base" >/dev/null 2>&1 && return 0
-    done
-
-    return 1
-}
-
-
-notify() {
-    local urgency="$1" body="$2"
-    command -v notify-send >/dev/null 2>&1 || return 0
-    if [ "$urgency" = "critical" ]; then
-        notify-send -u critical -a "Kayra" "$(msg_text NOTIFY_TITLE 'Services')" "$body"
-    else
-        notify-send -a "Kayra" "$(msg_text NOTIFY_TITLE 'Services')" "$body"
-    fi
-}
-
-# ------------------------------------------------------------------
-# Toggle the service with a root helper
-# ------------------------------------------------------------------
-toggle_service() {
-    local helper result
-    helper=$(mktemp) || return 1
-
-    cat >"$helper" <<'ROOT_HELPER'
-#!/bin/sh
-# Starts, stops or enables the given runit service.
-# Prints one of: STARTED, STOPPED, ENABLED, PROTECTED, NOTFOUND, FAILED
-#
-# $1    service name
-# $2... services that are not allowed to be stopped
-name="$1"
-shift
-protected="$*"
-dir="/etc/sv/$name"
-svc="/var/service/$name"
-
-is_protected() {
-    for p in $protected; do
-        [ "$p" = "$name" ] && return 0
-    done
-    return 1
-}
-
-[ -d "$dir" ] || { echo "NOTFOUND"; exit 1; }
-
-if [ -e "$svc" ]; then
-    state=$(sv status "$svc" 2>&1 | head -n 1)
-    case "$state" in
-        run:*)
-            # Protected services are never stopped.
-            if is_protected; then
-                echo "PROTECTED"
-                exit 0
-            fi
-            if sv down "$svc" >/dev/null 2>&1; then
-                echo "STOPPED"
-                exit 0
-            fi
-            ;;
-        *)
-            if sv up "$svc" >/dev/null 2>&1; then
-                echo "STARTED"
-                exit 0
-            fi
-            ;;
-    esac
-    echo "FAILED"
+if [ ! -r "$HELPER" ]; then
+    log ERROR "Root helper not found: $HELPER"
+    notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+        "$(msg_service MSG_FAILED 'Failed to toggle service {SERVICE}')"
     exit 1
 fi
-
-# Not enabled yet: create the service link and start it.
-ln -sfn "$dir" "$svc" || { echo "FAILED"; exit 1; }
-
-# runsvdir needs a moment to pick up the new service directory.
-i=0
-while [ "$i" -lt 6 ]; do
-    [ -e "$svc/supervise/ok" ] && break
-    sleep 1
-    i=$((i + 1))
-done
-
-if sv up "$svc" >/dev/null 2>&1; then
-    echo "ENABLED"
-else
-    # runsv starts the service on its own, give it a chance.
-    sleep 2
-    echo "ENABLED"
-fi
-ROOT_HELPER
-
-    if ! command -v pkexec >/dev/null 2>&1; then
-        rm -f "$helper"
-        printf 'FAILED\n'
-        return 0
-    fi
-
-    result=$(pkexec /bin/sh "$helper" "$SERVICE" "${PROTECTED_SERVICES[@]}" 2>/dev/null)
-    rm -f "$helper"
-
-    [ -z "$result" ] && result="FAILED"
-    printf '%s\n' "$result"
-}
 
 # ------------------------------------------------------------------
 # Protected services are checked before the root helper is called, so
 # no password is asked when a protected service would be stopped.
 # ------------------------------------------------------------------
-if is_protected "$SERVICE" && service_is_running "$SERVICE"; then
+if [[ " ${PROTECTED_SERVICES[*]} " == *" $SERVICE "* ]] && sv_service_is_running "$SERVICE"; then
     log WARN "Service $SERVICE is protected, it can not be stopped"
-    notify critical "$(i18n_template "$(msg_text MSG_PROTECTED 'Service {SERVICE} can not be stopped')" "SERVICE=$SERVICE")"
+    notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+        "$(msg_service MSG_PROTECTED 'Service {SERVICE} can not be stopped')"
     exit 1
 fi
 
-RESULT=$(toggle_service)
+# ------------------------------------------------------------------
+# Toggle the service with the root helper
+# ------------------------------------------------------------------
+if ! command -v pkexec >/dev/null 2>&1; then
+    log ERROR "pkexec is not installed"
+    notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+        "$(msg_service MSG_FAILED 'Failed to toggle service {SERVICE}')"
+    exit 1
+fi
+
+RESULT=$(pkexec /bin/sh "$HELPER" "$SERVICE" "${PROTECTED_SERVICES[@]}" 2>/dev/null)
+[ -z "$RESULT" ] && RESULT="FAILED"
 
 case "$RESULT" in
     STARTED)
         log INFO "Service $SERVICE started"
-        notify normal "$(i18n_template "$(msg_text MSG_STARTED 'Service {SERVICE} started')" "SERVICE=$SERVICE")"
+        notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+            "$(msg_service MSG_STARTED 'Service {SERVICE} started')"
         ;;
     STOPPED)
         log INFO "Service $SERVICE stopped"
-        notify normal "$(i18n_template "$(msg_text MSG_STOPPED 'Service {SERVICE} stopped')" "SERVICE=$SERVICE")"
+        notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+            "$(msg_service MSG_STOPPED 'Service {SERVICE} stopped')"
         ;;
     ENABLED)
         log INFO "Service $SERVICE enabled and started"
-        notify normal "$(i18n_template "$(msg_text MSG_ENABLED 'Service {SERVICE} enabled and started')" "SERVICE=$SERVICE")"
+        notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+            "$(msg_service MSG_ENABLED 'Service {SERVICE} enabled and started')"
         ;;
     PROTECTED)
         log WARN "Service $SERVICE is protected, it can not be stopped"
-        notify critical "$(i18n_template "$(msg_text MSG_PROTECTED 'Service {SERVICE} can not be stopped')" "SERVICE=$SERVICE")"
+        notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+            "$(msg_service MSG_PROTECTED 'Service {SERVICE} can not be stopped')"
         exit 1
         ;;
     NOTFOUND)
         log WARN "Service not found: $SERVICE"
-        notify critical "$(i18n_template "$(msg_text MSG_NOT_FOUND 'Service not found: {SERVICE}')" "SERVICE=$SERVICE")"
+        notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+            "$(msg_service MSG_NOT_FOUND 'Service not found: {SERVICE}')"
         exit 1
         ;;
     *)
         log ERROR "Failed to toggle service: $SERVICE"
-        notify critical "$(i18n_template "$(msg_text MSG_FAILED 'Failed to toggle service {SERVICE}')" "SERVICE=$SERVICE")"
+        notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+            "$(msg_service MSG_FAILED 'Failed to toggle service {SERVICE}')"
         exit 1
         ;;
 esac
