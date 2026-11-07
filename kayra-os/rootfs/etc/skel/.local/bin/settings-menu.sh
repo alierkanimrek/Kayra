@@ -21,7 +21,6 @@ declare -a ORDER=(
     KEYBOARD
     DISPLAY
     DEVICES
-    SYSTEM
     SERVICES
 )
 
@@ -32,7 +31,6 @@ declare -A ICONS=(
     [KEYBOARD]="E312"
     [DISPLAY]="E30C"
     [DEVICES]="E1B1"
-    [SYSTEM]="E8B8"
     [SERVICES]="E726"
 )
 
@@ -79,9 +77,6 @@ case "${SELECTED#* }" in
         ;;
     "${settings_menu[DEVICES]}")
         "$HOME/.local/bin/show-devices.sh" &
-        ;;
-    "${settings_menu[SYSTEM]}")
-        "$HOME/.local/bin/system-menu.sh" &
         ;;
     "${settings_menu[SERVICES]}")
         "$HOME/.local/bin/show-services.sh" &

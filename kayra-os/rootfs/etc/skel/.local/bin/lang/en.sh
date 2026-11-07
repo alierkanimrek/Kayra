@@ -26,13 +26,7 @@ declare -A settings_menu=(
   [KEYBOARD]="Keyboard"
   [DISPLAY]="Display"
   [DEVICES]="Devices"
-  [SYSTEM]="System"
   [SERVICES]="Services"
-)
-
-# System menu labels (icons and commands are defined in the system menu script)
-declare -A system_menu=(
-  [LOG_MONITOR]="Log Monitor"
 )
 
 # Appearance menu labels (icons and commands are defined in appearance-settings.sh)
@@ -131,33 +125,6 @@ declare -A i18n_CONNECTION_CHECK=(
   [ACTION_REMOVE]="Remove"
 )
 
-declare -A i18n_KAYRA_LOG_MONITOR=(
-  [NOTIFY_TITLE]="Kayra error detected"
-  [NOTIFY_APP]="kayra-log-monitor"
-  [BUTTON_OPEN_LOG]="Open Log File"
-  [BUTTON_DISABLE]="Disable these notifications"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
-)
-
-declare -A i18n_SYSLOG_NOTIFY=(
-  [TITLE_MULTIPLE]="Log entries ({COUNT} entries)"
-  [TITLE_SINGLE]="New log entry"
-  [BUTTON_OPEN_LOG]="Open Log File"
-  [NOTIFY_APP]="syslog"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
-)
-
-declare -A i18n_SYSLOG_BOOT_REPORT=(
-  [TITLE_MULTIPLE]="Errors Since Boot ({COUNT} entries)"
-  [TITLE_SINGLE]="Error Since Boot"
-  [BUTTON_OPEN_LOG]="Open Log File"
-  [NOTIFY_APP]="syslog"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
-)
-
 declare -A i18n_NET_MONITOR=(
   [USAGE_ERROR]="Usage: {SCRIPT} --ethernet <pattern1,pattern2,...> --other <pattern1,pattern2,...>"
   [UNKNOWN_PARAMETER]="Unknown parameter: {PARAM}"
@@ -207,14 +174,6 @@ declare -A i18n_TOGGLE_AUTO_THEME=(
   [ACTION_REMOVE]="Remove"
 )
 
-declare -A i18n_LOG_MONITOR=(
-  [NOTIFY_TITLE]="Log Monitor"
-  [MSG_ON]="Log error notifications enabled"
-  [MSG_OFF]="Log error notifications disabled"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
-)
-
 declare -A i18n_SYSTEM_INFO=(
   [LABEL_SYSTEM]="System"
   [LABEL_KERNEL]="Kernel"
@@ -237,8 +196,6 @@ declare -A i18n_SETTINGS_MENU=(
 declare -A i18n_SYSTEM_MENU=(
   [MSG_NO_ITEMS]="No settings found"
   [LABEL_auto_theme]="Automatic Theme Switching"
-  [LABEL_error_log_notify]="System Log Warnings"
-  [LABEL_kayra_error_log_notify]="Kayra Log Warnings"
   [NOTIFY_TITLE]="System Settings"
   [MSG_TOGGLED]="{LABEL}: {STATE}"
   [STATE_ON]="enabled"

@@ -26,13 +26,7 @@ declare -A settings_menu=(
   [KEYBOARD]="Klavye"
   [DISPLAY]="Ekran"
   [DEVICES]="Aygıtlar"
-  [SYSTEM]="Sistem"
   [SERVICES]="Servisler"
-)
-
-# System menu labels (icons and commands are defined in the system menu script)
-declare -A system_menu=(
-  [LOG_MONITOR]="Log İzleyici"
 )
 
 # Appearance menu labels (icons and commands are defined in appearance-settings.sh)
@@ -131,33 +125,6 @@ declare -A i18n_CONNECTION_CHECK=(
   [ACTION_REMOVE]="Remove"
 )
 
-declare -A i18n_KAYRA_LOG_MONITOR=(
-  [NOTIFY_TITLE]="Kayra hatası bulundu"
-  [NOTIFY_APP]="kayra-log-monitor"
-  [BUTTON_OPEN_LOG]="Log Dosyasını Aç"
-  [BUTTON_DISABLE]="Bu bildirimleri kapat"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
-)
-
-declare -A i18n_SYSLOG_NOTIFY=(
-  [TITLE_MULTIPLE]="Log kayıtları ({COUNT} kayıt)"
-  [TITLE_SINGLE]="Yeni log kaydı"
-  [BUTTON_OPEN_LOG]="Log Dosyasını Aç"
-  [NOTIFY_APP]="syslog"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
-)
-
-declare -A i18n_SYSLOG_BOOT_REPORT=(
-  [TITLE_MULTIPLE]="Açılıştan Bu Yana Hatalar ({COUNT} kayıt)"
-  [TITLE_SINGLE]="Açılıştan Bu Yana Hata"
-  [BUTTON_OPEN_LOG]="Log Dosyasını Aç"
-  [NOTIFY_APP]="syslog"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
-)
-
 declare -A i18n_NET_MONITOR=(
   [USAGE_ERROR]="Kullanım: {SCRIPT} --ethernet <desen1,desen2,...> --other <desen1,desen2,...>"
   [UNKNOWN_PARAMETER]="Bilinmeyen parametre: {PARAM}"
@@ -207,14 +174,6 @@ declare -A i18n_TOGGLE_AUTO_THEME=(
   [ACTION_REMOVE]="Remove"
 )
 
-declare -A i18n_LOG_MONITOR=(
-  [NOTIFY_TITLE]="Log İzleyici"
-  [MSG_ON]="Hata log bildirimleri etkinleştirildi"
-  [MSG_OFF]="Hata log bildirimleri devre dışı bırakıldı"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
-)
-
 declare -A i18n_SYSTEM_INFO=(
   [LABEL_SYSTEM]="Sistem"
   [LABEL_KERNEL]="Çekirdek"
@@ -237,8 +196,6 @@ declare -A i18n_SETTINGS_MENU=(
 declare -A i18n_SYSTEM_MENU=(
   [MSG_NO_ITEMS]="Ayar bulunamadı"
   [LABEL_auto_theme]="Otomatik Tema Değişimi"
-  [LABEL_error_log_notify]="Sistem Log Uyarıları"
-  [LABEL_kayra_error_log_notify]="Kayra Log Uyarıları"
   [NOTIFY_TITLE]="Sistem Ayarları"
   [MSG_TOGGLED]="{LABEL}: {STATE}"
   [STATE_ON]="etkin"
