@@ -142,7 +142,7 @@ declare -A i18n_WIFI_MONITOR=(
 )
 
 declare -A i18n_MEMORY_MONITOR=(
-  [MEMORY_AVAILABLE]=$'Available memory: %{RATIO}'
+  [MEMORY_AVAILABLE]=$'Available memory: {RATIO}%'
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
@@ -350,11 +350,11 @@ declare -A i18n_XBPS_MANAGER=(
   [NO_DATA]="Software data not downloaded"
   [ACTION_DOWNLOAD]="Download data"
   [LOCK_MSG]="Ongoing software operations exist, please wait for them to complete"
-  [REMOVE_CONFIRM]="Remove %s software?"
+  [REMOVE_CONFIRM]="Remove {PACKAGE} software?"
   [ACTION_REMOVE]="Remove"
   [REMOVE_OK]="Package removed successfully"
   [REMOVE_FAIL]="Failed to remove package"
-  [INSTALL_CONFIRM]="Install %s software?"
+  [INSTALL_CONFIRM]="Install {PACKAGE} software?"
   [INSTALL_OK]="Package installed successfully"
   [INSTALL_FAIL]="Failed to install package"
   [ACTION_INSTALL]="Install"
@@ -362,11 +362,11 @@ declare -A i18n_XBPS_MANAGER=(
   [APP_NAME]="Software Repository"
   [LOCK_DOWNLOAD]="Downloading software data."
   [LOCK_PREPARE]="Preparing build environment."
-  [LOCK_REMOVE]="Removing software: %s"
-  [LOCK_INSTALL]="Installing software: %s"
+  [LOCK_REMOVE]="Removing software: {PACKAGE}"
+  [LOCK_INSTALL]="Installing software: {PACKAGE}"
   [LOCK_UPDATE]="Updating software repository."
   [LOCK_UPDATE_INFO]="Updating software repo package info."
-  [LOCK_BUILD]="Building software: %s"
+  [LOCK_BUILD]="Building software: {PACKAGE}"
   [DOWNLOAD_OK]="Software data downloaded, ready for installation."
 )
 

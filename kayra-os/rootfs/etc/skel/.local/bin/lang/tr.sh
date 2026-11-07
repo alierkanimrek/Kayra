@@ -142,7 +142,7 @@ declare -A i18n_WIFI_MONITOR=(
 )
 
 declare -A i18n_MEMORY_MONITOR=(
-  [MEMORY_AVAILABLE]=$'Kullanılabilir bellek: %{RATIO}'
+  [MEMORY_AVAILABLE]=$'Kullanılabilir bellek: {RATIO}%'
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
@@ -350,11 +350,11 @@ declare -A i18n_XBPS_MANAGER=(
   [NO_DATA]="Yazılım verileri indirilmemiş"
   [ACTION_DOWNLOAD]="Verileri indir"
   [LOCK_MSG]="Devam eden yazılım işlemleri var, sonuçlanmasını bekleyin lütfen."
-  [REMOVE_CONFIRM]="%s Yazılımını kaldırmak istiyor musunuz?"
+  [REMOVE_CONFIRM]="{PACKAGE} Yazılımını kaldırmak istiyor musunuz?"
   [ACTION_REMOVE]="Kaldır"
   [REMOVE_OK]="Paket başarıyla kaldırıldı"
   [REMOVE_FAIL]="Paket kaldırılırken hata oluştu"
-  [INSTALL_CONFIRM]="%s Yazılımını kurmak istiyor musunuz?"
+  [INSTALL_CONFIRM]="{PACKAGE} Yazılımını kurmak istiyor musunuz?"
   [INSTALL_OK]="Paket başarıyla kuruldu"
   [INSTALL_FAIL]="Paket kurulurken hata oluştu"
   [ACTION_INSTALL]="Kur"
@@ -362,11 +362,11 @@ declare -A i18n_XBPS_MANAGER=(
   [APP_NAME]="Yazılım Deposu"
   [LOCK_DOWNLOAD]="Yazılım bilgileri indiriliyor."
   [LOCK_PREPARE]="Yazılım derleme ortamı hazırlanıyor."
-  [LOCK_REMOVE]="Yazılım kaldırılıyor: %s"
-  [LOCK_INSTALL]="Yazılım sisteme kuruluyor: %s"
+  [LOCK_REMOVE]="Yazılım kaldırılıyor: {PACKAGE}"
+  [LOCK_INSTALL]="Yazılım sisteme kuruluyor: {PACKAGE}"
   [LOCK_UPDATE]="Yazılım deposu güncelleniyor."
   [LOCK_UPDATE_INFO]="Yazılım deposu güncel paket bilgileri indiriliyor."
-  [LOCK_BUILD]="Yazılım derleniyor: %s"
+  [LOCK_BUILD]="Yazılım derleniyor: {PACKAGE}"
   [DOWNLOAD_OK]="Yazılım bilgileri indirildi, kurulum için hazır."
 )
 
