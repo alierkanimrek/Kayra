@@ -24,6 +24,7 @@
         "custom/clipboard",
         "custom/network",
         "custom/wifi",
+        "custom/bluetooth",
         "battery",
         "clock",
         "custom/spacer",
@@ -102,6 +103,15 @@
         "escape": true,
         "on-click": "$HOME/.local/bin/wifi-menu.sh",
         "on-click-right": "nm-connection-editor"
+    },
+    "custom/bluetooth": {
+        "exec": "$HOME/.local/bin/bluetooth-monitor.sh",
+        "exec-if": "command -v bluetoothctl >/dev/null 2>&1",
+        "return-type": "json",
+        "restart-interval": 0,
+        "tooltip": true,
+        "escape": true,
+        "on-click": "$HOME/.local/bin/bluetooth-menu.sh"
     },
     "custom/removable-monitor": {
         "exec": "$HOME/.local/bin/removable-storage-monitor.sh",

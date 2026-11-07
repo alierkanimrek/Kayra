@@ -27,6 +27,9 @@
 # Config:
 #   NOTIFY_APP      Application name shown on the notification. Default: "Kayra"
 #   NOTIFY_URGENCY  Default urgency of the notifications. Default: "normal"
+#   NOTIFY_TIMEOUT  Optional timeout of the notifications, in milliseconds.
+#                   Empty (the default) lets the notification daemon decide
+#                   how long the notification stays on screen.
 #   NOTIFY_ICON     Optional icon of the notification. It is a Material
 #                   Symbols codepoint, either in the "\U000F799" or in the
 #                   "0xF799" notation. Default: none
@@ -126,6 +129,7 @@ export LC_ALL=C.UTF-8
 
 : "${NOTIFY_APP:=Kayra}"
 : "${NOTIFY_URGENCY:=normal}"
+: "${NOTIFY_TIMEOUT:=}"
 : "${NOTIFY_ICON:=}"
 
 # Font that is used for the Material Symbols icon.
@@ -236,6 +240,7 @@ notify() {
     local args=() icon
     icon="$(notify_icon_resolve "${NOTIFY_ICON:-}")"
     [[ -n "$icon" ]] && args+=(-i "$icon")
+    [[ "$NOTIFY_TIMEOUT" =~ ^[0-9]+$ ]] && args+=(-t "$NOTIFY_TIMEOUT")
 
     notify-send -a "$NOTIFY_APP" -u "$urgency" "${args[@]}" "$title" "$body" >/dev/null 2>&1
 }
@@ -269,6 +274,7 @@ notify_action() {
     local icon
     icon="$(notify_icon_resolve "${NOTIFY_ICON:-}")"
     [[ -n "$icon" ]] && args=(-i "$icon" "${args[@]}")
+    [[ "$NOTIFY_TIMEOUT" =~ ^[0-9]+$ ]] && args+=(-t "$NOTIFY_TIMEOUT")
 
     notify-send -a "$NOTIFY_APP" -u "$NOTIFY_URGENCY" -w "${args[@]}" "$title" "$body" 2>/dev/null
 }

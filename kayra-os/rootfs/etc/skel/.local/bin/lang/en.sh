@@ -382,3 +382,36 @@ declare -A i18n_POWER_MENU=(
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
 )
+
+declare -A i18n_BLUETOOTH_MONITOR=(
+  [ADAPTER_OFF]="Bluetooth: Off"
+  [DISCONNECTED]=$'Bluetooth: On\nNo device connected'
+  [CONNECTED]=$'Bluetooth: Connected\n{DEVICES}'
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
+)
+
+declare -A i18n_BLUETOOTH_MENU=(
+  [NOTIFY_TITLE]="Bluetooth"
+  [NOTIFY_NO_DEVICE]="No Bluetooth adapter found"
+  [NOTIFY_COMMAND_NOT_FOUND]="Required command not found: {COMMAND}"
+  [PROMPT_SELECT]="Select a Bluetooth device"
+  [PROMPT_LABEL]="bt> "
+  [ACTION_POWER_ON]="Turn Bluetooth on"
+  [ACTION_POWER_OFF]="Turn Bluetooth off"
+  [ACTION_SCAN]="Scan for devices"
+  [MSG_POWER_ON]="Bluetooth turned on"
+  [MSG_POWER_OFF]="Bluetooth turned off"
+  [MSG_POWER_FAILED]="Failed to change the Bluetooth power state"
+  [MSG_CONNECTED]="{NAME} connected"
+  [MSG_DISCONNECTED]="{NAME} disconnected"
+  [MSG_CONNECT_FAILED]="Failed to connect to {NAME}"
+  [MSG_DISCONNECT_FAILED]="Failed to disconnect from {NAME}"
+  [MSG_PAIRED]="{NAME} paired and connected"
+  [MSG_PAIR_FAILED]="Failed to pair with {NAME}"
+  [MSG_SCAN_STARTED]="Scanning for devices..."
+  [MSG_NO_DEVICES]="No devices found"
+  [LABEL_CONNECTED]="connected"
+  [REMOVE_CONFIRM]="Remove %s software?"
+  [ACTION_REMOVE]="Remove"
+)

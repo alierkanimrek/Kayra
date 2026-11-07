@@ -49,6 +49,7 @@ tooltip label {
 #custom-network,
 #custom-clipboard,
 #custom-wifi,
+#custom-bluetooth,
 #custom-app-menu,
 #custom-user-info,
 #custom-system-info,
@@ -74,6 +75,7 @@ battery:hover,
 #custom-notification:hover,
 #custom-network:hover,
 #custom-wifi:hover,
+#custom-bluetooth:hover,
 #custom-connection-warning:hover,
 #custom-app-menu:hover,
 #custom-user-info:hover,
@@ -163,6 +165,18 @@ battery:hover,
  
 #custom-wifi.disconnected:hover {
     color: @color-fg-hover;
+}
+
+#custom-bluetooth.off {
+    color: @color-warning;
+}
+
+#custom-bluetooth.off:hover {
+    color: @color-fg-hover;
+}
+
+#custom-bluetooth.disconnected {
+    color: @color-fg;
 }
 
 #custom-user-info.supervisor {

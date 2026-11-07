@@ -61,7 +61,6 @@ pavucontrol
 pwvucontrol
 libspa-bluetooth
 bluez
-bluez-alsa
 
 # Authorization and Portals
 polkit-gnome

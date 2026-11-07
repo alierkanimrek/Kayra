@@ -380,3 +380,36 @@ declare -A i18n_POWER_MENU=(
   [MSG_BLOCKED]="Bu işlem engellendi."
   [MSG_UNKNOWN_ACTION]="Bilinmeyen işlem seçildi."
 )
+
+declare -A i18n_BLUETOOTH_MONITOR=(
+  [ADAPTER_OFF]="Bluetooth: Kapalı"
+  [DISCONNECTED]=$'Bluetooth: Açık\nBağlı cihaz yok'
+  [CONNECTED]=$'Bluetooth: Bağlı\n{DEVICES}'
+  [REMOVE_CONFIRM]="{PACKAGE} Yazılımını kaldırmak istiyor musunuz?"
+  [ACTION_REMOVE]="Kaldır"
+)
+
+declare -A i18n_BLUETOOTH_MENU=(
+  [NOTIFY_TITLE]="Bluetooth"
+  [NOTIFY_NO_DEVICE]="Bluetooth adaptörü bulunamadı"
+  [NOTIFY_COMMAND_NOT_FOUND]="Gerekli komut bulunamadı: {COMMAND}"
+  [PROMPT_SELECT]="Bir Bluetooth cihazı seç"
+  [PROMPT_LABEL]="bt> "
+  [ACTION_POWER_ON]="Bluetooth'u aç"
+  [ACTION_POWER_OFF]="Bluetooth'u kapat"
+  [ACTION_SCAN]="Cihazları tara"
+  [MSG_POWER_ON]="Bluetooth açıldı"
+  [MSG_POWER_OFF]="Bluetooth kapatıldı"
+  [MSG_POWER_FAILED]="Bluetooth güç durumu değiştirilemedi"
+  [MSG_CONNECTED]="{NAME} bağlandı"
+  [MSG_DISCONNECTED]="{NAME} bağlantısı kesildi"
+  [MSG_CONNECT_FAILED]="{NAME} cihazına bağlanılamadı"
+  [MSG_DISCONNECT_FAILED]="{NAME} bağlantısı kesilemedi"
+  [MSG_PAIRED]="{NAME} eşleştirildi ve bağlandı"
+  [MSG_PAIR_FAILED]="{NAME} eşleştirilemedi"
+  [MSG_SCAN_STARTED]="Cihazlar taranıyor..."
+  [MSG_NO_DEVICES]="Cihaz bulunamadı"
+  [LABEL_CONNECTED]="bağlı"
+  [REMOVE_CONFIRM]="{PACKAGE} Yazılımını kaldırmak istiyor musunuz?"
+  [ACTION_REMOVE]="Kaldır"
+)
