@@ -1,46 +1,32 @@
 # Kayra OS package list
 # One package per line. Lines starting with # and blank lines are ignored.
+# Order: repositories -> base system -> desktop -> applications.
+# Package names are case-sensitive.
 
-# Temel Sistem
-base-system
+# Repositories (must be installed first)
 void-repo-nonfree
 void-repo-multilib
 void-repo-multilib-nonfree
-mesa-dri
+
+# Base System and Boot
+base-system
+glibc-locales
+dialog
+grub
+grub-x86_64-efi
 socklog-void
 daemontools
-polkit-gnome
-udisks2
-gvfs
-curl
-inotify-tools
-unzip
-wtype
-git
-python
-python3-pipx
-grim
-pwvucontrol
+elogind
 chrony
-libvirt
-xdg-user-dirs
-xdg-user-dirs-gtk
-xdg-utils
-glibc-locales
+
+# Power Management
 tlp
-bluez
+brightnessctl
 
-
-# Sanal İstemci
-spice-vdagent
-virtualbox-ose-guest
-virtualbox-ose-guest-dkms
-linux-headers
-
-# Masaüstü Ortamı ve Wayland
-sway
-swaylock
+# Graphics and Wayland
+mesa-dri
 xorg-server-xwayland
+xorg-fonts
 qt5-wayland
 qt6-wayland
 kwayland
@@ -49,74 +35,87 @@ gtk+3
 libadwaita
 adwaita-qt
 adwaita-qt6
-adwaita-icon-theme
-adwaita-fonts
 tecla
 
-# Giriş Ekranı (Display Manager)
-greetd
-ReGreet
-
-# Durum Çubuğu, Bildirim ve Menüler
+# Desktop Shell and Menus
+sway
+swaylock
 Waybar
 SwayNotificationCenter
 fuzzel
+greetd
+ReGreet
 
-# Terminal Emülatörleri ve Editör
-alacritty
-nano
-
-# Sistem Servisleri ve Ağ Yönetimi
-elogind
-accountsservice
+# Networking and Service Discovery
 NetworkManager
 network-manager-applet
+curl
+avahi
+nss-mdns
 
-# Yetkilendirme ve Portallar
-xdg-desktop-portal-wlr
-lxqt-policykit
-
-# Panoya Kopyalama Araçları
-cliphist
-wl-clipboard
-
-# Ses Yönetimi
+# Audio and Bluetooth
 pipewire
 wireplumber
 alsa-pipewire
 pavucontrol
+pwvucontrol
 libspa-bluetooth
+bluez
 bluez-alsa
 
-# Kurulum ve Boot Yükleyicileri
-dialog
-grub
-grub-x86_64-efi
+# Authorization and Portals
+polkit-gnome
+lxqt-policykit
+xdg-desktop-portal-wlr
+accountsservice
 
-# Görünüm ve Temalar
+# Files, Disks, Clipboard and Screen
+udisks2
+gvfs
+Thunar
+gnome-disk-utility
+exfatprogs
+xdg-user-dirs
+xdg-user-dirs-gtk
+xdg-utils
+cliphist
+wl-clipboard
+grim
+wtype
+
+# Applications
+alacritty
+nano
+mousepad
+firefox
+flatpak
+
+# Appearance, Themes and Fonts
 nwg-look
 yaru
 noto-fonts-ttf
 ttf-material-icons
+adwaita-icon-theme
+adwaita-fonts
 fontconfig
 
-# Genel Masaüstü
-xorg-fonts
-Thunar
-mousepad
-flatpak
-firefox
-
-#Araçlar
-gnome-disk-utility
-exfatprogs
-
-#Printing
+# Printing and Scanning
 cups
 cups-filters
 cups-pk-helper
 gutenprint
-avahi
-nss-mdns
 system-config-printer
 
+# Virtualization
+libvirt
+spice-vdagent
+virtualbox-ose-guest
+virtualbox-ose-guest-dkms
+linux-headers
+
+# Development and CLI Tools
+git
+python
+python3-pipx
+unzip
+inotify-tools
