@@ -11,18 +11,18 @@
 #
 # How it works:
 #   * Phase 1 (no lock): syncs the repositories, refreshes the void-packages
-#     tree, computes the update size (download / installed) and the free space,
-#     then asks for confirmation showing what will be downloaded. It also
-#     offers to clean the package cache when the free space is not enough. The
-#     shared lock is NOT held here, so an unanswered confirmation never blocks
-#     other package operations.
+#     tree and computes the update size (download / installed) and the free
+#     space. When the free space is not enough it first offers a package cache
+#     cleanup (or the disk usage analyzer); only with enough room it asks for
+#     confirmation showing what will be downloaded. The shared lock is NOT held
+#     here, so an unanswered confirmation never blocks other package operations.
 #   * Phase 2 (shared XBPS lock, kayra-xbps-lock.sh): updates all binary
 #     packages in one transaction (xbps-install -Suy) and rebuilds/installs the
 #     outdated source packages from the local repository.
 #
 # Commands used: flock, xbps-install, xbps-query, xbps-remove, xbps-checkvers,
-#                xbps-src, git, find, sort, head, comm, awk, df, notify-send,
-#                pkexec, cd.
+#                xbps-src, git, find, sort, head, comm, awk, df, rm, sh,
+#                baobab (setsid/nohup), notify-send, pkexec, cd.
 #
 # Usage: kayra-xbps-update.sh
 #        kayra-xbps.sh -update
@@ -70,6 +70,26 @@ to_gb() {
 # Free space in bytes of the filesystem holding the given path.
 free_bytes() {
     df -Pk "$1" 2>/dev/null | awk 'NR==2 { print $4 * 1024 }'
+}
+
+# Show the disk usage of the root filesystem with baobab, launched in the
+# background and detached from this script so it survives its exit. The binary
+# is looked up on PATH first, then in the usual locations.
+open_disk_usage() {
+    local bin
+    bin=$(command -v baobab 2>/dev/null || true)
+    [[ -z "$bin" && -x /usr/sbin/baobab ]] && bin=/usr/sbin/baobab
+    [[ -z "$bin" && -x /usr/bin/baobab ]] && bin=/usr/bin/baobab
+    if [[ -z "$bin" ]]; then
+        log WARN "disk usage analyzer (baobab) not found"
+        return 1
+    fi
+    if command -v setsid >/dev/null 2>&1; then
+        setsid "$bin" / >/dev/null 2>&1 &
+    else
+        nohup "$bin" / >/dev/null 2>&1 &
+    fi
+    return 0
 }
 
 # Build a source package and install it from the local repository. The shared
@@ -144,7 +164,44 @@ if [[ "$update_count" -eq 0 && "$source_count" -eq 0 ]]; then
     cleanup_and_exit
 fi
 
-# Confirmation showing the download size before downloading anything.
+# Free space check first: when there is not enough room, offer the package cache
+# cleanup (or the disk usage analyzer) before asking to update at all.
+if [[ "$install_size" -gt "$(free_bytes /)" ]]; then
+    action=$(notify_action "${MSG[APP_NAME]}" \
+        "$(i18n_template "${MSG[UPDATE_CLEAN_CONFIRM]}" \
+            INSTALL="$(to_gb "$install_size")" FREE="$(to_gb "$(free_bytes /)")")" \
+        "clean=${MSG[ACTION_CLEAN]}" \
+        "diskusage=${MSG[ACTION_DISK_USAGE]}" \
+        "cancel=${MSG[ACTION_CANCEL]}") || true
+
+    # Show the disk usage and stop: the user can free space and run again.
+    if [[ "$action" == "diskusage" ]]; then
+        open_disk_usage && log INFO "opened the disk usage analyzer"
+        exit 0
+    fi
+    [[ "$action" == "clean" ]] || exit 0
+
+    # Clear the package database cache and the whole download cache in a single
+    # privileged call (one authentication prompt). xbps-remove -OO only drops
+    # outdated and uninstalled packages, so the download cache is cleared too
+    # (it usually holds the currently installed versions; re-downloaded on
+    # demand). The download cache is cleared even when xbps-remove fails.
+    xp_remove=$(command -v xbps-remove 2>/dev/null || echo xbps-remove)
+    if ! clean_out=$(pkexec sh -c "$xp_remove -OO -y; rm -rf /var/cache/xbps/*" 2>&1); then
+        log WARN "cache cleanup failed: $clean_out"
+    fi
+    if [[ "$install_size" -gt "$(free_bytes /)" ]]; then
+        # Still not enough: offer the disk usage analyzer before giving up.
+        action=$(notify_action "${MSG[APP_NAME]}" "${MSG[DISK_LOW]}" \
+            "diskusage=${MSG[ACTION_DISK_USAGE]}" "ok=${MSG[ACTION_OK]}") || true
+        [[ "$action" == "diskusage" ]] && open_disk_usage
+        log ERROR "not enough free space after cache cleanup"
+        exit 0
+    fi
+fi
+
+# Confirmation showing the download size before downloading anything. It is only
+# reached when enough free space is available (after a possible cleanup).
 body=$(i18n_template "${MSG[UPDATE_CONFIRM]}" \
     COUNT="$update_count" DOWNLOAD="$(to_gb "$download_size")" \
     INSTALL="$(to_gb "$install_size")" FREE="$(to_gb "$(free_bytes /)")")
@@ -154,23 +211,6 @@ fi
 action=$(notify_action "${MSG[APP_NAME]}" "$body" \
     "update=${MSG[ACTION_UPDATE]}" "cancel=${MSG[ACTION_CANCEL]}") || true
 [[ "$action" == "update" ]] || exit 0
-
-# Free space check, offering a package cache cleanup when needed.
-if [[ "$install_size" -gt "$(free_bytes /)" ]]; then
-    action=$(notify_action "${MSG[APP_NAME]}" \
-        "$(i18n_template "${MSG[UPDATE_CLEAN_CONFIRM]}" \
-            INSTALL="$(to_gb "$install_size")" FREE="$(to_gb "$(free_bytes /)")")" \
-        "clean=${MSG[ACTION_CLEAN]}" "cancel=${MSG[ACTION_CANCEL]}") || true
-    [[ "$action" == "clean" ]] || exit 0
-    if ! clean_out=$(pkexec xbps-remove -OO -y 2>&1); then
-        log WARN "xbps-remove -OO failed: $clean_out"
-    fi
-    if [[ "$install_size" -gt "$(free_bytes /)" ]]; then
-        notify_error "${MSG[APP_NAME]}" "${MSG[DISK_LOW]}"
-        log ERROR "not enough free space after cache cleanup"
-        exit 0
-    fi
-fi
 
 # Phase 2: take the shared lock for the whole mutation phase.
 check_lock
