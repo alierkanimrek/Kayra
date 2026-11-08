@@ -47,10 +47,16 @@ done <<< "$updates"
 # Window width of the longest menu entry (icon counted as 3 characters).
 MAX_WIDTH=$(printf '%s\n' "${LINES[@]}" | awk '{ n = length($0) - 1 + 3; if (n > m) m = n } END { print m+0 }')
 
+# Cap the number of visible lines so a long update list does not overflow the
+# screen; fuzzel scrolls through the remaining entries.
+MENU_MAX_LINES=12
+menu_lines=${#LINES[@]}
+(( menu_lines > MENU_MAX_LINES )) && menu_lines=$MENU_MAX_LINES
+
 # Close any open menu before starting a new one.
 pkill -x fuzzel 2>/dev/null || true
 
-SELECTED=$(printf '%s\n' "${LINES[@]}" | fuzzel --dmenu --anchor=top-left --log-no-syslog --minimal-lines --lines="${#LINES[@]}" --width="$MAX_WIDTH" --prompt="${MSG[UPDATES_PROMPT]}: ") || true
+SELECTED=$(printf '%s\n' "${LINES[@]}" | fuzzel --dmenu --anchor=top-left --log-no-syslog --minimal-lines --lines="$menu_lines" --width="$MAX_WIDTH" --prompt="${MSG[UPDATES_PROMPT]}: ") || true
 [[ -z "$SELECTED" ]] && exit 0
 
 # Map the selected line back to its id. The check line maps to the empty string.
