@@ -121,6 +121,7 @@ declare -A i18n_SETTINGS_MENU=(
   [MSG_NO_ITEMS]="Ayar bulunamadı"
   [LABEL_auto_theme]="Otomatik Tema Değişimi"
   [LABEL_auto_update]="Otomatik Güncelleme"
+  [LABEL_auto_group_management]="Otomatik Grup Yönetimi"
   [NOTIFY_TITLE]="Sistem Ayarları"
   [MSG_TOGGLED]="{LABEL}: {STATE}"
   [STATE_ON]="etkin"
@@ -234,7 +235,15 @@ declare -A I18N_REMOVABLE_EJECT_MENU=(
 
 
 declare -A i18n_WAYBAR_CONFIG=(
+  [APP_MENU_TOOLTIP]="Uygulama Menüsü\nSağ tık: Yazılımları kur/kaldır"
+  [CLIPBOARD_TOOLTIP]="Sol tık: Pano Geçmişi\nSağ tık: Geçmişi Temizle"
+  [BATTERY_TOOLTIP]="Kapasite: {capacity}% ({time})"
+  [BATTERY_TOOLTIP_CHARGING]="Şarj Oluyor: {capacity}% (Dolmaya kalan: {time})"
+  [BATTERY_EVENT_WARNING]="Düşük Pil"
+  [BATTERY_EVENT_CRITICAL]="Çok Düşük Pil"
   [BATTERY_EVENT_FULL]="Pil Dolu!"
+  [BATTERY_EVENT_DISCHARGING]="Güç Anahtarı Boşalıyor"
+  [BATTERY_EVENT_CHARGING]="Güç Anahtarı Şarj Oluyor"
 )
 
 declare -A i18n_XBPS_MANAGER=(

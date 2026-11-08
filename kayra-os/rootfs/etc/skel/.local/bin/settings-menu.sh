@@ -6,7 +6,8 @@
 # dmenu, each prefixed with its state icon (true = ●, false = ○).
 # Selecting an entry toggles the value (true <-> false) and saves it.
 #
-# Currently: automatic theme switching and automatic package update checks.
+# Currently: automatic theme switching, automatic package update checks and
+# automatic group management.
 #
 # Add a setting: put its key in SETTING_KEYS, and its translated label as
 # [LABEL_<key>] in i18n_SETTINGS_MENU (lang/en.sh, lang/tr.sh).
@@ -36,6 +37,7 @@ source "$SCRIPT_DIR/notify.sh"
 SETTING_KEYS=(
     auto_theme
     auto_update
+    auto_group_management
 )
 
 # Optional display labels; missing keys fall back to the key name

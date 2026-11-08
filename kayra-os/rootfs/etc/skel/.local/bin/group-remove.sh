@@ -3,13 +3,17 @@
 # group-remove.sh - Remove the user from a group via a fuzzel menu.
 #
 # Lists the groups the user is a member of and removes the selected one
-# with "usermod -G". Exception groups (listed in EXCEPTION_GROUPS) are shown
-# with a lock icon and cannot be removed.
+# with "usermod -G". Exception groups are shown with a lock icon and cannot be
+# removed; the exception list is the required_groups list from
+# ~/.config/kayra/settings.conf (via settings-conf.sh), so it stays in sync
+# with check-groups.sh and fix-groups.sh. When the auto_group_management
+# setting is "false" the exception list is empty and every group can be
+# removed.
 #
 # Usage: group-remove.sh [fuzzel parameters...]
 #
 # Used commands: fuzzel, notify-send, pkexec, usermod, id, getent, pkill,
-#                printf, awk, sort
+#                printf, awk, sort, settings-conf.sh
 
 set -euo pipefail
 export LC_ALL=C.UTF-8
@@ -19,6 +23,7 @@ declare -n MSG=i18n_GROUP_MANAGEMENT
 
 source "$(dirname "$0")/klog.sh"
 source "$(dirname "$0")/notify.sh"
+source "$(dirname "$0")/settings-conf.sh"
 
 # The user the group is removed from. SUDO_USER is used when the script runs
 # through pkexec, otherwise the current user.
@@ -28,11 +33,30 @@ TARGET_USER="${SUDO_USER:-${USER:-$(id -un)}}"
 ICON_MEMBER=$(printf '%b' '\U000E7EF')      # group
 ICON_EXCEPTION=$(printf '%b' '\U000E897')  # lock, the group can not be left
 
-# Exception groups - the user cannot be removed from these.
-EXCEPTION_GROUPS=(audio video input users socklog)
+# Automatic group management: when "true" (default) the required groups are
+# protected and cannot be removed from the menu. When "false" the user is free
+# to add or remove any group.
+AUTO_GROUP_MANAGEMENT="$(conf_get auto_group_management | head -n1 || true)"
+[[ -z "$AUTO_GROUP_MANAGEMENT" ]] && AUTO_GROUP_MANAGEMENT="true"
+
+# Exception groups - the user cannot be removed from these while automatic
+# group management is enabled. The list is the required_groups list from
+# settings.conf, so it stays in sync with check-groups.sh and fix-groups.sh.
+# Fallback used when the required_groups key is missing from settings.conf.
+DEFAULT_REQUIRED_GROUPS="users wheel disk floppy cdrom optical storage kvm audio video input dialout plugdev scanner usbmon lp lpadmin bluetooth socklog"
+
+if [[ "$AUTO_GROUP_MANAGEMENT" == "true" ]]; then
+    # Group names never contain spaces, so plain word splitting is safe here.
+    EXCEPTION_GROUPS_STR="$(conf_get required_groups | head -n1 || true)"
+    [[ -z "$EXCEPTION_GROUPS_STR" ]] && EXCEPTION_GROUPS_STR="$DEFAULT_REQUIRED_GROUPS"
+    EXCEPTION_GROUPS=( $EXCEPTION_GROUPS_STR )
+else
+    # Free mode: every group can be removed.
+    EXCEPTION_GROUPS=()
+fi
 
 # Exception groups as one space padded list for an exact match.
-EXCEPTION_LIST=" ${EXCEPTION_GROUPS[*]} "
+EXCEPTION_LIST=" ${EXCEPTION_GROUPS[*]:-} "
 
 # Returns 0 when the given group is an exception group. The match is exact,
 # so a group name is never treated as a pattern.

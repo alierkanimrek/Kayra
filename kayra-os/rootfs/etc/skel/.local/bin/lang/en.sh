@@ -121,6 +121,7 @@ declare -A i18n_SETTINGS_MENU=(
   [MSG_NO_ITEMS]="No settings found"
   [LABEL_auto_theme]="Automatic Theme Switching"
   [LABEL_auto_update]="Automatic Updates"
+  [LABEL_auto_group_management]="Automatic Group Management"
   [NOTIFY_TITLE]="System Settings"
   [MSG_TOGGLED]="{LABEL}: {STATE}"
   [STATE_ON]="enabled"
@@ -234,7 +235,15 @@ declare -A I18N_REMOVABLE_EJECT_MENU=(
 
 
 declare -A i18n_WAYBAR_CONFIG=(
+  [APP_MENU_TOOLTIP]="App Menu\nRight click: Install/Remove Applications"
+  [CLIPBOARD_TOOLTIP]="Left click: Clipboard History\nRight click: Clear History"
+  [BATTERY_TOOLTIP]="Capacity: {capacity}% ({time})"
+  [BATTERY_TOOLTIP_CHARGING]="Charging: {capacity}% (Time remaining: {time})"
+  [BATTERY_EVENT_WARNING]="Low Battery"
+  [BATTERY_EVENT_CRITICAL]="Very Low Battery"
   [BATTERY_EVENT_FULL]="Battery Full!"
+  [BATTERY_EVENT_DISCHARGING]="Power Switch Discharging"
+  [BATTERY_EVENT_CHARGING]="Power Switch Charging"
 )
 
 declare -A i18n_XBPS_MANAGER=(
