@@ -263,10 +263,6 @@ exec_always "pkill waybar || true; waybar > $HOME/.local/var/log/waybar.log 2>&1
 exec /usr/libexec/polkit-gnome-authentication-agent-1
 exec ~/.local/bin/check-groups.sh
 
-# Log notification monitors disabled (not in use).
-# exec ~/.local/bin/syslog-notify.sh &
-# exec ~/.local/bin/kayra-log-notify.sh &
-
 #Apps
 bindsym $mod+Ctrl+Return exec chromium
 bindsym $mod+Shift+Return exec $filemanager

@@ -25,8 +25,8 @@ source "$(dirname "$0")/notify.sh"
 TARGET_USER="${SUDO_USER:-${USER:-$(id -un)}}"
 
 # Material symbols used in front of every menu entry.
-ICON_MEMBER=$(printf '%b' '\U0000E7EF')
-ICON_EXCEPTION=$(printf '%b' '\U0000E88F')
+ICON_MEMBER=$(printf '%b' '\U000E7EF')      # group
+ICON_EXCEPTION=$(printf '%b' '\U000E897')  # lock, the group can not be left
 
 # Exception groups - the user cannot be removed from these.
 EXCEPTION_GROUPS=(audio video input users socklog)

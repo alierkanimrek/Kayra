@@ -32,7 +32,8 @@ PROFILE_FILE="$HOME/.profile"
 SET_LANGUAGE="$SCRIPT_DIR/set-language.sh"
 
 # Icon shown on the notification (Material Symbols codepoint).
-NOTIFY_ICON="\U000F799"
+ICON_LANGUAGE=$(printf '%b' '\U000F799')   # language
+NOTIFY_ICON="$ICON_LANGUAGE"
 
 # Menu icons: filled circle for the current language, empty circle for the
 # other languages.

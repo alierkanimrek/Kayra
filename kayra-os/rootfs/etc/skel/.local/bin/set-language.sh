@@ -36,7 +36,8 @@ source "$SCRIPT_DIR/klog.sh"
 source "$SCRIPT_DIR/notify.sh"
 
 # Icon shown on the notification (Material Symbols codepoint).
-NOTIFY_ICON="\U000F799"
+ICON_LANGUAGE=$(printf '%b' '\U000F799')   # language
+NOTIFY_ICON="$ICON_LANGUAGE"
 
 LANG_DATA_DIR="$SCRIPT_DIR/lang"
 LANG_LINK="$LANG_DATA_DIR/current.sh"

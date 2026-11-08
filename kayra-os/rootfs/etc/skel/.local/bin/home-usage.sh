@@ -21,7 +21,8 @@ source "$(dirname "$0")/klog.sh"
 source "$(dirname "$0")/notify.sh"
 
 # Icon shown on the notification (Material Symbols codepoint).
-NOTIFY_ICON="\U000F3DC"
+ICON_STORAGE=$(printf '%b' '\U000F3DC')   # storage
+NOTIFY_ICON="$ICON_STORAGE"
 
 # Calculate the $HOME size in human readable format.
 HOME_SIZE="$(du -sh "$HOME" 2>/dev/null | awk '{print $1}')"
