@@ -1,84 +1,154 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
-# Settings menu helper script for launching system settings.
+# settings-menu.sh - Kayra OS boolean settings menu (opened from the system menu).
 #
-# The menu labels come from the settings_menu array in the language file.
-# The icons and the commands are hard coded here and are matched to the
-# labels by their key (APPEARANCE_THEME, LANGUAGE, ...).
+# Lists the boolean settings of ~/.config/kayra/settings.conf in a fuzzel
+# dmenu, each prefixed with its state icon (true = ●, false = ○).
+# Selecting an entry toggles the value (true <-> false) and saves it.
 #
-# Usage: settings-menu.sh [fuzzel parameters...]
+# Currently: automatic theme switching and automatic package update checks.
+#
+# Add a setting: put its key in SETTING_KEYS, and its translated label as
+# [LABEL_<key>] in i18n_SETTINGS_MENU (lang/en.sh, lang/tr.sh).
+#
+# Used commands: fuzzel, pkill, grep, sed, printf, notify-send (via notify.sh)
+#
 
 set -euo pipefail
 export LC_ALL=C.UTF-8
 
-source "$(dirname "$0")/i18n.sh"
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+
+# Provides conf_get / conf_set and CONFIG_FILE
+source "$SCRIPT_DIR/settings-conf.sh"
+
+# Localization strings
+source "$SCRIPT_DIR/i18n.sh"
 declare -n MSG=i18n_SETTINGS_MENU
 
-# Display order of the menu entries
-declare -a ORDER=(
-    APPEARANCE_THEME
-    LANGUAGE
-    KEYBOARD
-    DISPLAY
-    DEVICES
-    SERVICES
+# Logging and notifications
+source "$SCRIPT_DIR/klog.sh"
+source "$SCRIPT_DIR/notify.sh"
+
+# ------------------------------------------------------------------
+# Settings registry - add new boolean settings here
+# ------------------------------------------------------------------
+SETTING_KEYS=(
+    auto_theme
+    auto_update
 )
 
-# Material Design Nerd Font icons per menu key
-declare -A ICONS=(
-    [APPEARANCE_THEME]="E40A"
-    [LANGUAGE]="E894"
-    [KEYBOARD]="E312"
-    [DISPLAY]="E30C"
-    [DEVICES]="E1B1"
-    [SERVICES]="E726"
-)
+# Optional display labels; missing keys fall back to the key name
+declare -A SETTING_LABELS=()
 
-# Check if settings_menu array exists
-if [ -z "${settings_menu[*]:-}" ]; then
-    echo "$(i18n_template "${MSG[MSG_NO_ITEMS]}")" >&2
+# State icons
+ICON_TRUE=$(LC_ALL=C.UTF-8 printf '%b' '\U000025CF')
+ICON_FALSE=$(LC_ALL=C.UTF-8 printf '%b' '\U000025CB')
+
+# Reads a boolean setting, prints "true" or "false"
+setting_get() {
+    local key="$1"
+    local value
+    value=$(conf_get "$key" | head -n1)
+    [ "$value" = "true" ] && echo "true" || echo "false"
+}
+
+# Writes a boolean setting, creating the file/entry when missing
+setting_set() {
+    local key="$1"
+    local value="$2"
+
+    mkdir -p "$(dirname "$CONFIG_FILE")"
+    if [ ! -f "$CONFIG_FILE" ]; then
+        touch "$CONFIG_FILE"
+    fi
+
+    if grep -q "^${key}=" "$CONFIG_FILE"; then
+        conf_set "$key" "$value"
+    else
+        printf '%s="%s"\n' "$key" "$value" >>"$CONFIG_FILE"
+    fi
+}
+
+# Flips true <-> false and prints the new value
+setting_toggle() {
+    local key="$1"
+    local current
+    current=$(setting_get "$key")
+
+    local new_value="true"
+    [ "$current" = "true" ] && new_value="false"
+
+    setting_set "$key" "$new_value"
+    echo "$new_value"
+}
+
+# ------------------------------------------------------------------
+# Build the menu entries
+# ------------------------------------------------------------------
+declare -a MENU_LINES=()
+declare -a MENU_KEYS=()
+
+for key in "${SETTING_KEYS[@]}"; do
+    current=$(setting_get "$key")
+
+    if [ "$current" = "true" ]; then
+        icon="$ICON_TRUE"
+    else
+        icon="$ICON_FALSE"
+    fi
+
+    label="${MSG[LABEL_${key}]:-${SETTING_LABELS[$key]:-$key}}"
+
+    MENU_LINES+=("${icon} ${label}")
+    MENU_KEYS+=("$key")
+done
+
+if [ "${#MENU_LINES[@]}" -eq 0 ]; then
+    echo "${MSG[MSG_NO_ITEMS]:-No settings found}" >&2
     exit 1
 fi
 
-# Build the icon lines
-declare -a LINES=()
-for key in "${ORDER[@]}"; do
-    if [ -z "${settings_menu[$key]:-}" ]; then
-        echo "$(i18n_template "${MSG[MSG_NO_ITEMS]}")" >&2
-        exit 1
-    fi
-    LINES+=("$(printf '%b' "\U000${ICONS[$key]}") ${settings_menu[$key]}")
-done
-
-# Close any existing fuzzel processes
+# Close any open fuzzel menu before showing a new one
 pkill -x fuzzel 2>/dev/null || true
 
-# Window width of the longest menu entry (icon counted as 3 characters)
-MAX_WIDTH=$(printf '%s\n' "${LINES[@]}" | awk '{ n = length($0) - 1 + 3; if (n > m) m = n } END { print m+0 }')
-
-# Get selection from fuzzel dmenu
-SELECTED=$(printf '%s\n' "${LINES[@]}" | fuzzel --dmenu --anchor=top-right --log-no-syslog --minimal-lines --lines="${#LINES[@]}" --width="$MAX_WIDTH" --hide-prompt "$@") || true
+# --- Show the menu ------------------------------------------------
+SELECTED=$(printf '%s\n' "${MENU_LINES[@]}" | fuzzel --dmenu --log-no-syslog --hide-prompt "$@") || true
 
 [ -z "$SELECTED" ] && exit 0
 
-# Run the command of the selected text
-case "${SELECTED#* }" in
-    "${settings_menu[APPEARANCE_THEME]}")
-        "$HOME/.local/bin/appearance-settings.sh" &
-        ;;
-    "${settings_menu[LANGUAGE]}")
-        "$HOME/.local/bin/language-settings.sh" &
-        ;;
-    "${settings_menu[KEYBOARD]}")
-        "$HOME/.local/bin/keyboard-settings.sh" &
-        ;;
-    "${settings_menu[DISPLAY]}")
-        "$HOME/.local/bin/display-settings.sh" &
-        ;;
-    "${settings_menu[DEVICES]}")
-        "$HOME/.local/bin/show-devices.sh" &
-        ;;
-    "${settings_menu[SERVICES]}")
-        "$HOME/.local/bin/show-services.sh" &
-        ;;
-esac
+# Find the index of the selected line
+SELECTED_INDEX=-1
+for i in "${!MENU_LINES[@]}"; do
+    if [ "${MENU_LINES[$i]}" = "$SELECTED" ]; then
+        SELECTED_INDEX=$i
+        break
+    fi
+done
+
+[ "$SELECTED_INDEX" -lt 0 ] && exit 0
+
+TARGET_KEY="${MENU_KEYS[$SELECTED_INDEX]}"
+NEW_VALUE=$(setting_toggle "$TARGET_KEY")
+
+log INFO "Setting $TARGET_KEY toggled to $NEW_VALUE"
+
+TARGET_LABEL="${MSG[LABEL_${TARGET_KEY}]:-${SETTING_LABELS[$TARGET_KEY]:-$TARGET_KEY}}"
+
+STATE_LABEL="${MSG[STATE_ON]}"
+[ "$NEW_VALUE" = "false" ] && STATE_LABEL="${MSG[STATE_OFF]}"
+
+# The notification is sent in the background, the menu script does not wait
+# for the user. The undo button switches the setting back.
+(
+    ACTION=$(notify_action "${MSG[NOTIFY_TITLE]}" \
+        "$(i18n_template "${MSG[MSG_TOGGLED]}" LABEL="$TARGET_LABEL" STATE="$STATE_LABEL")" \
+        "undo=${MSG[ACTION_UNDO]}")
+
+    if [ "$ACTION" = "undo" ]; then
+        setting_toggle "$TARGET_KEY" >/dev/null
+        log INFO "Setting $TARGET_KEY toggled back by the user"
+    fi
+) &
+
+exit 0

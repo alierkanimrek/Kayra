@@ -11,9 +11,10 @@
 # Shutdown, Reboot and Logout commands are executed through a control layer.
 # The control layer runs the registered checks one by one; a check that does
 # not approve the action blocks the command and its message is delivered with
-# notify-send. Currently the only check is the existence of /tmp/xbps.lock.
+# notify-send. Currently the only check is whether an XBPS operation is running
+# (the shared lock from kayra-xbps-lock.sh is held).
 #
-# Used commands: fuzzel, loginctl, notify-send, cat, id, date, pkill, printf
+# Used commands: flock, fuzzel, loginctl, notify-send, id, date, pkill, printf
 
 export LC_ALL=C.UTF-8
 
@@ -24,12 +25,10 @@ declare -n MSG=i18n_POWER_MENU
 
 source "$(dirname "$0")/klog.sh"
 source "$(dirname "$0")/notify.sh"
+source "$(dirname "$0")/kayra-xbps-lock.sh"
 
 # The current user is used for the logout action.
 CURRENT_USER="${USER:-$(id -un)}"
-
-# Lock file created by the software manager while software operations run.
-LOCK_FILE="/tmp/xbps.lock"
 
 # Material symbols used in the menu labels.
 ICON_SHUTDOWN=$(printf '%b' '\U000F16F')
@@ -54,12 +53,8 @@ declare -a CHECK_FUNCTIONS=(
 
 # Control layer check: a running software operation blocks the action.
 check_xbps_lock() {
-    local lock_content
-
-    if [[ -f "$LOCK_FILE" ]]; then
-        lock_content=$(cat "$LOCK_FILE" 2>/dev/null || true)
-        [[ -n "$lock_content" ]] || lock_content="${MSG[LOCK_MSG]}"
-        echo "${MSG[LOCK_MSG]} $lock_content"
+    if xbps_busy; then
+        echo "${MSG[LOCK_MSG]}"
         return 1
     fi
 

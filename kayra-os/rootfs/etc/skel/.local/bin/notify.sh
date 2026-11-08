@@ -30,6 +30,12 @@
 #   NOTIFY_TIMEOUT  Optional timeout of the notifications, in milliseconds.
 #                   Empty (the default) lets the notification daemon decide
 #                   how long the notification stays on screen.
+#   NOTIFY_ACTION_TIMEOUT  Timeout of actionable notifications (notify_action),
+#                   in milliseconds. Default: 300000 (5 minutes). Actionable
+#                   notifications must stay long enough to be answered, and an
+#                   explicit timeout is also what makes notify-send's --wait
+#                   return instead of hanging forever when the notification
+#                   expires (swaync does not emit a close signal on expiry).
 #   NOTIFY_ICON     Optional icon of the notification. It is a Material
 #                   Symbols codepoint, either in the "\U000F799" or in the
 #                   "0xF799" notation. Default: none
@@ -130,6 +136,7 @@ export LC_ALL=C.UTF-8
 : "${NOTIFY_APP:=Kayra}"
 : "${NOTIFY_URGENCY:=normal}"
 : "${NOTIFY_TIMEOUT:=}"
+: "${NOTIFY_ACTION_TIMEOUT:=300000}"
 : "${NOTIFY_ICON:=}"
 
 # Font that is used for the Material Symbols icon.
@@ -274,7 +281,11 @@ notify_action() {
     local icon
     icon="$(notify_icon_resolve "${NOTIFY_ICON:-}")"
     [[ -n "$icon" ]] && args=(-i "$icon" "${args[@]}")
-    [[ "$NOTIFY_TIMEOUT" =~ ^[0-9]+$ ]] && args+=(-t "$NOTIFY_TIMEOUT")
+
+    # Actionable notifications always get an explicit timeout: it keeps them on
+    # screen long enough to be answered and makes --wait return on expiry.
+    local timeout="${NOTIFY_TIMEOUT:-$NOTIFY_ACTION_TIMEOUT}"
+    [[ "$timeout" =~ ^[0-9]+$ ]] && args+=(-t "$timeout")
 
     notify-send -a "$NOTIFY_APP" -u "$NOTIFY_URGENCY" -w "${args[@]}" "$title" "$body" 2>/dev/null
 }

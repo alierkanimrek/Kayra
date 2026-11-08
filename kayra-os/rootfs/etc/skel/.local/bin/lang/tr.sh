@@ -19,14 +19,16 @@ declare -A user_menu=(
   [HOME_USAGE]="Ev Dizini Kullanımı"
 )
 
-# Settings menu labels (icons and commands are defined in settings-menu.sh)
-declare -A settings_menu=(
+# System menu labels (icons and commands are defined in system-menu.sh)
+declare -A system_menu=(
   [APPEARANCE_THEME]="Görünüm ve Tema"
   [LANGUAGE]="Dil"
   [KEYBOARD]="Klavye"
   [DISPLAY]="Ekran"
   [DEVICES]="Aygıtlar"
   [SERVICES]="Servisler"
+  [SETTINGS]="Ayarlar"
+  [UPDATES]="Güncellemeleri Kontrol Et"
 )
 
 # Appearance menu labels (icons and commands are defined in appearance-settings.sh)
@@ -34,7 +36,6 @@ declare -A appearance_menu=(
   [FONT]="Yazı Tipi"
   [FONT_SIZE]="Yazı Tipi Büyüklüğü"
   [CHANGE_THEME]="Temayı değiştir"
-  [AUTO_THEME]="Otomatik Tema"
   [WALLPAPER]="Duvar Kağıdı"
 )
 
@@ -166,14 +167,6 @@ declare -A i18n_FIX_GROUPS=(
   [ACTION_REMOVE]="Remove"
 )
 
-declare -A i18n_TOGGLE_AUTO_THEME=(
-  [NOTIFY_TITLE]="Otomatik Tema"
-  [MSG_ON]="Otomatik tema değişiklikleri etkinleştirildi"
-  [MSG_OFF]="Otomatik tema değişiklikleri devre dışı bırakıldı"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
-)
-
 declare -A i18n_SYSTEM_INFO=(
   [LABEL_SYSTEM]="Sistem"
   [LABEL_KERNEL]="Çekirdek"
@@ -185,22 +178,25 @@ declare -A i18n_SYSTEM_INFO=(
   [ACTION_REMOVE]="Remove"
 )
 
-declare -A i18n_SETTINGS_MENU=(
+declare -A i18n_APPEARANCE_MENU=(
   [MSG_NO_ITEMS]="Öğe bulunamadı"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
   [NOTIFY_TITLE]="Görünüm Ayarları"
   [MSG_SCRIPT_MISSING]="Menü komutu bulunamadı: {SCRIPT}"
 )
 
-declare -A i18n_SYSTEM_MENU=(
+declare -A i18n_SETTINGS_MENU=(
   [MSG_NO_ITEMS]="Ayar bulunamadı"
   [LABEL_auto_theme]="Otomatik Tema Değişimi"
+  [LABEL_auto_update]="Otomatik Güncelleme"
   [NOTIFY_TITLE]="Sistem Ayarları"
   [MSG_TOGGLED]="{LABEL}: {STATE}"
   [STATE_ON]="etkin"
   [STATE_OFF]="devre dışı"
   [ACTION_UNDO]="Geri al"
+)
+
+declare -A i18n_SYSTEM_MENU=(
+  [MSG_NO_ITEMS]="Öğe bulunamadı"
 )
 
 declare -A i18n_SHOW_DEVICES=(
@@ -368,6 +364,26 @@ declare -A i18n_XBPS_MANAGER=(
   [LOCK_UPDATE_INFO]="Yazılım deposu güncel paket bilgileri indiriliyor."
   [LOCK_BUILD]="Yazılım derleniyor: {PACKAGE}"
   [DOWNLOAD_OK]="Yazılım bilgileri indirildi, kurulum için hazır."
+  [INSTALLED_CONFIRM]="{PACKAGE} kurulu ve bir güncelleme var. Ne yapmak istersiniz?"
+  [ACTION_UPDATE]="Güncelle"
+  [ACTION_SYS_UPDATE]="Sistemi güncelle"
+  [ACTION_CANCEL]="İptal"
+  [ACTION_CLEAN]="Temizle"
+  [UPDATE_PKG_OK]="Paket başarıyla güncellendi"
+  [UPDATE_PKG_FAIL]="Paket güncellenirken hata oluştu"
+  [UPDATE_CONFIRM]="{COUNT} paket: indirme {DOWNLOAD}, kurulum {INSTALL}, boş {FREE}. Sistem güncellensin mi?"
+  [UPDATE_CLEAN_CONFIRM]="Yeterli boş alan yok (gereken {INSTALL}, boş {FREE}). Paket önbelleği temizlenip devam edilsin mi?"
+  [UPDATE_SYNC]="Yazılım depoları senkronize ediliyor."
+  [UPDATE_DOWNLOAD]="Güncellemeler indiriliyor ve kuruluyor."
+  [UPDATE_SOURCE]="Kaynak paketler derleniyor: {PACKAGES}"
+  [UPDATE_OK]="Sistem güncellendi"
+  [UPDATE_NONE]="Sistem güncel"
+  [DISK_LOW]="Yeterli boş disk alanı yok."
+  [CACHE_CLEAN]="Paket önbelleği temizleniyor."
+  [CHECK_UPDATES]="Güncellemeleri Kontrol Et"
+  [UPDATES_PROMPT]="Güncellemeler"
+  [UPDATES_TITLE]="Kullanılabilir güncellemeler: {COUNT}"
+  [UPDATES_SOURCE_TAG]="(kaynak)"
 )
 
 declare -A i18n_POWER_MENU=(
@@ -412,4 +428,21 @@ declare -A i18n_BLUETOOTH_MENU=(
   [LABEL_CONNECTED]="bağlı"
   [REMOVE_CONFIRM]="{PACKAGE} Yazılımını kaldırmak istiyor musunuz?"
   [ACTION_REMOVE]="Kaldır"
+)
+
+# NVIDIA sürücü tespiti (nvidia-detect.sh)
+declare -A i18n_NVIDIA_DETECT=(
+  [APP_NAME]="NVIDIA Sürücü"
+  [MISSING_CMD]="Gerekli komut bulunamadı: {COMMAND}"
+  [NO_GPU]="Bu sistemde NVIDIA GPU bulunamadı."
+  [REPO_EMPTY]="Depolarda NVIDIA sürücü paketi bulunamadı."
+  [DOWNLOAD_FAIL]="NVIDIA'dan desteklenen GPU listesi indirilemedi. Ağ bağlantınızı kontrol edin."
+  [UNSUPPORTED]="Depolardaki hiçbir sürücü paketi {GPU} kartını desteklemiyor. Açık kaynak nouveau sürücüsünü düşünün."
+  [RECOMMEND]=$'Algılanan: {GPU}\nÖnerilen sürücü: {PACKAGE}'
+  [INSTALL_CONFIRM]="{PACKAGE} sürücü paketi kurulsun mu?"
+  [ACTION_INSTALL]="Kur"
+  [ALREADY_OK]="Zaten kurulu ve güncel: {PACKAGE} ({VERSION})."
+  [UPDATE_INFO]="Kurulu: {INSTALLED} - mevcut: {AVAILABLE}."
+  [UPDATE_HINT]="Paket yöneticinizle güncelleyin."
+  [CONFLICT]="Uyarı: başka bir NVIDIA sürücü dalı da kurulu: {PACKAGES}."
 )

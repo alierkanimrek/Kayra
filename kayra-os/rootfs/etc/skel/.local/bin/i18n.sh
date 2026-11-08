@@ -5,7 +5,7 @@
 # Loads the active language file and its string arrays:
 #   lang/current.sh (symlink set by set-language.sh) or lang/en.sh as fallback.
 # Arrays: i18n_<SCREEN>_* per screen (e.g. i18n_USER_MENU), i18n for globals,
-#         user_menu/settings_menu/... map a localized label to a command.
+#         user_menu/system_menu/... map a localized label to a command.
 #
 # Usage in a script:
 #   source "$(dirname "$0")/i18n.sh"

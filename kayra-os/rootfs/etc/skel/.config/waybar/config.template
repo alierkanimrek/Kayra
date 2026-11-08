@@ -4,6 +4,7 @@
     "spacing": 4,
     "modules-left": [
         "custom/app-menu",
+        "custom/xbps-updates-monitor",
         "custom/xbps-lock-monitor",        
         "sway/workspaces",
         "sway/mode",
@@ -149,7 +150,7 @@
     "custom/system-info": {
         "format": "\ue8b8",
         "tooltip": false,
-        "on-click": "$HOME/.local/bin/settings-menu.sh",
+        "on-click": "$HOME/.local/bin/system-menu.sh",
         "escape": false
     },
     "battery": {
@@ -227,6 +228,15 @@
         "return-type": "json",
         "hide-empty-text": true,
         "tooltip": true,
+        "restart-interval": 0
+    },
+
+    "custom/xbps-updates-monitor": {
+        "exec": "$HOME/.local/bin/kayra-xbps-updates-monitor.sh",
+        "return-type": "json",
+        "hide-empty-text": true,
+        "tooltip": true,
+        "on-click": "$HOME/.local/bin/kayra-xbps-updates-menu.sh",
         "restart-interval": 0
     },
     

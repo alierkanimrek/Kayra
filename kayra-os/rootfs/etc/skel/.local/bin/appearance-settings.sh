@@ -14,7 +14,7 @@ set -euo pipefail
 export LC_ALL=C.UTF-8
 
 source "$(dirname "$0")/i18n.sh"
-declare -n MSG=i18n_SETTINGS_MENU
+declare -n MSG=i18n_APPEARANCE_MENU
 
 source "$(dirname "$0")/klog.sh"
 source "$(dirname "$0")/notify.sh"
@@ -24,7 +24,6 @@ declare -a ORDER=(
     FONT
     FONT_SIZE
     CHANGE_THEME
-    AUTO_THEME
     WALLPAPER
 )
 
@@ -33,7 +32,6 @@ declare -A ICONS=(
     [FONT]="E262"
     [FONT_SIZE]="E245"
     [CHANGE_THEME]="E3B7"
-    [AUTO_THEME]="E65F"
     [WALLPAPER]="E1BC"
 )
 
@@ -77,9 +75,6 @@ case "$SELECTED_LABEL" in
         ;;
     "${appearance_menu[CHANGE_THEME]}")
         TARGET_COMMAND="/usr/bin/nwg-look"
-        ;;
-    "${appearance_menu[AUTO_THEME]}")
-        TARGET_COMMAND="$HOME/.local/bin/toggle-auto-theme.sh"
         ;;
     "${appearance_menu[WALLPAPER]}")
         TARGET_COMMAND="$HOME/.local/bin/change-wallpaper.sh"

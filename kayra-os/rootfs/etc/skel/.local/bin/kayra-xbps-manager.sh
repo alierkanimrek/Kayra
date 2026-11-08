@@ -9,7 +9,7 @@
 #     kayra-xbps-clone.sh.
 #   * Otherwise opens the package menu (kayra-xbps-menu.sh).
 #
-# Commands used: cat, notify-send, kayra-xbps-clone.sh, kayra-xbps-menu.sh.
+# Commands used: flock, notify-send, kayra-xbps-clone.sh, kayra-xbps-menu.sh.
 #
 # Usage: kayra-xbps-manager.sh
 
@@ -21,17 +21,19 @@ declare -n MSG=i18n_XBPS_MANAGER
 
 source "$(dirname "$0")/klog.sh"
 source "$(dirname "$0")/notify.sh"
+source "$(dirname "$0")/kayra-xbps-lock.sh"
 
 # Icon of the download prompt (Material Symbols "file_download").
 ICON_DOWNLOAD="$(printf '%b' '\U000E2C4')"
 
 PACKAGES_DIR="/var/spool/void-packages"
-LOCK_FILE="/tmp/xbps.lock"
 RUN_FILE="$PACKAGES_DIR/xbps-src"
 
-if [[ -f "$LOCK_FILE" ]]; then
-    lock_content=$(cat "$LOCK_FILE" 2>/dev/null || true)
-    notify_warn "${MSG[APP_NAME]}" "${MSG[LOCK_MSG]}"$'\n'"$lock_content"
+# If any package operation is running (a Kayra script or a command the user
+# started by hand), tell the user and stop. The manager only dispatches to the
+# scripts that take the lock themselves, so it must not hold it here.
+if xbps_busy; then
+    notify_warn "${MSG[APP_NAME]}" "${MSG[LOCK_MSG]}"
     exit 0
 fi
 

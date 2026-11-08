@@ -19,14 +19,16 @@ declare -A user_menu=(
   [HOME_USAGE]="Home Directory Usage"
 )
 
-# Settings menu labels (icons and commands are defined in settings-menu.sh)
-declare -A settings_menu=(
+# System menu labels (icons and commands are defined in system-menu.sh)
+declare -A system_menu=(
   [APPEARANCE_THEME]="Appearance & Theme"
   [LANGUAGE]="Language"
   [KEYBOARD]="Keyboard"
   [DISPLAY]="Display"
   [DEVICES]="Devices"
   [SERVICES]="Services"
+  [SETTINGS]="Settings"
+  [UPDATES]="Check for Updates"
 )
 
 # Appearance menu labels (icons and commands are defined in appearance-settings.sh)
@@ -34,7 +36,6 @@ declare -A appearance_menu=(
   [FONT]="Font"
   [FONT_SIZE]="Font Size"
   [CHANGE_THEME]="Change Theme"
-  [AUTO_THEME]="Auto Theme"
   [WALLPAPER]="Wallpaper"
 )
 
@@ -166,14 +167,6 @@ declare -A i18n_FIX_GROUPS=(
   [ACTION_REMOVE]="Remove"
 )
 
-declare -A i18n_TOGGLE_AUTO_THEME=(
-  [NOTIFY_TITLE]="Auto Theme"
-  [MSG_ON]="Automatic theme changes enabled"
-  [MSG_OFF]="Automatic theme changes disabled"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
-)
-
 declare -A i18n_SYSTEM_INFO=(
   [LABEL_SYSTEM]="System"
   [LABEL_KERNEL]="Kernel"
@@ -185,22 +178,25 @@ declare -A i18n_SYSTEM_INFO=(
   [ACTION_REMOVE]="Remove"
 )
 
-declare -A i18n_SETTINGS_MENU=(
+declare -A i18n_APPEARANCE_MENU=(
   [MSG_NO_ITEMS]="No items found"
-  [REMOVE_CONFIRM]="Remove %s software?"
-  [ACTION_REMOVE]="Remove"
   [NOTIFY_TITLE]="Appearance Settings"
   [MSG_SCRIPT_MISSING]="Menu command not found: {SCRIPT}"
 )
 
-declare -A i18n_SYSTEM_MENU=(
+declare -A i18n_SETTINGS_MENU=(
   [MSG_NO_ITEMS]="No settings found"
   [LABEL_auto_theme]="Automatic Theme Switching"
+  [LABEL_auto_update]="Automatic Updates"
   [NOTIFY_TITLE]="System Settings"
   [MSG_TOGGLED]="{LABEL}: {STATE}"
   [STATE_ON]="enabled"
   [STATE_OFF]="disabled"
   [ACTION_UNDO]="Undo"
+)
+
+declare -A i18n_SYSTEM_MENU=(
+  [MSG_NO_ITEMS]="No items found"
 )
 
 declare -A i18n_SHOW_DEVICES=(
@@ -368,6 +364,26 @@ declare -A i18n_XBPS_MANAGER=(
   [LOCK_UPDATE_INFO]="Updating software repo package info."
   [LOCK_BUILD]="Building software: {PACKAGE}"
   [DOWNLOAD_OK]="Software data downloaded, ready for installation."
+  [INSTALLED_CONFIRM]="{PACKAGE} is installed and an update is available. What do you want to do?"
+  [ACTION_UPDATE]="Update"
+  [ACTION_SYS_UPDATE]="Update system"
+  [ACTION_CANCEL]="Cancel"
+  [ACTION_CLEAN]="Clean"
+  [UPDATE_PKG_OK]="Package updated successfully"
+  [UPDATE_PKG_FAIL]="Failed to update package"
+  [UPDATE_CONFIRM]="{COUNT} package(s): download {DOWNLOAD}, install {INSTALL}, {FREE} free. Update the system now?"
+  [UPDATE_CLEAN_CONFIRM]="Not enough free space (need {INSTALL}, {FREE} free). Clean the package cache and continue?"
+  [UPDATE_SYNC]="Syncing software repositories."
+  [UPDATE_DOWNLOAD]="Downloading and installing updates."
+  [UPDATE_SOURCE]="Rebuilding source packages: {PACKAGES}"
+  [UPDATE_OK]="System updated"
+  [UPDATE_NONE]="System is up to date"
+  [DISK_LOW]="Not enough free disk space."
+  [CACHE_CLEAN]="Cleaning package cache."
+  [CHECK_UPDATES]="Check for Updates"
+  [UPDATES_PROMPT]="Updates"
+  [UPDATES_TITLE]="Updates available: {COUNT}"
+  [UPDATES_SOURCE_TAG]="(source)"
 )
 
 declare -A i18n_POWER_MENU=(
@@ -414,4 +430,21 @@ declare -A i18n_BLUETOOTH_MENU=(
   [LABEL_CONNECTED]="connected"
   [REMOVE_CONFIRM]="Remove %s software?"
   [ACTION_REMOVE]="Remove"
+)
+
+# NVIDIA driver detection (nvidia-detect.sh)
+declare -A i18n_NVIDIA_DETECT=(
+  [APP_NAME]="NVIDIA Driver"
+  [MISSING_CMD]="Required command not found: {COMMAND}"
+  [NO_GPU]="No NVIDIA GPU was found on this system."
+  [REPO_EMPTY]="No NVIDIA driver package was found in the repositories."
+  [DOWNLOAD_FAIL]="Could not download the supported GPU list from NVIDIA. Check your network connection."
+  [UNSUPPORTED]="No driver package in the repositories supports {GPU}. Consider the open-source nouveau driver."
+  [RECOMMEND]=$'Detected: {GPU}\nRecommended driver: {PACKAGE}'
+  [INSTALL_CONFIRM]="Install the {PACKAGE} driver package?"
+  [ACTION_INSTALL]="Install"
+  [ALREADY_OK]="Already installed and up to date: {PACKAGE} ({VERSION})."
+  [UPDATE_INFO]="Installed: {INSTALLED} - available: {AVAILABLE}."
+  [UPDATE_HINT]="Update it with your package manager."
+  [CONFLICT]="Warning: another NVIDIA driver branch is also installed: {PACKAGES}."
 )

@@ -8,8 +8,8 @@
 # not present in the source list are added to the list so they can be
 # managed (removed) from the same menu.
 #
-# Used commands: find, xbps-query, sort, awk, sed, printf, pkill, fuzzel,
-#                notify-send
+# Used commands: flock, find, xbps-query, sort, awk, sed, printf, pkill,
+#                fuzzel, notify-send
 #
 set -euo pipefail
 export LC_ALL=C.UTF-8
@@ -18,13 +18,14 @@ source "$(dirname "$0")/i18n.sh"
 declare -n MSG=i18n_XBPS_MANAGER
 
 source "$(dirname "$0")/klog.sh"
+source "$(dirname "$0")/kayra-xbps-lock.sh"
 
 PACKAGES_DIR="/var/spool/void-packages"
-LOCK_FILE="/tmp/xbps.lock"
 
-if [[ -f "$LOCK_FILE" ]]; then
-    lock_content=$(cat "$LOCK_FILE" 2>/dev/null || true)
-    notify-send "${MSG[APP_NAME]}" "${MSG[LOCK_MSG]}\n $lock_content"
+# If a package operation is already running, warn and stop. The menu does not
+# take the lock itself; the script it launches (kayra-xbps.sh) does.
+if xbps_busy; then
+    notify-send "${MSG[APP_NAME]}" "${MSG[LOCK_MSG]}"
     exit 0
 fi
 

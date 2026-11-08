@@ -6,6 +6,7 @@ export QT_QPA_PLATFORM=wayland
 export ELM_DISPLAY=wl
 export SDL_VIDEODRIVER=wayland
 export QT_SCALE_FACTOR=1.25
+export QT_QPA_PLATFORMTHEME=gtk3
 export PATH="~/.local/bin:$PATH"
 
 export GRIM_DEFAULT_DIR="$HOME/Pictures/screenshots"
