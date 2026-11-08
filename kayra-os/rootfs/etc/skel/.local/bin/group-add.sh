@@ -44,11 +44,13 @@ if [[ ${#ADDABLE_GROUPS[@]} -eq 0 ]]; then
     exit 0
 fi
 
-# Menu entries are the plain group names.
+# Menu entries are the plain group names (no icon).
 declare -a MENU_LINES=("${ADDABLE_GROUPS[@]}")
 
-# Window width of the longest menu entry.
-MAX_WIDTH=$(printf '%s\n' "${MENU_LINES[@]}" | awk '{ n = length($0); if (n > m) m = n } END { print m+0 }')
+# Window width of the longest menu entry, using the shared project formula.
+# The entries have no icon, but the formula is kept unchanged so the extra
+# slack (-1 + 3) prevents fuzzel from clipping the longest group name.
+MAX_WIDTH=$(printf '%s\n' "${MENU_LINES[@]}" | awk '{ n = length($0) - 1 + 3; if (n > m) m = n } END { print m+0 }')
 
 # Close any open fuzzel windows
 pkill -x fuzzel 2>/dev/null || true
