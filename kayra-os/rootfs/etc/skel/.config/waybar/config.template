@@ -1,5 +1,6 @@
 // -*- mode: jsonc -*-
 {
+    "include": ["~/.config/waybar/app-pins.conf"],
     "height": 30,
     "spacing": 4,
     "modules-left": [
@@ -9,6 +10,7 @@
         "sway/workspaces",
         "sway/mode",
         "sway/scratchpad",
+        "group/app-pins",
         "custom/media"
     ],
     "modules-center": [
@@ -152,6 +154,14 @@
         "tooltip": false,
         "on-click": "$HOME/.local/bin/system-menu.sh",
         "escape": false
+    },
+
+    "custom/app-pin-trigger": {
+        "format": "\uEF40",
+        "tooltip": true,
+        "tooltip-format": "{{APP_PINS_TOOLTIP}}",
+        "on-click": "$HOME/.local/bin/waybar-app-pins.sh menu",
+        "on-click-right": "$HOME/.local/bin/waybar-app-pins.sh command"
     },
     "battery": {
         "bat": "BAT1",

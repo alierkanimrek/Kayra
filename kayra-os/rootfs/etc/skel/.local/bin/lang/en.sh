@@ -96,6 +96,9 @@ declare -A i18n_WIFI_MONITOR=(
 
 declare -A i18n_MEMORY_MONITOR=(
   [MEMORY_AVAILABLE]=$'Available memory: {RATIO}%'
+  [TOP_PROCESSES]="Top memory processes:"
+  [NOTIFY_TITLE]="Low memory"
+  [NOTIFY_LOW_MEMORY]=$'Available memory dropped to {RATIO}%.'
 )
 
 declare -A i18n_CHECK_GROUPS=(
@@ -236,6 +239,7 @@ declare -A I18N_REMOVABLE_EJECT_MENU=(
 
 declare -A i18n_WAYBAR_CONFIG=(
   [APP_MENU_TOOLTIP]="App Menu\nRight click: Install/Remove Applications"
+  [APP_PINS_TOOLTIP]="Pinned applications\nLeft click: Add application\nRight click: Add command"
   [CLIPBOARD_TOOLTIP]="Left click: Clipboard History\nRight click: Clear History"
   [BATTERY_TOOLTIP]="Capacity: {capacity}% ({time})"
   [BATTERY_TOOLTIP_CHARGING]="Charging: {capacity}% (Time remaining: {time})"
@@ -344,4 +348,24 @@ declare -A i18n_NVIDIA_DETECT=(
   [UPDATE_INFO]="Installed: {INSTALLED} - available: {AVAILABLE}."
   [UPDATE_HINT]="Update it with your package manager."
   [CONFLICT]="Warning: another NVIDIA driver branch is also installed: {PACKAGES}."
+)
+
+# Pinned application bar (waybar-app-pins.sh, waybar-app-pins-slot.sh)
+declare -A i18n_APP_PINS=(
+  [NOTIFY_TITLE]="Application Bar"
+  [MENU_PROMPT]="Add application"
+  [COMMAND_PROMPT]="Command"
+  [REMOVE_ACTION]="Remove"
+  [MSG_ADDED]="{APP} added to the bar"
+  [MSG_CMD_ADDED]="{CMD} command added to the bar"
+  [MSG_REMOVED]="{APP} removed from the bar"
+  [MSG_ALREADY]="{APP} is already on the bar"
+  [MSG_NO_APPS]="No applications found"
+  [MSG_FULL]="All slots are full. Add a slot with: waybar-app-pins-slot.sh add"
+  [MSG_SLOT_COUNT]="Pinned slots (used/total): {COUNT}"
+  [MSG_SLOT_ADDED]="Slot {INDEX} added"
+  [MSG_SLOT_REMOVED]="Slot {INDEX} removed"
+  [MSG_SLOT_LAST_FULL]="Slot {INDEX} is in use and cannot be removed"
+  [MSG_NO_SLOTS]="No slot to remove"
+  [MSG_FAILED]="Operation failed"
 )

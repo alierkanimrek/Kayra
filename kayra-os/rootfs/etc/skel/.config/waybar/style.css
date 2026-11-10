@@ -51,10 +51,15 @@ tooltip label {
 #custom-wifi,
 #custom-bluetooth,
 #custom-app-menu,
+#custom-app-pin-trigger,
 #custom-xbps-updates-monitor,
 #custom-user-info,
 #custom-system-info,
 #custom-removable-monitor,
+#custom-memory-monitor,
+#custom-connection-warning,
+#custom-xbps-lock-monitor,
+#custom-spacer,
 #wireplumber,
 #wireplumber.mic,
 #clock{
@@ -65,27 +70,71 @@ tooltip label {
 	margin: 0 3px;
 }
 
-/* Ortak Hover: fare üzerine gelince beyaz parlama */
+/* ------------------------------------------------------------------
+ * Ortak Hover — her modül/ikon fare üzerine gelince @color-fg-hover
+ * ------------------------------------------------------------------
+ * Waybar (0.16 / GTK3) her modülü bir GtkEventBox içine koyar ve fare
+ * girişinde PRELIGHT durumunu event_box_.get_child() widget'ına uygular
+ * (src/AModule.cpp : handleMouseEnter). GTK3'te PRELIGHT çocuklara YAYILMAZ.
+ *
+ *   - ALabel tabanlı modüller (clock, battery, wireplumber, mode, window,
+ *     scratchpad ...): isim doğrudan prelight alan label üzerindedir, bu
+ *     yüzden "#id:hover" çalışır.
+ *   - custom/… (yıldız) modülleri: isim label'a taşınır ama prelight üstteki GtkBox'a
+ *     uygulanır; bu yüzden "#custom-id:hover" label'ı eşleştirmez. Hover'ı
+ *     üstteki kutuya bağlayıp etiketi onun çocuğu olarak seçiyoruz:
+ *     "box:hover > #custom-id".
+ */
+
+/* ALabel tabanlı (native) modüller */
+#workspaces:hover,
+#workspaces button:hover,
 #mode:hover,
-battery:hover,
 #scratchpad:hover,
-#custom-media:hover,
-#custom-clipboard:hover,
-#custom-power-button:hover,
-#custom-power-trigger:hover,
-#custom-notification:hover,
-#custom-network:hover,
-#custom-wifi:hover,
-#custom-bluetooth:hover,
-#custom-connection-warning:hover,
-#custom-app-menu:hover,
-#custom-xbps-updates-monitor:hover,
-#custom-user-info:hover,
-#custom-system-info:hover,
-#custom-removable-monitor:hover,
+#window:hover,
+#tray:hover,
+#battery:hover,
 #wireplumber:hover,
-#wireplumber-mic:hover,
-#clock:hover{
+#wireplumber.mic:hover,
+#clock:hover {
+    color: @color-fg-hover;
+}
+
+/* custom/… (yıldız) modülleri */
+#custom-media:hover,
+box:hover > #custom-media,
+#custom-power-trigger:hover,
+box:hover > #custom-power-trigger,
+#custom-power-button:hover,
+box:hover > #custom-power-button,
+#custom-notification:hover,
+box:hover > #custom-notification,
+#custom-network:hover,
+box:hover > #custom-network,
+#custom-clipboard:hover,
+box:hover > #custom-clipboard,
+#custom-wifi:hover,
+box:hover > #custom-wifi,
+#custom-bluetooth:hover,
+box:hover > #custom-bluetooth,
+#custom-connection-warning:hover,
+box:hover > #custom-connection-warning,
+#custom-app-menu:hover,
+box:hover > #custom-app-menu,
+#custom-app-pin-trigger:hover,
+box:hover > #custom-app-pin-trigger,
+#custom-xbps-updates-monitor:hover,
+box:hover > #custom-xbps-updates-monitor,
+#custom-xbps-lock-monitor:hover,
+box:hover > #custom-xbps-lock-monitor,
+#custom-user-info:hover,
+box:hover > #custom-user-info,
+#custom-system-info:hover,
+box:hover > #custom-system-info,
+#custom-removable-monitor:hover,
+box:hover > #custom-removable-monitor,
+#custom-memory-monitor:hover,
+box:hover > #custom-memory-monitor {
     color: @color-fg-hover;
 }
 
@@ -153,7 +202,9 @@ battery:hover,
     color: @color-warning;
 }
 
-#custom-notification.notification:hover {
+/* custom/… modüllerinde prelight label'da değil üstteki kutuda olduğu için
+   state hover'ları da kutu üzerinden hedeflenir. */
+box:hover > #custom-notification.notification {
     color: @color-fg-hover;
 }
 
@@ -165,7 +216,7 @@ battery:hover,
     color: @color-warning;
 }
  
-#custom-wifi.disconnected:hover {
+box:hover > #custom-wifi.disconnected {
     color: @color-fg-hover;
 }
 
@@ -173,7 +224,7 @@ battery:hover,
     color: @color-warning;
 }
 
-#custom-bluetooth.off:hover {
+box:hover > #custom-bluetooth.off {
     color: @color-fg-hover;
 }
 
@@ -185,7 +236,7 @@ battery:hover,
     color: @color-warning;
 }
 
-#custom-user-info.supervisor:hover {
+box:hover > #custom-user-info.supervisor {
     color: @color-fg-hover;
 }
 #battery{
@@ -198,4 +249,24 @@ battery:hover,
 #battery.critical{
 	font-size: 1.5rem;
 	color: @color-warning;
+}
+
+/* ---------------- Uygulama Sabitleme Grubu ---------------- */
+/* image#app-pin-N modülleri: boş slot (empty) sıfır genişlikte kaybolur.
+   Gövde boşluğu (4px) grup içine uygulanmadığından, üst düzey modüllerle
+   aynı etkiyi (3+4+3=10px) yakalamak için kenar boşluğu 5px kullanılır. */
+#image {
+	padding: 0;
+	margin: 0 5px;
+}
+
+#custom-app-pin-trigger {
+	margin: 0 5px;
+}
+
+#image.empty {
+	min-width: 0;
+	min-height: 0;
+	padding: 0;
+	margin: 0;
 }

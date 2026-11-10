@@ -96,6 +96,9 @@ declare -A i18n_WIFI_MONITOR=(
 
 declare -A i18n_MEMORY_MONITOR=(
   [MEMORY_AVAILABLE]=$'Kullanılabilir bellek: {RATIO}%'
+  [TOP_PROCESSES]="En çok bellek kullanan süreçler:"
+  [NOTIFY_TITLE]="Bellek azalıyor"
+  [NOTIFY_LOW_MEMORY]=$'Kullanılabilir bellek %{RATIO} değerine düştü.'
 )
 
 declare -A i18n_CHECK_GROUPS=(
@@ -236,6 +239,7 @@ declare -A I18N_REMOVABLE_EJECT_MENU=(
 
 declare -A i18n_WAYBAR_CONFIG=(
   [APP_MENU_TOOLTIP]="Uygulama Menüsü\nSağ tık: Yazılımları kur/kaldır"
+  [APP_PINS_TOOLTIP]="Sabitlenen uygulamalar\nSol tık: Uygulama ekle\nSağ tık: Komut ekle"
   [CLIPBOARD_TOOLTIP]="Sol tık: Pano Geçmişi\nSağ tık: Geçmişi Temizle"
   [BATTERY_TOOLTIP]="Kapasite: {capacity}% ({time})"
   [BATTERY_TOOLTIP_CHARGING]="Şarj Oluyor: {capacity}% (Dolmaya kalan: {time})"
@@ -344,4 +348,24 @@ declare -A i18n_NVIDIA_DETECT=(
   [UPDATE_INFO]="Kurulu: {INSTALLED} - mevcut: {AVAILABLE}."
   [UPDATE_HINT]="Paket yöneticinizle güncelleyin."
   [CONFLICT]="Uyarı: başka bir NVIDIA sürücü dalı da kurulu: {PACKAGES}."
+)
+
+# Sabitlenen uygulama çubuğu (waybar-app-pins.sh, waybar-app-pins-slot.sh)
+declare -A i18n_APP_PINS=(
+  [NOTIFY_TITLE]="Uygulama Çubuğu"
+  [MENU_PROMPT]="Uygulama ekle"
+  [COMMAND_PROMPT]="Komut"
+  [REMOVE_ACTION]="Kaldır"
+  [MSG_ADDED]="{APP} çubuğa eklendi"
+  [MSG_CMD_ADDED]="{CMD} komutu çubuğa eklendi"
+  [MSG_REMOVED]="{APP} çubuktan kaldırıldı"
+  [MSG_ALREADY]="{APP} zaten çubukta"
+  [MSG_NO_APPS]="Uygulama bulunamadı"
+  [MSG_FULL]="Tüm slotlar dolu. Slot eklemek için: waybar-app-pins-slot.sh add"
+  [MSG_SLOT_COUNT]="Sabitlenen slotlar (kullanılan/toplam): {COUNT}"
+  [MSG_SLOT_ADDED]="Slot {INDEX} eklendi"
+  [MSG_SLOT_REMOVED]="Slot {INDEX} kaldırıldı"
+  [MSG_SLOT_LAST_FULL]="{INDEX} numaralı slot kullanımda, kaldırılamaz"
+  [MSG_NO_SLOTS]="Kaldırılacak slot yok"
+  [MSG_FAILED]="İşlem başarısız"
 )
