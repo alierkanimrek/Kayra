@@ -10,11 +10,13 @@
 #               application is appended to the state file (adds a pin).
 #   command     Fuzzel prompt; the typed shell command is appended to the state
 #               file as a "cmd:" pin and shown with a fixed terminal icon.
+#               Command pins always run inside a terminal (see TERMINAL), so a
+#               TUI like "htop" or "opencode" does not need to name one.
 #   icon N      Print the icon file path and the tooltip of slot N. The image
 #               module shows the icon; for an empty slot a non-existent path is
 #               printed so the module hides it.
-#   launch N    Launch the application (action pin) or run the command (cmd:
-#               pin) stored in slot N.
+#   launch N    Launch the application (action pin) stored in slot N, or run
+#               the command (cmd: pin) inside a terminal.
 #   remove N    Fuzzel menu with a single "Remove" entry that unpins slot N.
 #
 # Adding or removing a pin only rewrites the state file, then sends
@@ -40,6 +42,7 @@ export LC_ALL=C.UTF-8
 SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
 
 source "$SCRIPT_DIR/klog.sh"
+source "$SCRIPT_DIR/settings-conf.sh"
 source "$SCRIPT_DIR/i18n.sh"
 declare -n MSG=i18n_APP_PINS
 source "$SCRIPT_DIR/notify.sh"
@@ -52,6 +55,12 @@ SIGNAL=5
 
 # Icon file used for pins whose value is a shell command (state line "cmd:...").
 CMD_ICON_NAME="terminal-app"
+
+# Terminal command prefix used to run command pins (they always open in a
+# terminal). Read from settings.conf (key "terminal"), e.g. "alacritty -e";
+# falls back to "alacritty -e".
+TERMINAL="$(conf_get terminal | head -n1)"
+[ -n "$TERMINAL" ] || TERMINAL="alacritty -e"
 
 # Temporary file used by the add menu (removed on exit).
 TMP_DATA=""
@@ -248,9 +257,13 @@ cmd_launch() {
     line=$(sed -n "$(( n + 1 ))p" "$STATE" 2>/dev/null)
     [ -n "$line" ] || exit 0
 
-    # Command pin: run it detached so the bar is never blocked.
+    # Command pin: always open the command in a terminal.
     if [ "${line#cmd:}" != "$line" ]; then
-        setsid -f sh -c "${line#cmd:}" >/dev/null 2>&1 || log WARN "Failed to run command: ${line#cmd:}"
+        # $TERMINAL may carry extra arguments (e.g. "alacritty -e"), so it is
+        # intentionally word-split here.
+        # shellcheck disable=SC2086
+        setsid -f $TERMINAL sh -c "${line#cmd:}" >/dev/null 2>&1 ||
+            log WARN "Failed to run command: ${line#cmd:}"
         exit 0
     fi
 
