@@ -10,8 +10,10 @@
 #               application is appended to the state file (adds a pin).
 #   command     Fuzzel prompt; the typed shell command is appended to the state
 #               file as a "cmd:" pin and shown with a fixed terminal icon.
-#               Command pins always run inside a terminal (see TERMINAL), so a
-#               TUI like "htop" or "opencode" does not need to name one.
+#               Command pins always run inside a terminal (see TERMINAL) using
+#               the user's interactive shell (bash -ic), so PATH and aliases
+#               from ~/.bashrc apply; a TUI like "htop" or "opencode" does not
+#               need to name a terminal.
 #   icon N      Print the icon file path and the tooltip of slot N. The image
 #               module shows the icon; for an empty slot a non-existent path is
 #               printed so the module hides it.
@@ -257,12 +259,14 @@ cmd_launch() {
     line=$(sed -n "$(( n + 1 ))p" "$STATE" 2>/dev/null)
     [ -n "$line" ] || exit 0
 
-    # Command pin: always open the command in a terminal.
+    # Command pin: always open the command in a terminal. An interactive shell
+    # is used so the user's PATH and aliases from ~/.bashrc are available
+    # (non-interactive shells do not read it).
     if [ "${line#cmd:}" != "$line" ]; then
         # $TERMINAL may carry extra arguments (e.g. "alacritty -e"), so it is
         # intentionally word-split here.
         # shellcheck disable=SC2086
-        setsid -f $TERMINAL sh -c "${line#cmd:}" >/dev/null 2>&1 ||
+        setsid -f $TERMINAL bash -ic "${line#cmd:}" >/dev/null 2>&1 ||
             log WARN "Failed to run command: ${line#cmd:}"
         exit 0
     fi
