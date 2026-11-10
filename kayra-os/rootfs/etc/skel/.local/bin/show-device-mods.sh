@@ -88,8 +88,8 @@ DEVICE_TITLE=$(printf '%s' "$DEVICE_JSON" | jq -r '
 # ------------------------------------------------------------------
 # Build the menu entries
 # ------------------------------------------------------------------
-ICON_IN_USE=$(LC_ALL=C.UTF-8 printf '%b' '\U000025CF')     # ● in use
-ICON_UNUSED=$(LC_ALL=C.UTF-8 printf '%b' '\U000025CB')     # ○ unused
+ICON_IN_USE=$(printf '%b' '\U0000E837')     # radio_button_checked - in use
+ICON_UNUSED=$(printf '%b' '\U0000E836')     # radio_button_unchecked - unused
 
 declare -a MENU_LINES=()
 declare -a MENU_MODULES=()

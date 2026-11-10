@@ -3,7 +3,8 @@
 # settings-menu.sh - Kayra OS boolean settings menu (opened from the system menu).
 #
 # Lists the boolean settings of ~/.config/kayra/settings.conf in a fuzzel
-# dmenu, each prefixed with its state icon (true = ●, false = ○).
+# dmenu, each prefixed with its state icon (true = radio_button_checked,
+# false = radio_button_unchecked, same glyphs as removable-menu.sh).
 # Selecting an entry toggles the value (true <-> false) and saves it.
 #
 # Currently: automatic theme switching, automatic package update checks and
@@ -43,9 +44,9 @@ SETTING_KEYS=(
 # Optional display labels; missing keys fall back to the key name
 declare -A SETTING_LABELS=()
 
-# State icons
-ICON_TRUE=$(LC_ALL=C.UTF-8 printf '%b' '\U000025CF')
-ICON_FALSE=$(LC_ALL=C.UTF-8 printf '%b' '\U000025CB')
+# State icons (Material Icons, matched to the removable storage menu)
+ICON_TRUE=$(printf '%b' '\U0000E837')     # radio_button_checked
+ICON_FALSE=$(printf '%b' '\U0000E836')    # radio_button_unchecked
 
 # Reads a boolean setting, prints "true" or "false"
 setting_get() {

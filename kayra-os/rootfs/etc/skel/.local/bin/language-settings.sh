@@ -4,7 +4,7 @@
 #
 # The available languages come from the system locales (locale -av). The
 # current language is read from ~/.profile. The current language is marked
-# with a filled circle, the other languages with an empty circle.
+# with a filled radio button, the other languages with an empty radio button.
 #
 # The locale code of the selected entry is handed over to set-language.sh.
 # The mapping of the locale code to the language data file (lang/<code>.sh)
@@ -35,10 +35,11 @@ SET_LANGUAGE="$SCRIPT_DIR/set-language.sh"
 ICON_LANGUAGE=$(printf '%b' '\U000F799')   # language
 NOTIFY_ICON="$ICON_LANGUAGE"
 
-# Menu icons: filled circle for the current language, empty circle for the
-# other languages.
-ICON_CURRENT=$(LC_ALL=C.UTF-8 printf '%b' '\U000025CF')
-ICON_OTHER=$(LC_ALL=C.UTF-8 printf '%b' '\U000025CB')
+# Menu icons: radio_button_checked for the current language,
+# radio_button_unchecked for the other languages (same glyphs as
+# removable-menu.sh).
+ICON_CURRENT=$(printf '%b' '\U0000E837')
+ICON_OTHER=$(printf '%b' '\U0000E836')
 
 # Available locales from the system: "<locale code>|<language name>".
 LOCALE_LIST=$(locale -av 2>/dev/null | awk '
