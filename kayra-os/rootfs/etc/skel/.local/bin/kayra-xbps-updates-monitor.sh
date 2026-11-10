@@ -12,7 +12,8 @@
 #     settings file changes (conf_wait_change) or after CHECK_PERIOD seconds,
 #     whichever comes first.
 #   * As soon as auto_update is true it runs a fresh check immediately (on
-#     startup and whenever the setting turns true), then every INTERVAL.
+#     startup, whenever the setting turns true and whenever an xbps transaction
+#     ends), then every INTERVAL.
 #   * The check comes from kayra-xbps-updates.sh: a fresh in-memory repository
 #     sync with "xbps-install -un -M" (no root, no write to /var/db/xbps, run
 #     under nice). On a failed check (offline) the last known state is kept and
@@ -35,6 +36,7 @@ declare -n MSG=i18n_XBPS_MANAGER
 
 source "$(dirname "$0")/settings-conf.sh"
 source "$(dirname "$0")/kayra-xbps-updates.sh"
+source "$(dirname "$0")/kayra-xbps-lock.sh"   # for xbps_busy (lock state)
 
 ICON=$(printf '%b' '\U000E923')   # Material Icons "update"
 INTERVAL=21600                    # 6 hours between checks
@@ -85,6 +87,7 @@ hide() {
 
 enabled_prev=""
 next_check=0
+was_busy=0
 
 if auto_update_enabled; then
     enabled_prev=true
@@ -102,6 +105,16 @@ while :; do
     # Wake immediately when settings.conf changes, otherwise after
     # CHECK_PERIOD seconds.
     conf_wait_change "$CHECK_PERIOD" || true
+
+    # Re-check as soon as an xbps transaction ends (ours or one started by the
+    # user): while the shared lock is held something is being installed or
+    # removed, and the update list is stale right after it finishes.
+    if xbps_busy; then
+        was_busy=1
+    elif [[ "$was_busy" -eq 1 ]]; then
+        was_busy=0
+        next_check=0
+    fi
 
     if auto_update_enabled; then
         now=$(date +%s)
