@@ -47,6 +47,7 @@ tooltip label {
 #custom-power-button,
 #custom-notification,
 #custom-network,
+#custom-airplane,
 #custom-clipboard,
 #custom-wifi,
 #custom-bluetooth,
@@ -111,6 +112,8 @@ box:hover > #custom-power-button,
 box:hover > #custom-notification,
 #custom-network:hover,
 box:hover > #custom-network,
+#custom-airplane:hover,
+box:hover > #custom-airplane,
 #custom-clipboard:hover,
 box:hover > #custom-clipboard,
 #custom-wifi:hover,
@@ -210,6 +213,21 @@ box:hover > #custom-notification.notification {
 
 #custom-connection-warning.warning {
     color: @color-warning;
+}
+
+/* Uçak modu açıkken ikon uyarı rengiyle vurgulanır */
+#custom-airplane.on {
+    color: @color-warning;
+}
+
+box:hover > #custom-airplane.on {
+    color: @color-fg-hover;
+}
+
+/* plane_mode_icon kapalıyken modül boş kalır ve yer kaplamaz */
+#custom-airplane.hidden {
+    margin: 0;
+    padding: 0;
 }
 
 #custom-wifi.disconnected {

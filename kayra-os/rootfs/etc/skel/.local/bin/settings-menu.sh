@@ -39,6 +39,7 @@ SETTING_KEYS=(
     auto_theme
     auto_update
     auto_group_management
+    plane_mode_icon
 )
 
 # Optional display labels; missing keys fall back to the key name

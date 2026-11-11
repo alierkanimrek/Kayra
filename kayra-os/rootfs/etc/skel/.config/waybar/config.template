@@ -26,6 +26,7 @@
         "wireplumber#mic",
         "custom/clipboard",
         "custom/network",
+        "custom/airplane",
         "custom/wifi",
         "custom/bluetooth",
         "battery",
@@ -87,6 +88,15 @@
         "tooltip": true,
         "escape": true,
         "on-click": "nm-connection-editor"
+    },
+
+    "custom/airplane": {
+        "exec": "$HOME/.local/bin/airplane-monitor.sh",
+        "return-type": "json",
+        "restart-interval": 0,
+        "tooltip": true,
+        "escape": true,
+        "on-click": "$HOME/.local/bin/airplane-toggle.sh"
     },
 
     "custom/network": {

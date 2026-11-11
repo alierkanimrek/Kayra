@@ -94,6 +94,11 @@ declare -A i18n_WIFI_MONITOR=(
   [DEVICE_CONNECTED]=$'Device: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSignal: {SIGNAL}'
 )
 
+declare -A i18n_AIRPLANE_MONITOR=(
+  [ON]="Airplane mode: On"
+  [OFF]="Airplane mode: Off"
+)
+
 declare -A i18n_MEMORY_MONITOR=(
   [MEMORY_AVAILABLE]=$'Available memory: {RATIO}%'
   [TOP_PROCESSES]="Top memory processes:"
@@ -125,6 +130,7 @@ declare -A i18n_SETTINGS_MENU=(
   [LABEL_auto_theme]="Automatic Theme Switching"
   [LABEL_auto_update]="Automatic Updates"
   [LABEL_auto_group_management]="Automatic Group Management"
+  [LABEL_plane_mode_icon]="Airplane Mode Icon"
   [NOTIFY_TITLE]="System Settings"
   [MSG_TOGGLED]="{LABEL}: {STATE}"
   [STATE_ON]="enabled"

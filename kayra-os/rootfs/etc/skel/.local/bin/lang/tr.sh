@@ -94,6 +94,11 @@ declare -A i18n_WIFI_MONITOR=(
   [DEVICE_CONNECTED]=$'Aygıt: {DEVICE}\nSSID: {SSID}\nIP: {IP}\nSinyal: {SIGNAL}'
 )
 
+declare -A i18n_AIRPLANE_MONITOR=(
+  [ON]="Uçak modu: Açık"
+  [OFF]="Uçak modu: Kapalı"
+)
+
 declare -A i18n_MEMORY_MONITOR=(
   [MEMORY_AVAILABLE]=$'Kullanılabilir bellek: {RATIO}%'
   [TOP_PROCESSES]="En çok bellek kullanan süreçler:"
@@ -125,6 +130,7 @@ declare -A i18n_SETTINGS_MENU=(
   [LABEL_auto_theme]="Otomatik Tema Değişimi"
   [LABEL_auto_update]="Otomatik Güncelleme"
   [LABEL_auto_group_management]="Otomatik Grup Yönetimi"
+  [LABEL_plane_mode_icon]="Uçak Modu Simgesi"
   [NOTIFY_TITLE]="Sistem Ayarları"
   [MSG_TOGGLED]="{LABEL}: {STATE}"
   [STATE_ON]="etkin"
