@@ -58,6 +58,7 @@ tooltip label {
 #custom-system-info,
 #custom-removable-monitor,
 #custom-memory-monitor,
+#custom-temp-monitor,
 #custom-connection-warning,
 #custom-xbps-lock-monitor,
 #custom-spacer,
@@ -137,7 +138,9 @@ box:hover > #custom-system-info,
 #custom-removable-monitor:hover,
 box:hover > #custom-removable-monitor,
 #custom-memory-monitor:hover,
-box:hover > #custom-memory-monitor {
+box:hover > #custom-memory-monitor,
+#custom-temp-monitor:hover,
+box:hover > #custom-temp-monitor {
     color: @color-fg-hover;
 }
 
@@ -213,6 +216,15 @@ box:hover > #custom-notification.notification {
 
 #custom-connection-warning.warning {
     color: @color-warning;
+}
+
+/* CPU sıcaklığı 85°C üzerine çıkınca ikon uyarı rengiyle vurgulanır */
+#custom-temp-monitor.warning {
+    color: @color-warning;
+}
+
+box:hover > #custom-temp-monitor.warning {
+    color: @color-fg-hover;
 }
 
 /* Uçak modu açıkken ikon uyarı rengiyle vurgulanır */

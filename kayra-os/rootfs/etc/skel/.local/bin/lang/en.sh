@@ -106,6 +106,13 @@ declare -A i18n_MEMORY_MONITOR=(
   [NOTIFY_LOW_MEMORY]=$'Available memory dropped to {RATIO}%.'
 )
 
+declare -A i18n_TEMP_MONITOR=(
+  [TEMP_ALERT]=$'CPU temperature: {TEMP}°C'
+  [WARNING]=$'Warning: CPU temperature is above {WARN_TEMP}°C'
+  [NOTIFY_TITLE]="CPU overheating"
+  [NOTIFY_CRITICAL]=$'CPU temperature stayed above {CRIT}°C for {SECONDS}s. Please check the cooling system.'
+)
+
 declare -A i18n_CHECK_GROUPS=(
   [NOTIFY_MSG]="Missing group membership"
   [NOTIFY_ACTION]="Add groups"
@@ -251,7 +258,6 @@ declare -A i18n_WAYBAR_CONFIG=(
   [BATTERY_TOOLTIP_CHARGING]="Charging: {capacity}% (Time remaining: {time})"
   [BATTERY_EVENT_WARNING]="Low Battery"
   [BATTERY_EVENT_CRITICAL]="Very Low Battery"
-  [BATTERY_EVENT_FULL]="Battery Full!"
   [BATTERY_EVENT_DISCHARGING]="Power Switch Discharging"
   [BATTERY_EVENT_CHARGING]="Power Switch Charging"
 )

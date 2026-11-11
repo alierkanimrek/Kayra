@@ -106,6 +106,13 @@ declare -A i18n_MEMORY_MONITOR=(
   [NOTIFY_LOW_MEMORY]=$'Kullanılabilir bellek %{RATIO} değerine düştü.'
 )
 
+declare -A i18n_TEMP_MONITOR=(
+  [TEMP_ALERT]=$'CPU sıcaklığı: {TEMP}°C'
+  [WARNING]=$'Uyarı: CPU sıcaklığı {WARN_TEMP}°C üzerinde'
+  [NOTIFY_TITLE]="CPU aşırı ısınıyor"
+  [NOTIFY_CRITICAL]=$'CPU sıcaklığı {SECONDS} saniyedir {CRIT}°C üzerinde. Lütfen soğutma sistemini kontrol edin.'
+)
+
 declare -A i18n_CHECK_GROUPS=(
   [NOTIFY_MSG]="Grup üyeliği eksik"
   [NOTIFY_ACTION]="Grup ekle"
@@ -251,7 +258,6 @@ declare -A i18n_WAYBAR_CONFIG=(
   [BATTERY_TOOLTIP_CHARGING]="Şarj Oluyor: {capacity}% (Dolmaya kalan: {time})"
   [BATTERY_EVENT_WARNING]="Düşük Pil"
   [BATTERY_EVENT_CRITICAL]="Çok Düşük Pil"
-  [BATTERY_EVENT_FULL]="Pil Dolu!"
   [BATTERY_EVENT_DISCHARGING]="Güç Anahtarı Boşalıyor"
   [BATTERY_EVENT_CHARGING]="Güç Anahtarı Şarj Oluyor"
 )

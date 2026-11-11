@@ -18,6 +18,7 @@
     ],
     "modules-right": [
         "custom/memory-monitor",
+        "custom/temp-monitor",
         "custom/removable-monitor",
         "custom/connection-warning",
         "custom/notification",
@@ -183,7 +184,6 @@
         "events": {
             "on-discharging-warning": "notify-send -u normal '{{BATTERY_EVENT_WARNING}}'",
             "on-discharging-critical": "notify-send -u critical '{{BATTERY_EVENT_CRITICAL}}'",
-            "on-charging-100": "notify-send -u normal '{{BATTERY_EVENT_FULL}}'",
             "on-discharging": "notify-send -u normal '{{BATTERY_EVENT_DISCHARGING}}'",
             "on-charging": "notify-send -u normal '{{BATTERY_EVENT_CHARGING}}'"
         },
@@ -241,6 +241,14 @@
         "tooltip": true,
         "restart-interval": 0,
         "on-click": "gnome-system-monitor -r",
+    },
+
+    "custom/temp-monitor": {
+        "exec": "$HOME/.local/bin/temp-monitor.sh",
+        "return-type": "json",
+        "hide-empty-text": true,
+        "tooltip": true,
+        "restart-interval": 0
     },
     
     "custom/xbps-lock-monitor": {
