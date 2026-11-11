@@ -303,6 +303,7 @@ declare -A i18n_XBPS_MANAGER=(
 declare -A i18n_POWER_MENU=(
   [ITEM_SHUTDOWN]="Shutdown"
   [ITEM_REBOOT]="Reboot"
+  [ITEM_SUSPEND]="Suspend"
   [ITEM_LOGOUT]="Logout"
   [ITEM_LOCK]="Lock"
   [NOTIFY_TITLE]="Power Menu"

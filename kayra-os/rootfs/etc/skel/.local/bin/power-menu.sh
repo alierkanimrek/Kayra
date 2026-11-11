@@ -2,19 +2,21 @@
 #
 # power-menu.sh - Power and session menu for Kayra OS.
 #
-# Opens a fuzzel menu with the options: Shutdown, Reboot, Logout, Lock.
+# Opens a fuzzel menu with the options: Shutdown, Reboot, Suspend, Logout, Lock.
 #   Shutdown -> loginctl poweroff
 #   Reboot   -> loginctl reboot
+#   Suspend  -> swaylock -f && loginctl suspend
 #   Logout   -> loginctl terminate-user $USER
-#   Lock     -> loginctl lock-session
+#   Lock     -> swaylock -f
 #
-# Shutdown, Reboot and Logout commands are executed through a control layer.
+# Shutdown, Reboot, Suspend and Logout commands are executed through a control layer.
 # The control layer runs the registered checks one by one; a check that does
 # not approve the action blocks the command and its message is delivered with
 # notify-send. Currently the only check is whether an XBPS operation is running
 # (the shared lock from kayra-xbps-lock.sh is held).
 #
-# Used commands: flock, fuzzel, loginctl, notify-send, id, date, pkill, printf
+# Used commands: flock, fuzzel, loginctl, notify-send, id, date, pkill, printf,
+#                swaylock
 
 export LC_ALL=C.UTF-8
 
@@ -33,6 +35,7 @@ CURRENT_USER="${USER:-$(id -un)}"
 # Material symbols used in the menu labels.
 ICON_SHUTDOWN=$(printf '%b' '\U000F16F')
 ICON_REBOOT=$(printf '%b' '\U000E042')
+ICON_SUSPEND=$(printf '%b' '\U000F159')   # bedtime
 ICON_LOGOUT=$(printf '%b' '\U000E9BA')
 ICON_LOCK=$(printf '%b' '\U000E897')
 
@@ -41,6 +44,7 @@ ICON_LOCK=$(printf '%b' '\U000E897')
 declare -a MENU_ITEMS=(
     "Shutdown"
     "Reboot"
+    "Suspend"
     "Logout"
     "Lock"
 )
@@ -95,6 +99,13 @@ run_action() {
             log INFO "Executing reboot: loginctl reboot"
             loginctl reboot
             ;;
+        Suspend)
+            control_layer "$action" || return 0
+            # swaylock -f returns only after the session is locked, so the
+            # system never suspends while the screen is still visible.
+            log INFO "Executing suspend: swaylock -f && loginctl suspend"
+            swaylock -f && loginctl suspend
+            ;;
         Logout)
             control_layer "$action" || return 0
             log INFO "Executing logout: loginctl terminate-user $CURRENT_USER"
@@ -102,13 +113,8 @@ run_action() {
             ;;
         Lock)
             # Lock is not guarded by the control layer.
-            if [[ -n "${XDG_SESSION_ID:-}" ]]; then
-                log INFO "Executing lock: loginctl lock-session $XDG_SESSION_ID"
-                loginctl lock-session "$XDG_SESSION_ID"
-            else
-                log INFO "Executing lock: loginctl lock-session"
-                loginctl lock-session
-            fi
+            log INFO "Executing lock: swaylock -f"
+            swaylock -f
             ;;
         *)
             log WARN "Unknown power action: $action"
@@ -148,6 +154,7 @@ build_menu_lines() {
         case "$item" in
             Shutdown) MENU_LINES+=("$ICON_SHUTDOWN $label") ;;
             Reboot)   MENU_LINES+=("$ICON_REBOOT $label") ;;
+            Suspend)  MENU_LINES+=("$ICON_SUSPEND $label") ;;
             Logout)   MENU_LINES+=("$ICON_LOGOUT $label") ;;
             Lock)     MENU_LINES+=("$ICON_LOCK $label") ;;
             *)        MENU_LINES+=("$label") ;;

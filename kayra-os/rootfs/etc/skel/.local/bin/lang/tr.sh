@@ -303,6 +303,7 @@ declare -A i18n_XBPS_MANAGER=(
 declare -A i18n_POWER_MENU=(
   [ITEM_SHUTDOWN]="Kapat"
   [ITEM_REBOOT]="Yeniden Başlat"
+  [ITEM_SUSPEND]="Askıya Al"
   [ITEM_LOGOUT]="Oturumu Kapat"
   [ITEM_LOCK]="Kilitle"
   [NOTIFY_TITLE]="Güç Menüsü"

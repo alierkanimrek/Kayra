@@ -10,7 +10,7 @@ Rules:
 - Write bash scripts using only basic Linux commands as much as possible, to reduce dependencies.
 - Use "export LC_ALL=C.UTF-8".
 - Write code comments and variable names in English.
-- Do not use the `read` and `eval` commands.
+- Do not use the `eval` command.
 - Research efficient alternatives for loops or text manipulation operations, such as using `awk` or `sed` instead of `for` loops.
 - Use the `jq` command for outputs that will be read by Waybar modules.
 - For logging, use the function in the klog.sh script. Keep log messages embedded in the code in English.
