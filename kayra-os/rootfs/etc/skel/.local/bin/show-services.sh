@@ -11,8 +11,11 @@
 #   ■  stopped   (the service is not running)
 # Services that are not supervised are marked with the "(disabled)" suffix.
 #
-# Selecting a service runs toggle-service.sh <service>, which stops a
-# running service, starts a stopped one or enables + starts a disabled one.
+# Selecting a service runs toggle-service.sh <service> <state>:
+#   * a running service opens an actionable notification with a "Stop" and a
+#     "Restart" button,
+#   * a stopped service is started,
+#   * a disabled service is enabled and started.
 #
 # The service states are read with the root helper sv-status-helper.sh,
 # because the runit control files are only readable by root. If the helper
@@ -115,6 +118,7 @@ fi
 # ------------------------------------------------------------------
 declare -a LINES=()
 declare -a SERVICES=()
+declare -a STATES=()
 
 mapfile -t LINES < <(awk -F'\t' \
     -v running="$ICON_RUNNING" \
@@ -127,6 +131,7 @@ mapfile -t LINES < <(awk -F'\t' \
 ' <<< "$STATE_DATA")
 
 mapfile -t SERVICES < <(awk -F'\t' '$1 != "" { print $1 }' <<< "$STATE_DATA")
+mapfile -t STATES < <(awk -F'\t' '$1 != "" { print $2 }' <<< "$STATE_DATA")
 
 if [ "${#LINES[@]}" -eq 0 ]; then
     log WARN "No services found in $SV_DIR"
@@ -162,7 +167,8 @@ done
 [ "$SELECTED_INDEX" -lt 0 ] && exit 0
 
 SERVICE="${SERVICES[$SELECTED_INDEX]}"
+STATE="${STATES[$SELECTED_INDEX]:-}"
 
-log INFO "Toggling service: $SERVICE"
+log INFO "Changing service: $SERVICE (state: ${STATE:-unknown})"
 
-exec "$SCRIPT_DIR/toggle-service.sh" "$SERVICE"
+exec "$SCRIPT_DIR/toggle-service.sh" "$SERVICE" "$STATE"
