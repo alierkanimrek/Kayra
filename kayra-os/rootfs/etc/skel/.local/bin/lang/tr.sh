@@ -14,6 +14,7 @@ declare -A system_menu=(
   [LANGUAGE]="Dil"
   [KEYBOARD]="Klavye"
   [DISPLAY]="Ekran"
+  [POWER_MODE]="Güç Modu"
   [DEVICES]="Aygıtlar"
   [SERVICES]="Servisler"
   [SETTINGS]="Ayarlar"
@@ -410,4 +411,17 @@ declare -A i18n_APP_PINS=(
   [MSG_SLOT_LAST_FULL]="{INDEX} numaralı slot kullanımda, kaldırılamaz"
   [MSG_NO_SLOTS]="Kaldırılacak slot yok"
   [MSG_FAILED]="İşlem başarısız"
+)
+
+declare -A i18n_POWER_MODE_MENU=(
+  [PROFILE_PERFORMANCE]="Performans"
+  [PROFILE_BALANCED]="Dengeli"
+  [PROFILE_POWER_SAVER]="Güç Tasarrufu"
+  [PROFILE_AUTO]="Otomatik"
+  [NOTIFY_TITLE]="Güç Modu"
+  [MSG_SET]="Güç modu {PROFILE} olarak ayarlandı"
+  [MSG_AUTO_SET]="Otomatik güç profiline geçildi"
+  [MSG_SET_FAILED]="Güç modu ayarlanamadı"
+  [NOTIFY_COMMAND_NOT_FOUND]="Komut bulunamadı: {COMMAND}"
+  [NOTIFY_UNAVAILABLE]="Güç profili denetimi kullanılamıyor"
 )

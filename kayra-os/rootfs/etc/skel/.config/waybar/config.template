@@ -197,7 +197,8 @@
         "max-length": 25,
         "tooltip": true,
         "tooltip-format": "{{BATTERY_TOOLTIP}}",
-        "tooltip-format-charging": "{{BATTERY_TOOLTIP_CHARGING}}"
+        "tooltip-format-charging": "{{BATTERY_TOOLTIP_CHARGING}}",
+        "on-click": "$HOME/.local/bin/power-mode-menu.sh"
     },
 
     "wireplumber": {

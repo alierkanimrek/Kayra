@@ -3,7 +3,7 @@
 # system-menu.sh - Kayra OS system menu.
 #
 # Launches the different system tools from a fuzzel dmenu: appearance, language,
-# keyboard, display, devices, services and the software update check.
+# keyboard, display, power mode, devices, services and the software update check.
 #
 # The menu labels come from the system_menu array in the language file
 # (lang/en.sh, lang/tr.sh). The icons and the commands are hard coded here and
@@ -23,6 +23,7 @@ declare -a ORDER=(
     LANGUAGE
     KEYBOARD
     DISPLAY
+    POWER_MODE
     DEVICES
     SERVICES
     SETTINGS
@@ -35,6 +36,7 @@ declare -A ICONS=(
     [LANGUAGE]="E894"
     [KEYBOARD]="E312"
     [DISPLAY]="E30C"
+    [POWER_MODE]="EA0B"
     [DEVICES]="E1B1"
     [SERVICES]="E726"
     [SETTINGS]="F560"
@@ -81,6 +83,10 @@ case "${SELECTED#* }" in
         ;;
     "${system_menu[DISPLAY]}")
         "$HOME/.local/bin/display-settings.sh" &
+        ;;
+    "${system_menu[POWER_MODE]}")
+        # TLP power profile submenu (Performance / Balanced / Power Saver / Automatic).
+        "$HOME/.local/bin/power-mode-menu.sh" &
         ;;
     "${system_menu[DEVICES]}")
         "$HOME/.local/bin/show-devices.sh" &

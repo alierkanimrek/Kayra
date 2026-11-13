@@ -21,6 +21,7 @@ chrony
 
 # Power Management
 tlp
+tlp-pd
 brightnessctl
 
 # Graphics and Wayland

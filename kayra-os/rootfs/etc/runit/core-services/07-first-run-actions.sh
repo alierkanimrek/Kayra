@@ -49,6 +49,7 @@ ln -s /etc/sv/chronyd /etc/runit/runsvdir/current
 ln -s /etc/sv/cupsd /etc/runit/runsvdir/current
 ln -s /etc/sv/avahi-daemon /etc/runit/runsvdir/current
 ln -s /etc/sv/tlp /etc/runit/runsvdir/current
+ln -s /etc/sv/tlp-pd /etc/runit/runsvdir/current
 ln -s /etc/sv/bluetoothd /etc/runit/runsvdir/current
 
 #void-packages

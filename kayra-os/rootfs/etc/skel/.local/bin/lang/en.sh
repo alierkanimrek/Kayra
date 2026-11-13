@@ -14,6 +14,7 @@ declare -A system_menu=(
   [LANGUAGE]="Language"
   [KEYBOARD]="Keyboard"
   [DISPLAY]="Display"
+  [POWER_MODE]="Power Mode"
   [DEVICES]="Devices"
   [SERVICES]="Services"
   [SETTINGS]="Settings"
@@ -410,4 +411,17 @@ declare -A i18n_APP_PINS=(
   [MSG_SLOT_LAST_FULL]="Slot {INDEX} is in use and cannot be removed"
   [MSG_NO_SLOTS]="No slot to remove"
   [MSG_FAILED]="Operation failed"
+)
+
+declare -A i18n_POWER_MODE_MENU=(
+  [PROFILE_PERFORMANCE]="Performance"
+  [PROFILE_BALANCED]="Balanced"
+  [PROFILE_POWER_SAVER]="Power Saver"
+  [PROFILE_AUTO]="Automatic"
+  [NOTIFY_TITLE]="Power Mode"
+  [MSG_SET]="Power mode set to {PROFILE}"
+  [MSG_AUTO_SET]="Switched to the automatic power profile"
+  [MSG_SET_FAILED]="Could not set the power mode"
+  [NOTIFY_COMMAND_NOT_FOUND]="Command not found: {COMMAND}"
+  [NOTIFY_UNAVAILABLE]="Power profile control is unavailable"
 )
