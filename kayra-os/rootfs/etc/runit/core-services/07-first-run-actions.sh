@@ -31,6 +31,9 @@ mkdir -p /etc/alsa/conf.d
 ln -s /usr/share/alsa/alsa.conf.d/50-pipewire.conf /etc/alsa/conf.d
 ln -s /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf /etc/alsa/conf.d
 
+#Cups PDF Dir
+sed -i 's|^#*Out .*|Out ${HOME}/Exports/documents/|' /etc/cups/cups-pdf.conf
+
 #Services
 ln -s /etc/sv/socklog-unix /etc/runit/runsvdir/current
 ln -s /etc/sv/nanoklogd /etc/runit/runsvdir/current
@@ -53,5 +56,8 @@ mkdir -p /var/spool/void-packages
 chown root:users /var/spool/void-packages
 chmod 770 /var/spool/void-packages
 git config --global --add safe.directory /var/spool/void-packages
+
+#PDF Printer
+lpadmin -p PDF -E -v cups-pdf:/ -P /usr/share/cups/model/CUPS-PDF_opt.ppd
 
 touch "$MARKER"
