@@ -191,6 +191,7 @@ declare -A i18n_SHOW_DEVICE_MODS=(
   [MSG_DEVICE_NOT_FOUND]="Device not found: "
   [MSG_BAD_DEVICE]="Unknown device: "
   [MSG_ALREADY_IN_USE]="Module {MODULE} is already in use."
+  [ITEM_NVIDIA_DETECT]="Detect the matching NVIDIA driver"
   [MSG_USAGE]="Usage: show-device-mods.sh <device-key>"
   [MSG_NO_FUZZEL]="fuzzel is not installed"
   [MSG_NO_JQ]="jq is not installed"

@@ -7,7 +7,15 @@
 # and shows every device in a fuzzel menu. Selecting a device runs
 # show-device-mods.sh with that device.
 #
+# The window width is computed from the longest entry, and the font size is
+# taken from the global font_size (settings.conf, via settings-conf.sh) minus
+# 2 px so the long PCI/USB labels stay compact. The size is never pushed below
+# the project minimum (FONT_MIN=8): at/under the minimum it is left unchanged.
+#
 # Usage: show-devices.sh
+#
+# Used commands: jq, awk, printf, fuzzel, pkill, list-devices.sh,
+#                settings-conf.sh (conf_get), i18n.sh, klog.sh
 #
 export LC_ALL=C.UTF-8
 set -uo pipefail
@@ -18,6 +26,9 @@ DATA_FILE="$HOME/.local/bin/data/devices.json"
 # shellcheck source=/dev/null
 source "$SCRIPT_DIR/i18n.sh"
 declare -n MSG=i18n_SHOW_DEVICES
+
+# shellcheck source=/dev/null
+source "$SCRIPT_DIR/settings-conf.sh"
 
 $HOME/.local/bin/list-devices.sh
 
@@ -81,10 +92,31 @@ done <<< "$entries"
 # ------------------------------------------------------------------
 # Show the menu
 # ------------------------------------------------------------------
+# Menu font size: two pixels smaller than the global font_size (read from
+# settings.conf via settings-conf.sh), keeping the same font family. Never go
+# below the project minimum (FONT_MIN): at/under the minimum keep it unchanged.
+FONT_MIN=8
+FONT_ARGS=()
+GLOBAL_FONT_SIZE=$(conf_get font_size)
+MENU_FONT_FAMILY=$(conf_get font)
+if [[ "$GLOBAL_FONT_SIZE" =~ ^[0-9]+$ ]]; then
+    MENU_FONT_SIZE=$(( GLOBAL_FONT_SIZE - 2 ))
+    (( MENU_FONT_SIZE < FONT_MIN )) && MENU_FONT_SIZE="$GLOBAL_FONT_SIZE"
+    FONT_ARGS=(--font="${MENU_FONT_FAMILY:-monospace}:pixelsize=${MENU_FONT_SIZE}")
+fi
+
+# Window width of the longest menu entry, using the shared project formula.
+# The device labels carry no icon, but the formula is kept unchanged: the
+# extra slack (-1 + 3) stops fuzzel from clipping the longest label.
+MAX_WIDTH=$(printf '%s\n' "${MENU_LINES[@]}" | awk '{ n = length($0) - 1 + 3; if (n > m) m = n } END { print m+0 }')
+
+# Close any open fuzzel windows
 pkill -x fuzzel 2>/dev/null || true
 
 SELECTED=$(printf '%s\n' "${MENU_LINES[@]}" | fuzzel --dmenu --log-no-syslog \
-    --width 70 --lines 20 --prompt="${MSG[PROMPT_DEVICE]:-Device: }") || true
+    --minimal-lines --lines="${#MENU_LINES[@]}" --width="$MAX_WIDTH" \
+    ${FONT_ARGS[@]+"${FONT_ARGS[@]}"} \
+    --prompt="${MSG[PROMPT_DEVICE]:-Device: }") || true
 
 [ -z "$SELECTED" ] && exit 0
 

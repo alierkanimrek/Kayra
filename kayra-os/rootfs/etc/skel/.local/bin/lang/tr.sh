@@ -191,6 +191,7 @@ declare -A i18n_SHOW_DEVICE_MODS=(
   [MSG_DEVICE_NOT_FOUND]="Aygıt bulunamadı: "
   [MSG_BAD_DEVICE]="Bilinmeyen aygıt: "
   [MSG_ALREADY_IN_USE]="{MODULE} modülü zaten kullanımda."
+  [ITEM_NVIDIA_DETECT]="Uygun NVIDIA sürücüsünü algıla"
   [MSG_USAGE]="Kullanım: show-device-mods.sh <aygıt>"
   [MSG_NO_FUZZEL]="fuzzel kurulu değil"
   [MSG_NO_JQ]="jq kurulu değil"

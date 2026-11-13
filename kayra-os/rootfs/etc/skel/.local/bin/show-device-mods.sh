@@ -14,7 +14,13 @@
 #
 # Selecting an unused module runs change-device-module.sh <device> <module>.
 #
+# On an NVIDIA graphics card an extra "detect driver" entry (magnifier icon) is
+# shown at the top of the menu and runs nvidia-detect.sh.
+#
 # Usage: show-device-mods.sh <device-key>
+#
+# Used commands: jq, printf, fuzzel, pkill, list-devices.sh, nvidia-detect.sh,
+#                change-device-module.sh, i18n.sh, klog.sh
 #
 export LC_ALL=C.UTF-8
 set -uo pipefail
@@ -76,6 +82,12 @@ if [ -z "$DEVICE_JSON" ] || [ "$DEVICE_JSON" = "null" ]; then
     exit 1
 fi
 
+# NVIDIA graphics card? (vendor 10de + display class 03xx = VGA / 3D / Display)
+IS_NVIDIA_GPU=false
+if printf '%s' "$DEVICE_JSON" | jq -e '(.vendor_id == "10de") and (.class_id | startswith("03"))' >/dev/null 2>&1; then
+    IS_NVIDIA_GPU=true
+fi
+
 # Human readable device title
 DEVICE_TITLE=$(printf '%s' "$DEVICE_JSON" | jq -r '
     def clean: gsub("^\\s+|\\s+$"; "");
@@ -94,6 +106,14 @@ ICON_UNUSED=$(printf '%b' '\U0000E836')     # radio_button_unchecked - unused
 declare -a MENU_LINES=()
 declare -a MENU_MODULES=()
 declare -a MENU_STATES=()
+
+# NVIDIA graphics card: offer a driver-detection action at the top of the menu.
+ICON_DETECT=$(printf '%b' '\U0000E8B6')     # search / magnifier (Material Symbols)
+if $IS_NVIDIA_GPU && [ -x "$SCRIPT_DIR/nvidia-detect.sh" ]; then
+    MENU_LINES+=("$ICON_DETECT ${MSG[ITEM_NVIDIA_DETECT]:-NVIDIA driver}")
+    MENU_MODULES+=("")
+    MENU_STATES+=("nvidia_detect")
+fi
 
 # Modules in use by the device
 while IFS= read -r mod; do
@@ -140,6 +160,12 @@ done
 
 MODULE="${MENU_MODULES[$SELECTED_INDEX]}"
 STATE="${MENU_STATES[$SELECTED_INDEX]}"
+
+# The NVIDIA driver-detection action runs nvidia-detect.sh
+if [ "$STATE" = "nvidia_detect" ]; then
+    log INFO "Running nvidia-detect.sh for $DEVICE_KEY"
+    exec "$SCRIPT_DIR/nvidia-detect.sh"
+fi
 
 # Modules already in use cannot be changed here
 if [ "$STATE" = "in_use" ]; then
