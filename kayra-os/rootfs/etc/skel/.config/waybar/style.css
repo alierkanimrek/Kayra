@@ -59,6 +59,7 @@ tooltip label {
 #custom-removable-monitor,
 #custom-memory-monitor,
 #custom-temp-monitor,
+#custom-cups-monitor,
 #custom-connection-warning,
 #custom-xbps-lock-monitor,
 #custom-spacer,
@@ -140,7 +141,9 @@ box:hover > #custom-removable-monitor,
 #custom-memory-monitor:hover,
 box:hover > #custom-memory-monitor,
 #custom-temp-monitor:hover,
-box:hover > #custom-temp-monitor {
+box:hover > #custom-temp-monitor,
+#custom-cups-monitor:hover,
+box:hover > #custom-cups-monitor {
     color: @color-fg-hover;
 }
 
@@ -224,6 +227,15 @@ box:hover > #custom-notification.notification {
 }
 
 box:hover > #custom-temp-monitor.warning {
+    color: @color-fg-hover;
+}
+
+/* Yazdırma işi hatalıysa (job-stopped vb.) ikon uyarı rengiyle vurgulanır */
+#custom-cups-monitor.error {
+    color: @color-warning;
+}
+
+box:hover > #custom-cups-monitor.error {
     color: @color-fg-hover;
 }
 

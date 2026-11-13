@@ -113,6 +113,31 @@ declare -A i18n_TEMP_MONITOR=(
   [NOTIFY_CRITICAL]=$'CPU sıcaklığı {SECONDS} saniyedir {CRIT}°C üzerinde. Lütfen soğutma sistemini kontrol edin.'
 )
 
+declare -A i18n_CUPS_MONITOR=(
+  [JOBS_HEADER]="Bekleyen yazdırma işleri:"
+  [JOB_LINE]="  {JOB}  {OWNER}  {SIZE}"
+  [PRINTERS_HEADER]="Yazıcılar:"
+  [PRINTER_LINE]="  {PRINTER}: {STATE}"
+  [STATE_IDLE]="boşta"
+  [STATE_PRINTING]="yazdırıyor"
+  [STATE_DISABLED]="devre dışı"
+  [STATE_UNAVAILABLE]="erişilemez"
+  [DEFAULT_PRINTER]="Varsayılan yazıcı: {PRINTER}"
+  [DEFAULT_NONE]="Varsayılan yazıcı yok"
+  [NOTIFY_TITLE]="Yazdırma işi hatası"
+  [NOTIFY_ERROR]="{PRINTER} yazıcısındaki {JOB} işi durdu: {STATE}"
+)
+
+declare -A i18n_CUPS_MENU=(
+  [MENU_PROMPT]="Yazdırma kuyruğu"
+  [CANCEL_TITLE]="Yazdırma işini iptal et"
+  [CANCEL_CONFIRM]="{PRINTER} yazıcısındaki {JOB} işi iptal edilsin mi?"
+  [CANCEL_YES]="İptal et"
+  [CANCEL_NO]="Vazgeç"
+  [CANCEL_FAIL_TITLE]="İptal başarısız"
+  [CANCEL_FAIL]="{PRINTER} yazıcısındaki {JOB} işi iptal edilemedi."
+)
+
 declare -A i18n_CHECK_GROUPS=(
   [NOTIFY_MSG]="Grup üyeliği eksik"
   [NOTIFY_ACTION]="Grup ekle"

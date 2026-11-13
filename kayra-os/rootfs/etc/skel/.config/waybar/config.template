@@ -19,6 +19,7 @@
     "modules-right": [
         "custom/memory-monitor",
         "custom/temp-monitor",
+        "custom/cups-monitor",
         "custom/removable-monitor",
         "custom/connection-warning",
         "custom/notification",
@@ -249,6 +250,17 @@
         "hide-empty-text": true,
         "tooltip": true,
         "restart-interval": 0
+    },
+
+    "custom/cups-monitor": {
+        "exec": "$HOME/.local/bin/cups-monitor.sh",
+        "exec-if": "command -v lpstat >/dev/null 2>&1",
+        "return-type": "json",
+        "hide-empty-text": true,
+        "tooltip": true,
+        "restart-interval": 0,
+        "on-click": "$HOME/.local/bin/cups-menu.sh",
+        "on-click-right": "xdg-open http://localhost:631"
     },
     
     "custom/xbps-lock-monitor": {

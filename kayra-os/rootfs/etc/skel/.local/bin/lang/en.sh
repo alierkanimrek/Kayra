@@ -113,6 +113,31 @@ declare -A i18n_TEMP_MONITOR=(
   [NOTIFY_CRITICAL]=$'CPU temperature stayed above {CRIT}°C for {SECONDS}s. Please check the cooling system.'
 )
 
+declare -A i18n_CUPS_MONITOR=(
+  [JOBS_HEADER]="Pending print jobs:"
+  [JOB_LINE]="  {JOB}  {OWNER}  {SIZE}"
+  [PRINTERS_HEADER]="Printers:"
+  [PRINTER_LINE]="  {PRINTER}: {STATE}"
+  [STATE_IDLE]="idle"
+  [STATE_PRINTING]="printing"
+  [STATE_DISABLED]="disabled"
+  [STATE_UNAVAILABLE]="unavailable"
+  [DEFAULT_PRINTER]="Default printer: {PRINTER}"
+  [DEFAULT_NONE]="No default printer"
+  [NOTIFY_TITLE]="Print job error"
+  [NOTIFY_ERROR]="Job {JOB} on {PRINTER} stopped: {STATE}"
+)
+
+declare -A i18n_CUPS_MENU=(
+  [MENU_PROMPT]="Print queue"
+  [CANCEL_TITLE]="Cancel print job"
+  [CANCEL_CONFIRM]="Cancel job {JOB} on {PRINTER}?"
+  [CANCEL_YES]="Cancel job"
+  [CANCEL_NO]="Keep"
+  [CANCEL_FAIL_TITLE]="Cancel failed"
+  [CANCEL_FAIL]="Job {JOB} on {PRINTER} could not be canceled."
+)
+
 declare -A i18n_CHECK_GROUPS=(
   [NOTIFY_MSG]="Missing group membership"
   [NOTIFY_ACTION]="Add groups"
