@@ -60,11 +60,15 @@ cleanup_and_exit() {
     exit 0
 }
 
-# Bytes -> "N.N GB". Sizes are shown in GB so no number reaches four digits:
-# swaync (the notification daemon) offers a 'COPY "<number>"' action whenever a
-# notification body contains a 4 to 8 digit number, which we do not want here.
-to_gb() {
-    awk -v b="$1" 'BEGIN { printf "%.1f GB", b / 1073741824 }'
+# Bytes -> "N.N MB" when below 1 GB, otherwise "N.N GB". The integer part is
+# kept below four digits, because swaync (the notification daemon) offers a
+# 'COPY "<number>"' action whenever a notification body contains a 4 to 8 digit
+# number, which we do not want here.
+human_size() {
+    awk -v b="$1" 'BEGIN {
+        if (b < 1000 * 1048576) printf "%.1f MB", b / 1048576
+        else                    printf "%.1f GB", b / 1073741824
+    }'
 }
 
 # Free space in bytes of the filesystem holding the given path.
@@ -169,7 +173,7 @@ fi
 if [[ "$install_size" -gt "$(free_bytes /)" ]]; then
     action=$(notify_action "${MSG[APP_NAME]}" \
         "$(i18n_template "${MSG[UPDATE_CLEAN_CONFIRM]}" \
-            INSTALL="$(to_gb "$install_size")" FREE="$(to_gb "$(free_bytes /)")")" \
+            INSTALL="$(human_size "$install_size")" FREE="$(human_size "$(free_bytes /)")")" \
         "clean=${MSG[ACTION_CLEAN]}" \
         "diskusage=${MSG[ACTION_DISK_USAGE]}" \
         "cancel=${MSG[ACTION_CANCEL]}") || true
@@ -203,8 +207,8 @@ fi
 # Confirmation showing the download size before downloading anything. It is only
 # reached when enough free space is available (after a possible cleanup).
 body=$(i18n_template "${MSG[UPDATE_CONFIRM]}" \
-    COUNT="$update_count" DOWNLOAD="$(to_gb "$download_size")" \
-    INSTALL="$(to_gb "$install_size")" FREE="$(to_gb "$(free_bytes /)")")
+    COUNT="$update_count" DOWNLOAD="$(human_size "$download_size")" \
+    INSTALL="$(human_size "$install_size")" FREE="$(human_size "$(free_bytes /)")")
 if [[ "$source_count" -gt 0 ]]; then
     body+=$'\n'"$(i18n_template "${MSG[UPDATE_SOURCE]}" PACKAGES="$(printf '%s ' $source_updates)")"
 fi
