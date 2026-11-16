@@ -68,6 +68,7 @@ cmd_add() {
             "exec": ($bin + " icon " + $i),
             "size": 20,
             "signal": 5,
+            "interval": "once",
             "on-click": ($bin + " launch " + $i),
             "on-click-right": ($bin + " remove " + $i)
         } |
