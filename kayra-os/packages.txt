@@ -53,6 +53,7 @@ network-manager-applet
 curl
 avahi
 nss-mdns
+socat
 
 # Audio and Bluetooth
 pipewire
@@ -120,3 +121,4 @@ python
 python3-pipx
 unzip
 inotify-tools
+jq
