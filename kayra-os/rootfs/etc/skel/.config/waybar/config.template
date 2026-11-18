@@ -84,7 +84,7 @@
     },
 
     "custom/connection-warning": {
-        "exec": "$HOME/.local/bin/connection-check.sh",
+        "exec": "/usr/local/bin/kayra-connection-check.sh",
         "return-type": "json",
         "restart-interval": 30,
         "tooltip": true,
@@ -93,16 +93,16 @@
     },
 
     "custom/airplane": {
-        "exec": "$HOME/.local/bin/airplane-monitor.sh",
+        "exec": "/usr/local/bin/kayra-airplane-monitor.sh",
         "return-type": "json",
         "restart-interval": 0,
         "tooltip": true,
         "escape": true,
-        "on-click": "$HOME/.local/bin/airplane-toggle.sh"
+        "on-click": "/usr/local/bin/kayra-airplane-toggle.sh"
     },
 
     "custom/network": {
-        "exec": "$HOME/.local/bin/net-monitor.sh --ethernet \"en*\" --other \"docker*,veth*,br-*,virbr*\"",
+        "exec": "/usr/local/bin/kayra-net-monitor.sh --ethernet \"en*\" --other \"docker*,veth*,br-*,virbr*\"",
         "return-type": "json",
         "restart-interval": 30,
         "tooltip": true,
@@ -110,7 +110,7 @@
     },
 
     "custom/wifi": {
-        "exec": "$HOME/.local/bin/wifi-monitor.sh",
+        "exec": "/usr/local/bin/kayra-wifi-monitor.sh",
         "exec-if": "nmcli -t -f TYPE device status | grep -q '^wifi$'",
         "return-type": "json",
         "restart-interval": 0,
@@ -120,7 +120,7 @@
         "on-click-right": "nm-connection-editor"
     },
     "custom/bluetooth": {
-        "exec": "$HOME/.local/bin/bluetooth-monitor.sh",
+        "exec": "/usr/local/bin/kayra-bluetooth-monitor.sh",
         "exec-if": "command -v bluetoothctl >/dev/null 2>&1",
         "return-type": "json",
         "restart-interval": 0,
@@ -129,7 +129,7 @@
         "on-click": "$HOME/.local/bin/bluetooth-menu.sh"
     },
     "custom/removable-monitor": {
-        "exec": "$HOME/.local/bin/removable-storage-monitor.sh",
+        "exec": "/usr/local/bin/kayra-removable-storage-monitor.sh",
         "return-type": "json",
         "restart-interval": 0,
         "tooltip": true,
@@ -237,7 +237,7 @@
     },
 
     "custom/memory-monitor": {
-        "exec": "$HOME/.local/bin/memory-monitor.sh",
+        "exec": "/usr/local/bin/kayra-memory-monitor.sh",
         "return-type": "json",
         "hide-empty-text": true,
         "tooltip": true,
@@ -246,7 +246,7 @@
     },
 
     "custom/temp-monitor": {
-        "exec": "$HOME/.local/bin/temp-monitor.sh",
+        "exec": "/usr/local/bin/kayra-temp-monitor.sh",
         "return-type": "json",
         "hide-empty-text": true,
         "tooltip": true,
@@ -254,7 +254,7 @@
     },
 
     "custom/cups-monitor": {
-        "exec": "$HOME/.local/bin/cups-monitor.sh",
+        "exec": "/usr/local/bin/kayra-cups-monitor.sh",
         "exec-if": "command -v lpstat >/dev/null 2>&1",
         "return-type": "json",
         "hide-empty-text": true,
@@ -265,7 +265,7 @@
     },
     
     "custom/xbps-lock-monitor": {
-        "exec": "$HOME/.local/bin/xbps-lock-monitor.sh",
+        "exec": "/usr/local/bin/kayra-xbps-lock-monitor.sh",
         "return-type": "json",
         "hide-empty-text": true,
         "tooltip": true,
@@ -273,7 +273,7 @@
     },
 
     "custom/xbps-updates-monitor": {
-        "exec": "$HOME/.local/bin/kayra-xbps-updates-monitor.sh",
+        "exec": "/usr/local/bin/kayra-xbps-updates-monitor.sh",
         "return-type": "json",
         "hide-empty-text": true,
         "tooltip": true,
