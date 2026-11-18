@@ -1,0 +1,598 @@
+Albanian (Default)|al|
+  Albanian - Albanian (Plisi)|al|plisi
+  Albanian - Albanian (Veqilharxhi)|al|veqilharxhi
+Amharic|et|
+Arabic (Default)|ara|
+  Arabic - Arabic (AZERTY)|ara|azerty
+  Arabic - Arabic (AZERTY, Eastern Arabic numerals)|ara|azerty_digits
+  Arabic - Arabic (Buckwalter)|ara|buckwalter
+  Arabic - Arabic (Eastern Arabic numerals)|ara|digits
+  Arabic - Arabic (Macintosh)|ara|mac
+  Arabic - Arabic (Macintosh, phonetic)|ara|mac-phonetic
+  Arabic - Arabic (OLPC)|ara|olpc
+Arabic (Egypt)|eg|
+Arabic (Iraq) (Default)|iq|
+  Arabic (Iraq) - Kurdish (Iraq, Arabic-Latin)|iq|ku_ara
+  Arabic (Iraq) - Kurdish (Iraq, F)|iq|ku_f
+  Arabic (Iraq) - Kurdish (Iraq, Latin Alt-Q)|iq|ku_alt
+  Arabic (Iraq) - Kurdish (Iraq, Latin Q)|iq|ku
+Arabic (Morocco) (Default)|ma|
+  Arabic (Morocco) - Berber (Morocco, Tifinagh)|ma|tifinagh
+  Arabic (Morocco) - Berber (Morocco, Tifinagh alt.)|ma|tifinagh-alt
+  Arabic (Morocco) - Berber (Morocco, Tifinagh extended)|ma|tifinagh-extended
+  Arabic (Morocco) - Berber (Morocco, Tifinagh extended phonetic)|ma|tifinagh-extended-phonetic
+  Arabic (Morocco) - Berber (Morocco, Tifinagh phonetic)|ma|tifinagh-phonetic
+  Arabic (Morocco) - Berber (Morocco, Tifinagh phonetic, alt.)|ma|tifinagh-alt-phonetic
+  Arabic (Morocco) - French (Morocco)|ma|french
+  Arabic (Morocco) - Tarifit|ma|rif
+Arabic (Syria) (Default)|sy|
+  Arabic (Syria) - Kurdish (Syria, F)|sy|ku_f
+  Arabic (Syria) - Kurdish (Syria, Latin Alt-Q)|sy|ku_alt
+  Arabic (Syria) - Kurdish (Syria, Latin Q)|sy|ku
+  Arabic (Syria) - Syriac|sy|syc
+  Arabic (Syria) - Syriac (phonetic)|sy|syc_phonetic
+Armenian (Default)|am|
+  Armenian - Armenian (alt. eastern)|am|eastern-alt
+  Armenian - Armenian (alt. phonetic)|am|phonetic-alt
+  Armenian - Armenian (eastern)|am|eastern
+  Armenian - Armenian (phonetic)|am|phonetic
+  Armenian - Armenian (western)|am|western
+A user-defined custom Layout|custom|
+Azerbaijani (Default)|az|
+  Azerbaijani - Azerbaijani (Cyrillic)|az|cyrillic
+Bambara (Default)|ml|
+  Bambara - English (Mali, US, intl.)|ml|us-intl
+  Bambara - English (Mali, US, Macintosh)|ml|us-mac
+  Bambara - French (Mali, alt.)|ml|fr-oss
+Bangla (Default)|bd|
+  Bangla - Bangla (Probhat)|bd|probhat
+Belarusian (Default)|by|
+  Belarusian - Belarusian (intl.)|by|intl
+  Belarusian - Belarusian (Latin)|by|latin
+  Belarusian - Belarusian (legacy)|by|legacy
+  Belarusian - Belarusian (phonetic)|by|phonetic
+  Belarusian - Russian (Belarus)|by|ru
+Belgian (Default)|be|
+  Belgian - Belgian (alt.)|be|oss
+  Belgian - Belgian (ISO, alt.)|be|iso-alternate
+  Belgian - Belgian (Latin-9 only, alt.)|be|oss_latin9
+  Belgian - Belgian (no dead keys)|be|nodeadkeys
+  Belgian - Belgian (Wang 724 AZERTY)|be|wang
+Berber (Algeria, Latin) (Default)|dz|
+  Berber (Algeria, Latin) - Arabic (Algeria)|dz|ar
+  Berber (Algeria, Latin) - Berber (Algeria, Tifinagh)|dz|ber
+  Berber (Algeria, Latin) - Kabyle (AZERTY, with dead keys)|dz|azerty-deadkeys
+  Berber (Algeria, Latin) - Kabyle (QWERTY, UK, with dead keys)|dz|qwerty-gb-deadkeys
+  Berber (Algeria, Latin) - Kabyle (QWERTY, US, with dead keys)|dz|qwerty-us-deadkeys
+Bosnian (Default)|ba|
+  Bosnian - Bosnian (US)|ba|us
+  Bosnian - Bosnian (US, with Bosnian digraphs)|ba|unicodeus
+  Bosnian - Bosnian (with Bosnian digraphs)|ba|unicode
+  Bosnian - Bosnian (with guillemets)|ba|alternatequotes
+Braille (Default)|brai|
+  Braille - Braille (one-handed, left)|brai|left_hand
+  Braille - Braille (one-handed, left, inverted thumb)|brai|left_hand_invert
+  Braille - Braille (one-handed, right)|brai|right_hand
+  Braille - Braille (one-handed, right, inverted thumb)|brai|right_hand_invert
+Bulgarian (Default)|bg|
+  Bulgarian - Bulgarian (enhanced)|bg|bekl
+  Bulgarian - Bulgarian (new phonetic)|bg|bas_phonetic
+  Bulgarian - Bulgarian (traditional phonetic)|bg|phonetic
+Burmese (Default)|mm|
+  Burmese - Burmese (Zawgyi)|mm|zawgyi
+  Burmese - Mara|mm|mara
+  Burmese - Mon|mm|mnw
+  Burmese - Mon (A1)|mm|mnw-a1
+  Burmese - Shan|mm|shn
+  Burmese - Shan (Zawgyi)|mm|zgt
+Chinese (Default)|cn|
+  Chinese - Hanyu Pinyin Letters (with AltGr dead keys)|cn|altgr-pinyin
+  Chinese - Mongolian (Bichig)|cn|mon_trad
+  Chinese - Mongolian (Galik)|cn|mon_trad_galik
+  Chinese - Mongolian (Manchu)|cn|mon_trad_manchu
+  Chinese - Mongolian (Manchu Galik)|cn|mon_manchu_galik
+  Chinese - Mongolian (Todo)|cn|mon_trad_todo
+  Chinese - Mongolian (Todo Galik)|cn|mon_todo_galik
+  Chinese - Mongolian (Xibe)|cn|mon_trad_xibe
+  Chinese - Tibetan|cn|tib
+  Chinese - Tibetan (with ASCII numerals)|cn|tib_asciinum
+  Chinese - Uyghur|cn|ug
+Croatian (Default)|hr|
+  Croatian - Croatian (US)|hr|us
+  Croatian - Croatian (US, with Croatian digraphs)|hr|unicodeus
+  Croatian - Croatian (with Croatian digraphs)|hr|unicode
+  Croatian - Croatian (with guillemets)|hr|alternatequotes
+Czech (Default)|cz|
+  Czech - Czech (extra backslash)|cz|bksl
+  Czech - Czech (QWERTY)|cz|qwerty
+  Czech - Czech (QWERTY, extra backslash)|cz|qwerty_bksl
+  Czech - Czech (QWERTY, Macintosh)|cz|qwerty-mac
+  Czech - Czech (QWERTY, Windows)|cz|winkeys-qwerty
+  Czech - Czech (QWERTZ, Windows)|cz|winkeys
+  Czech - Czech (UCW, only accented letters)|cz|ucw
+  Czech - Czech (US, Dvorak, UCW support)|cz|dvorak-ucw
+  Czech - Russian (Czechia, phonetic)|cz|rus
+Danish (Default)|dk|
+  Danish - Danish (Dvorak)|dk|dvorak
+  Danish - Danish (Macintosh)|dk|mac
+  Danish - Danish (Macintosh, no dead keys)|dk|mac_nodeadkeys
+  Danish - Danish (no dead keys)|dk|nodeadkeys
+  Danish - Danish (Windows)|dk|winkeys
+Dari (Default)|af|
+  Dari - Dari (Afghanistan, OLPC)|af|fa-olpc
+  Dari - Pashto|af|ps
+  Dari - Pashto (Afghanistan, OLPC)|af|ps-olpc
+  Dari - Uzbek (Afghanistan)|af|uz
+  Dari - Uzbek (Afghanistan, OLPC)|af|uz-olpc
+Dhivehi|mv|
+Dutch (Default)|nl|
+  Dutch - Dutch (Macintosh)|nl|mac
+  Dutch - Dutch (standard)|nl|std
+  Dutch - Dutch (US)|nl|us
+Dzongkha|bt|
+English (Australia)|au|
+English (Cameroon) (Default)|cm|
+  English (Cameroon) - Cameroon (AZERTY, intl.)|cm|azerty
+  English (Cameroon) - Cameroon (Dvorak, intl.)|cm|dvorak
+  English (Cameroon) - Cameroon Multilingual (QWERTY, intl.)|cm|qwerty
+  English (Cameroon) - French (Cameroon)|cm|french
+  English (Cameroon) - Mmuock|cm|mmuock
+English (Ghana) (Default)|gh|
+  English (Ghana) - Akan|gh|akan
+  English (Ghana) - Avatime|gh|avn
+  English (Ghana) - English (Ghana, GILLBT)|gh|gillbt
+  English (Ghana) - English (Ghana, multilingual)|gh|generic
+  English (Ghana) - Ewe|gh|ewe
+  English (Ghana) - Fula|gh|fula
+  English (Ghana) - Ga|gh|ga
+  English (Ghana) - Hausa (Ghana)|gh|hausa
+English (New Zealand) (Default)|nz|
+  English (New Zealand) - Maori|nz|mao
+English (Nigeria) (Default)|ng|
+  English (Nigeria) - Hausa (Nigeria)|ng|hausa
+  English (Nigeria) - Igbo|ng|igbo
+  English (Nigeria) - Yoruba|ng|yoruba
+English (South Africa)|za|
+English (UK) (Default)|gb|
+  English (UK) - English (UK, Colemak)|gb|colemak
+  English (UK) - English (UK, Colemak-DH)|gb|colemak_dh
+  English (UK) - English (UK, Dvorak)|gb|dvorak
+  English (UK) - English (UK, Dvorak, with UK punctuation)|gb|dvorakukp
+  English (UK) - English (UK, extended, Windows)|gb|extd
+  English (UK) - English (UK, intl., with dead keys)|gb|intl
+  English (UK) - English (UK, Macintosh)|gb|mac
+  English (UK) - English (UK, Macintosh, intl.)|gb|mac_intl
+  English (UK) - Polish (British keyboard)|gb|pl
+  English (UK) - Scottish Gaelic|gb|gla
+English (US) (Default)|us|
+  English (US) - Cherokee|us|chr
+  English (US) - English (classic Dvorak)|us|dvorak-classic
+  English (US) - English (Colemak)|us|colemak
+  English (US) - English (Colemak-DH)|us|colemak_dh
+  English (US) - English (Colemak-DH ISO)|us|colemak_dh_iso
+  English (US) - English (Colemak-DH Ortholinear)|us|colemak_dh_ortho
+  English (US) - English (Colemak-DH Wide)|us|colemak_dh_wide
+  English (US) - English (Colemak-DH Wide ISO)|us|colemak_dh_wide_iso
+  English (US) - English (Dvorak)|us|dvorak
+  English (US) - English (Dvorak, alt. intl.)|us|dvorak-alt-intl
+  English (US) - English (Dvorak, intl., with dead keys)|us|dvorak-intl
+  English (US) - English (Dvorak, Macintosh, ANSI)|us|dvorak-mac
+  English (US) - English (Dvorak, Macintosh, ISO)|us|dvorak-mac-iso
+  English (US) - English (Dvorak, one-handed, left)|us|dvorak-l
+  English (US) - English (Dvorak, one-handed, right)|us|dvorak-r
+  English (US) - English (intl., with AltGr dead keys)|us|altgr-intl
+  English (US) - English (Macintosh, ABC, ANSI)|us|mac
+  English (US) - English (Macintosh, ABC, ISO)|us|mac-iso
+  English (US) - English (Norman)|us|norman
+  English (US) - English (programmer Dvorak)|us|dvp
+  English (US) - English (the divide/multiply toggle the layout)|us|olpc2
+  English (US) - English (US, alt. intl.)|us|alt-intl
+  English (US) - English (US, euro on 5)|us|euro
+  English (US) - English (US, intl., with dead keys)|us|intl
+  English (US) - English (US, Symbolic)|us|symbolic
+  English (US) - English (Workman)|us|workman
+  English (US) - English (Workman, intl., with dead keys)|us|workman-intl
+  English (US) - Hawaiian|us|haw
+  English (US) - Russian (US, phonetic)|us|rus
+  English (US) - Serbo-Croatian (US)|us|hbs
+Esperanto (Default)|epo|
+  Esperanto - Esperanto (legacy)|epo|legacy
+Estonian (Default)|ee|
+  Estonian - Estonian (Dvorak)|ee|dvorak
+  Estonian - Estonian (no dead keys)|ee|nodeadkeys
+  Estonian - Estonian (US)|ee|us
+Faroese (Default)|fo|
+  Faroese - Faroese (no dead keys)|fo|nodeadkeys
+Filipino (Default)|ph|
+  Filipino - Filipino (Capewell-Dvorak, Baybayin)|ph|capewell-dvorak-bay
+  Filipino - Filipino (Capewell-Dvorak, Latin)|ph|capewell-dvorak
+  Filipino - Filipino (Capewell-QWERF 2006, Baybayin)|ph|capewell-qwerf2k6-bay
+  Filipino - Filipino (Capewell-QWERF 2006, Latin)|ph|capewell-qwerf2k6
+  Filipino - Filipino (Colemak, Baybayin)|ph|colemak-bay
+  Filipino - Filipino (Colemak, Latin)|ph|colemak
+  Filipino - Filipino (Dvorak, Baybayin)|ph|dvorak-bay
+  Filipino - Filipino (Dvorak, Latin)|ph|dvorak
+  Filipino - Filipino (QWERTY, Baybayin)|ph|qwerty-bay
+Finnish (Default)|fi|
+  Finnish - Finnish (classic)|fi|classic
+  Finnish - Finnish (classic, no dead keys)|fi|nodeadkeys
+  Finnish - Finnish (Macintosh)|fi|mac
+  Finnish - Finnish (Windows)|fi|winkeys
+  Finnish - Northern Saami (Finland)|fi|smi
+French (Default)|fr|
+  French - Breton (France)|fr|bre
+  French - French (alt.)|fr|oss
+  French - French (alt., Latin-9 only)|fr|oss_latin9
+  French - French (alt., no dead keys)|fr|oss_nodeadkeys
+  French - French (AZERTY)|fr|azerty
+  French - French (AZERTY, AFNOR)|fr|afnor
+  French - French (BEPO)|fr|bepo
+  French - French (BEPO, AFNOR)|fr|bepo_afnor
+  French - French (BEPO, Latin-9 only)|fr|bepo_latin9
+  French - French (Dvorak)|fr|dvorak
+  French - French (Ergo‑L)|fr|ergol
+  French - French (Ergo‑L, ISO variant)|fr|ergol_iso
+  French - French (legacy, alt.)|fr|latin9
+  French - French (legacy, alt., no dead keys)|fr|latin9_nodeadkeys
+  French - French (Macintosh)|fr|mac
+  French - French (no dead keys)|fr|nodeadkeys
+  French - French (US)|fr|us
+  French - Georgian (France, AZERTY Tskapo)|fr|geo
+  French - Occitan|fr|oci
+French (Canada) (Default)|ca|
+  French (Canada) - Canadian (CSA)|ca|multix
+  French (Canada) - English (Canada)|ca|eng
+  French (Canada) - French (Canada, Dvorak)|ca|fr-dvorak
+  French (Canada) - French (Canada, legacy)|ca|fr-legacy
+  French (Canada) - Inuktitut|ca|ike
+French (Democratic Republic of the Congo)|cd|
+French (Togo)|tg|
+Georgian (Default)|ge|
+  Georgian - Georgian (ergonomic)|ge|ergonomic
+  Georgian - Georgian (MESS)|ge|mess
+  Georgian - Ossetian (Georgia)|ge|os
+  Georgian - Russian (Georgia)|ge|ru
+German (Default)|de|
+  German - German (dead acute)|de|deadacute
+  German - German (dead grave acute)|de|deadgraveacute
+  German - German (dead tilde)|de|deadtilde
+  German - German (Dvorak)|de|dvorak
+  German - German (E1)|de|e1
+  German - German (E2)|de|e2
+  German - German (Macintosh)|de|mac
+  German - German (Macintosh, no dead keys)|de|mac_nodeadkeys
+  German - German (Neo 2)|de|neo
+  German - German (no dead keys)|de|nodeadkeys
+  German - German (QWERTY)|de|qwerty
+  German - German (T3)|de|T3
+  German - German (US)|de|us
+  German - Lower Sorbian|de|dsb
+  German - Lower Sorbian (QWERTZ)|de|dsb_qwertz
+  German - Romanian (Germany)|de|ro
+  German - Romanian (Germany, no dead keys)|de|ro_nodeadkeys
+  German - Russian (Germany, phonetic)|de|ru
+  German - Turkish (Germany)|de|tr
+German (Austria) (Default)|at|
+  German (Austria) - German (Austria, Macintosh)|at|mac
+  German (Austria) - German (Austria, no dead keys)|at|nodeadkeys
+German (Switzerland) (Default)|ch|
+  German (Switzerland) - French (Switzerland)|ch|fr
+  German (Switzerland) - French (Switzerland, Macintosh)|ch|fr_mac
+  German (Switzerland) - French (Switzerland, no dead keys)|ch|fr_nodeadkeys
+  German (Switzerland) - German (Switzerland, legacy)|ch|legacy
+  German (Switzerland) - German (Switzerland, Macintosh)|ch|de_mac
+  German (Switzerland) - German (Switzerland, no dead keys)|ch|de_nodeadkeys
+Greek (Default)|gr|
+  Greek - Greek (no dead keys)|gr|nodeadkeys
+  Greek - Greek (polytonic)|gr|polytonic
+  Greek - Greek (simple)|gr|simple
+Hebrew (Default)|il|
+  Hebrew - Hebrew (Biblical, Tiro)|il|biblical
+  Hebrew - Hebrew (lyx)|il|lyx
+  Hebrew - Hebrew (phonetic)|il|phonetic
+  Hebrew - Hebrew (SI-1452-2)|il|si2
+Hungarian (Default)|hu|
+  Hungarian - Hungarian (no dead keys)|hu|nodeadkeys
+  Hungarian - Hungarian (QWERTY)|hu|qwerty
+  Hungarian - Hungarian (QWERTY, 101-key, comma, dead keys)|hu|101_qwerty_comma_dead
+  Hungarian - Hungarian (QWERTY, 101-key, comma, no dead keys)|hu|101_qwerty_comma_nodead
+  Hungarian - Hungarian (QWERTY, 101-key, dot, dead keys)|hu|101_qwerty_dot_dead
+  Hungarian - Hungarian (QWERTY, 101-key, dot, no dead keys)|hu|101_qwerty_dot_nodead
+  Hungarian - Hungarian (QWERTY, 102-key, comma, dead keys)|hu|102_qwerty_comma_dead
+  Hungarian - Hungarian (QWERTY, 102-key, comma, no dead keys)|hu|102_qwerty_comma_nodead
+  Hungarian - Hungarian (QWERTY, 102-key, dot, dead keys)|hu|102_qwerty_dot_dead
+  Hungarian - Hungarian (QWERTY, 102-key, dot, no dead keys)|hu|102_qwerty_dot_nodead
+  Hungarian - Hungarian (QWERTZ, 101-key, comma, dead keys)|hu|101_qwertz_comma_dead
+  Hungarian - Hungarian (QWERTZ, 101-key, comma, no dead keys)|hu|101_qwertz_comma_nodead
+  Hungarian - Hungarian (QWERTZ, 101-key, dot, dead keys)|hu|101_qwertz_dot_dead
+  Hungarian - Hungarian (QWERTZ, 101-key, dot, no dead keys)|hu|101_qwertz_dot_nodead
+  Hungarian - Hungarian (QWERTZ, 102-key, comma, dead keys)|hu|102_qwertz_comma_dead
+  Hungarian - Hungarian (QWERTZ, 102-key, comma, no dead keys)|hu|102_qwertz_comma_nodead
+  Hungarian - Hungarian (QWERTZ, 102-key, dot, dead keys)|hu|102_qwertz_dot_dead
+  Hungarian - Hungarian (QWERTZ, 102-key, dot, no dead keys)|hu|102_qwertz_dot_nodead
+  Hungarian - Hungarian (standard)|hu|standard
+Icelandic (Default)|is|
+  Icelandic - Icelandic (Dvorak)|is|dvorak
+  Icelandic - Icelandic (Macintosh)|is|mac
+  Icelandic - Icelandic (Macintosh, legacy)|is|mac_legacy
+Indian (Default)|in|
+  Indian - Assamese (KaGaPa, phonetic)|in|asm-kagapa
+  Indian - Bangla (India)|in|ben
+  Indian - Bangla (India, Baishakhi)|in|ben_baishakhi
+  Indian - Bangla (India, Baishakhi InScript)|in|ben_inscript
+  Indian - Bangla (India, Bornona)|in|ben_bornona
+  Indian - Bangla (India, Gitanjali)|in|ben_gitanjali
+  Indian - Bangla (India, KaGaPa, phonetic)|in|ben-kagapa
+  Indian - Bangla (India, Probhat)|in|ben_probhat
+  Indian - English (India, with rupee)|in|eng
+  Indian - Gujarati|in|guj
+  Indian - Gujarati (KaGaPa, phonetic)|in|guj-kagapa
+  Indian - Hindi (Bolnagri)|in|bolnagri
+  Indian - Hindi (KaGaPa, phonetic)|in|hin-kagapa
+  Indian - Hindi (Wx)|in|hin-wx
+  Indian - Indic IPA|in|iipa
+  Indian - Kannada|in|kan
+  Indian - Kannada (KaGaPa, phonetic)|in|kan-kagapa
+  Indian - Malayalam|in|mal
+  Indian - Malayalam (enhanced InScript, with rupee)|in|mal_enhanced
+  Indian - Malayalam (Lalitha)|in|mal_lalitha
+  Indian - Malayalam (Poorna, extended InScript)|in|mal_poorna
+  Indian - Manipuri (Meitei)|in|mni
+  Indian - Mara|in|mara
+  Indian - Marathi (enhanced InScript)|in|marathi
+  Indian - Marathi (KaGaPa, phonetic)|in|mar-kagapa
+  Indian - Oriya|in|ori
+  Indian - Oriya (Bolnagri)|in|ori-bolnagri
+  Indian - Oriya (Wx)|in|ori-wx
+  Indian - Punjabi (Gurmukhi)|in|guru
+  Indian - Punjabi (Gurmukhi Jhelum)|in|jhelum
+  Indian - Sanskrit (KaGaPa, phonetic)|in|san-kagapa
+  Indian - Santali (Ol Chiki)|in|sat
+  Indian - Tamil (InScript, with Arabic numerals)|in|tam
+  Indian - Tamil (InScript, with Tamil numerals)|in|tam_tamilnumbers
+  Indian - Tamil (TamilNet '99)|in|tamilnet
+  Indian - Tamil (TamilNet '99, TAB encoding)|in|tamilnet_TAB
+  Indian - Tamil (TamilNet '99, TSCII encoding)|in|tamilnet_TSCII
+  Indian - Tamil (TamilNet '99 with Tamil numerals)|in|tamilnet_tamilnumbers
+  Indian - Telugu|in|tel
+  Indian - Telugu (KaGaPa, phonetic)|in|tel-kagapa
+  Indian - Telugu (Sarala)|in|tel-sarala
+  Indian - Urdu (alt. phonetic)|in|urd-phonetic3
+  Indian - Urdu (phonetic)|in|urd-phonetic
+  Indian - Urdu (Windows)|in|urd-winkeys
+Indonesian (Latin) (Default)|id|
+  Indonesian (Latin) - Indonesian (Arab Melayu, extended phonetic)|id|melayu-phoneticx
+  Indonesian (Latin) - Indonesian (Arab Melayu, phonetic)|id|melayu-phonetic
+  Indonesian (Latin) - Indonesian (Arab Pegon, phonetic)|id|pegon-phonetic
+  Indonesian (Latin) - Javanese|id|javanese
+Irish (Default)|ie|
+  Irish - CloGaelach|ie|CloGaelach
+  Irish - Irish (UnicodeExpert)|ie|UnicodeExpert
+  Irish - Ogham|ie|ogam
+  Irish - Ogham (IS434)|ie|ogam_is434
+Italian (Default)|it|
+  Italian - Friulian (Italy)|it|fur
+  Italian - Georgian (Italy)|it|geo
+  Italian - Italian (IBM 142)|it|ibm
+  Italian - Italian (Macintosh)|it|mac
+  Italian - Italian (no dead keys)|it|nodeadkeys
+  Italian - Italian (US)|it|us
+  Italian - Italian (Windows)|it|winkeys
+  Italian - Sicilian|it|scn
+Japanese (Default)|jp|
+  Japanese - Japanese (Dvorak)|jp|dvorak
+  Japanese - Japanese (Kana)|jp|kana
+  Japanese - Japanese (Macintosh)|jp|mac
+  Japanese - Japanese (OADG 109A)|jp|OADG109A
+Kazakh (Default)|kz|
+  Kazakh - Kazakh (extended)|kz|ext
+  Kazakh - Kazakh (Latin)|kz|latin
+  Kazakh - Kazakh (with Russian)|kz|kazrus
+  Kazakh - Russian (Kazakhstan, with Kazakh)|kz|ruskaz
+Khmer (Cambodia)|kh|
+Korean (Default)|kr|
+  Korean - Korean (101/104-key compatible)|kr|kr104
+Kyrgyz (Default)|kg|
+  Kyrgyz - Kyrgyz (phonetic)|kg|phonetic
+Lao (Default)|la|
+  Lao - Lao (STEA)|la|stea
+Latvian (Default)|lv|
+  Latvian - Latvian (adapted)|lv|adapted
+  Latvian - Latvian (apostrophe)|lv|apostrophe
+  Latvian - Latvian (ergonomic, ŪGJRMV)|lv|ergonomic
+  Latvian - Latvian (F)|lv|fkey
+  Latvian - Latvian (Modern Cyrillic)|lv|modern-cyr
+  Latvian - Latvian (Modern Latin)|lv|modern
+  Latvian - Latvian (tilde)|lv|tilde
+Lithuanian (Default)|lt|
+  Lithuanian - Lithuanian (IBM)|lt|ibm
+  Lithuanian - Lithuanian (LEKP)|lt|lekp
+  Lithuanian - Lithuanian (LEKPa)|lt|lekpa
+  Lithuanian - Lithuanian (Ratise)|lt|ratise
+  Lithuanian - Lithuanian (standard)|lt|std
+  Lithuanian - Lithuanian (US)|lt|us
+  Lithuanian - Samogitian|lt|sgs
+Macedonian (Default)|mk|
+  Macedonian - Macedonian (no dead keys)|mk|nodeadkeys
+Malay (Jawi, Arabic Keyboard) (Default)|my|
+  Malay (Jawi, Arabic Keyboard) - Malay (Jawi, phonetic)|my|phonetic
+Maltese (Default)|mt|
+  Maltese - Maltese (UK, with AltGr overrides)|mt|alt-gb
+  Maltese - Maltese (US)|mt|us
+  Maltese - Maltese (US, with AltGr overrides)|mt|alt-us
+Moldavian (Default)|md|
+  Moldavian - Gagauz (Moldova)|md|gag
+Mongolian|mn|
+Montenegrin (Default)|me|
+  Montenegrin - Montenegrin (Cyrillic)|me|cyrillic
+  Montenegrin - Montenegrin (Cyrillic, with guillemets)|me|cyrillicalternatequotes
+  Montenegrin - Montenegrin (Cyrillic, ZE and ZHE swapped)|me|cyrillicyz
+  Montenegrin - Montenegrin (Latin, QWERTY)|me|latinyz
+  Montenegrin - Montenegrin (Latin, Unicode)|me|latinunicode
+  Montenegrin - Montenegrin (Latin, Unicode, QWERTY)|me|latinunicodeyz
+  Montenegrin - Montenegrin (Latin, with guillemets)|me|latinalternatequotes
+Nepali|np|
+N'Ko (AZERTY)|gn|
+Norwegian (Default)|no|
+  Norwegian - Northern Saami (Norway)|no|smi
+  Norwegian - Northern Saami (Norway, no dead keys)|no|smi_nodeadkeys
+  Norwegian - Norwegian (Colemak)|no|colemak
+  Norwegian - Norwegian (Colemak-DH)|no|colemak_dh
+  Norwegian - Norwegian (Colemak-DH Wide)|no|colemak_dh_wide
+  Norwegian - Norwegian (Dvorak)|no|dvorak
+  Norwegian - Norwegian (Macintosh)|no|mac
+  Norwegian - Norwegian (Macintosh, no dead keys)|no|mac_nodeadkeys
+  Norwegian - Norwegian (no dead keys)|no|nodeadkeys
+  Norwegian - Norwegian (Windows)|no|winkeys
+Persian (Default)|ir|
+  Persian - Azerbaijani (Iran)|ir|azb
+  Persian - Kurdish (Iran, Arabic-Latin)|ir|ku_ara
+  Persian - Kurdish (Iran, F)|ir|ku_f
+  Persian - Kurdish (Iran, Latin Alt-Q)|ir|ku_alt
+  Persian - Kurdish (Iran, Latin Q)|ir|ku
+  Persian - Persian (Windows)|ir|winkeys
+  Persian - Persian (with Persian keypad)|ir|pes_keypad
+Polish (Default)|pl|
+  Polish - Kashubian|pl|csb
+  Polish - Polish (Dvorak)|pl|dvorak
+  Polish - Polish (Dvorak, with Polish quotes on key 1)|pl|dvorak_altquotes
+  Polish - Polish (Dvorak, with Polish quotes on quotemark key)|pl|dvorak_quotes
+  Polish - Polish (legacy)|pl|legacy
+  Polish - Polish (programmer Dvorak)|pl|dvp
+  Polish - Polish (QWERTZ)|pl|qwertz
+  Polish - Russian (Poland, phonetic Dvorak)|pl|ru_phonetic_dvorak
+  Polish - Silesian|pl|szl
+Portuguese (Default)|pt|
+  Portuguese - Esperanto (Portugal, Nativo)|pt|nativo-epo
+  Portuguese - Portuguese (Macintosh)|pt|mac
+  Portuguese - Portuguese (Macintosh, no dead keys)|pt|mac_nodeadkeys
+  Portuguese - Portuguese (Nativo)|pt|nativo
+  Portuguese - Portuguese (Nativo for US keyboards)|pt|nativo-us
+  Portuguese - Portuguese (no dead keys)|pt|nodeadkeys
+Portuguese (Brazil) (Default)|br|
+  Portuguese (Brazil) - Esperanto (Brazil, Nativo)|br|nativo-epo
+  Portuguese (Brazil) - Portuguese (Brazil, Dvorak)|br|dvorak
+  Portuguese (Brazil) - Portuguese (Brazil, IBM/Lenovo ThinkPad)|br|thinkpad
+  Portuguese (Brazil) - Portuguese (Brazil, IBM/Lenovo ThinkPad, no dead keys)|br|thinkpad_nodeadkeys
+  Portuguese (Brazil) - Portuguese (Brazil, Nativo)|br|nativo
+  Portuguese (Brazil) - Portuguese (Brazil, Nativo for US keyboards)|br|nativo-us
+  Portuguese (Brazil) - Portuguese (Brazil, no dead keys)|br|nodeadkeys
+  Portuguese (Brazil) - Russian (Brazil, phonetic)|br|rus
+Romanian (Default)|ro|
+  Romanian - Romanian (standard)|ro|std
+  Romanian - Romanian (Windows)|ro|winkeys
+Russian (Default)|ru|
+  Russian - Abkhazian (Russia)|ru|ab
+  Russian - Bashkirian|ru|bak
+  Russian - Chuvash|ru|cv
+  Russian - Chuvash (Latin)|ru|cv_latin
+  Russian - Kalmyk|ru|xal
+  Russian - Komi|ru|kom
+  Russian - Mari|ru|chm
+  Russian - Ossetian (legacy)|ru|os_legacy
+  Russian - Ossetian (Windows)|ru|os_winkeys
+  Russian - Russian (DOS)|ru|dos
+  Russian - Russian (engineering, EN)|ru|ruchey_en
+  Russian - Russian (engineering, RU)|ru|ruchey_ru
+  Russian - Russian (legacy)|ru|legacy
+  Russian - Russian (Macintosh)|ru|mac
+  Russian - Russian (phonetic)|ru|phonetic
+  Russian - Russian (phonetic, AZERTY)|ru|phonetic_azerty
+  Russian - Russian (phonetic, Dvorak)|ru|phonetic_dvorak
+  Russian - Russian (phonetic, Windows)|ru|phonetic_winkeys
+  Russian - Russian (phonetic, YAZHERTY)|ru|phonetic_YAZHERTY
+  Russian - Russian (typewriter)|ru|typewriter
+  Russian - Russian (typewriter, legacy)|ru|typewriter-legacy
+  Russian - Serbian (Russia)|ru|srp
+  Russian - Tatar|ru|tt
+  Russian - Udmurt|ru|udm
+  Russian - Yakut|ru|sah
+Serbian (Default)|rs|
+  Serbian - Pannonian Rusyn|rs|rue
+  Serbian - Serbian (Cyrillic, with guillemets)|rs|alternatequotes
+  Serbian - Serbian (Cyrillic, ZE and ZHE swapped)|rs|yz
+  Serbian - Serbian (Latin)|rs|latin
+  Serbian - Serbian (Latin, QWERTY)|rs|latinyz
+  Serbian - Serbian (Latin, Unicode)|rs|latinunicode
+  Serbian - Serbian (Latin, Unicode, QWERTY)|rs|latinunicodeyz
+  Serbian - Serbian (Latin, with guillemets)|rs|latinalternatequotes
+Sinhala (phonetic) (Default)|lk|
+  Sinhala (phonetic) - Sinhala (US)|lk|us
+  Sinhala (phonetic) - Tamil (Sri Lanka, TamilNet '99)|lk|tam_unicode
+  Sinhala (phonetic) - Tamil (Sri Lanka, TamilNet '99, TAB encoding)|lk|tam_TAB
+Slovak (Default)|sk|
+  Slovak - Slovak (extra backslash)|sk|bksl
+  Slovak - Slovak (QWERTY)|sk|qwerty
+  Slovak - Slovak (QWERTY, extra backslash)|sk|qwerty_bksl
+Slovenian (Default)|si|
+  Slovenian - Slovenian (US)|si|us
+  Slovenian - Slovenian (with guillemets)|si|alternatequotes
+Spanish (Default)|es|
+  Spanish - Asturian (Spain, with bottom-dot H and L)|es|ast
+  Spanish - Catalan (Spain, with middle-dot L)|es|cat
+  Spanish - Spanish (dead tilde)|es|deadtilde
+  Spanish - Spanish (Dvorak)|es|dvorak
+  Spanish - Spanish (no dead keys)|es|nodeadkeys
+  Spanish - Spanish (Windows)|es|winkeys
+Spanish (Latin American) (Default)|latam|
+  Spanish (Latin American) - Spanish (Latin American, Colemak)|latam|colemak
+  Spanish (Latin American) - Spanish (Latin American, dead tilde)|latam|deadtilde
+  Spanish (Latin American) - Spanish (Latin American, Dvorak)|latam|dvorak
+  Spanish (Latin American) - Spanish (Latin American, no dead keys)|latam|nodeadkeys
+Swahili (Kenya) (Default)|ke|
+  Swahili (Kenya) - Kikuyu|ke|kik
+Swahili (Tanzania)|tz|
+Swedish (Default)|se|
+  Swedish - Northern Saami (Sweden)|se|smi
+  Swedish - Russian (Sweden, phonetic)|se|rus
+  Swedish - Swedish (Colemak)|se|colemak
+  Swedish - Swedish (Dvorak)|se|dvorak
+  Swedish - Swedish (Dvorak, intl.)|se|us_dvorak
+  Swedish - Swedish (Macintosh)|se|mac
+  Swedish - Swedish (no dead keys)|se|nodeadkeys
+  Swedish - Swedish Sign Language|se|swl
+  Swedish - Swedish (Svdvorak)|se|svdvorak
+  Swedish - Swedish (US)|se|us
+Taiwanese (Default)|tw|
+  Taiwanese - Saisiyat (Taiwan)|tw|saisiyat
+  Taiwanese - Taiwanese (indigenous)|tw|indigenous
+Tajik (Default)|tj|
+  Tajik - Tajik (legacy)|tj|legacy
+Thai (Default)|th|
+  Thai - Thai (Manoonchai)|th|mnc
+  Thai - Thai (Pattachote)|th|pat
+  Thai - Thai (TIS-820.2538)|th|tis
+Tswana|bw|
+Turkish (Default)|tr|
+  Turkish - Kurdish (Turkey, F)|tr|ku_f
+  Turkish - Kurdish (Turkey, Latin Alt-Q)|tr|ku_alt
+  Turkish - Kurdish (Turkey, Latin Q)|tr|ku
+  Turkish - Turkish (Alt-Q)|tr|alt
+  Turkish - Turkish (E)|tr|e
+  Turkish - Turkish (F)|tr|f
+  Turkish - Turkish (intl., with dead keys)|tr|intl
+Turkmen (Default)|tm|
+  Turkmen - Turkmen (Alt-Q)|tm|alt
+Ukrainian (Default)|ua|
+  Ukrainian - Crimean Tatar (Turkish Alt-Q)|ua|crh_alt
+  Ukrainian - Crimean Tatar (Turkish F)|ua|crh_f
+  Ukrainian - Crimean Tatar (Turkish Q)|ua|crh
+  Ukrainian - Ukrainian (homophonic)|ua|homophonic
+  Ukrainian - Ukrainian (legacy)|ua|legacy
+  Ukrainian - Ukrainian (macOS)|ua|macOS
+  Ukrainian - Ukrainian (phonetic)|ua|phonetic
+  Ukrainian - Ukrainian (typewriter)|ua|typewriter
+  Ukrainian - Ukrainian (Windows)|ua|winkeys
+  Ukrainian - Ukrainian (Windows Enhanced)|ua|winkeysenhanced
+Urdu (Pakistan) (Default)|pk|
+  Urdu (Pakistan) - Arabic (Pakistan)|pk|ara
+  Urdu (Pakistan) - Sindhi|pk|snd
+  Urdu (Pakistan) - Urdu (Pakistan, CRULP)|pk|urd-crulp
+  Urdu (Pakistan) - Urdu (Pakistan, NLA)|pk|urd-nla
+  Urdu (Pakistan) - Urdu (Pak Urdu Phonetic)|pk|pak_urdu_phonetic
+Uzbek (Default)|uz|
+  Uzbek - Uzbek (Latin)|uz|latin
+Vietnamese (Default)|vn|
+  Vietnamese - Vietnamese (France)|vn|fr
+  Vietnamese - Vietnamese (US)|vn|us
+Wolof|sn|

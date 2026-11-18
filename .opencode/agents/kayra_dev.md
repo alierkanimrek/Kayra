@@ -29,7 +29,8 @@ Source -> live target:
 - User settings: `~/.config/kayra/settings.conf` (`lang=<code>`), via
   `settings-conf.sh`.
 - Legacy user scripts: `/etc/skel/.local/bin/`; do not add new ones.
-- Deploy: `sudo utils/kayra-deploy ...`; the tool itself is not installed.
+- Deploy: `sudo utils/kayra-deploy <scripts|lang|data|services|core|config|all>`;
+  the tool itself is not installed.
 
 ## Shared
 
@@ -55,7 +56,7 @@ Source -> live target:
 
 **Do**
 - Name new user scripts `kayra-*` and deploy with
-  `sudo utils/kayra-deploy --user`.
+  `sudo utils/kayra-deploy scripts`.
 - Source libraries with absolute paths from `/usr/local/lib/kayra/`;
   legacy skel scripts may keep `$(dirname "$0")`.
 - Keep new scripts out of `/etc/skel/.local/bin/`; that tree is legacy.
