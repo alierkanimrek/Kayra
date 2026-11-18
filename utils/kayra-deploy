@@ -1,526 +1,140 @@
 #!/bin/bash
 #
-# kayra-deploy - deploy the Kayra OS overlay to the running system.
+# kayra-deploy - copy the Kayra OS overlay to the running system.
 #
 # Developer helper: lives in utils/ and is never installed.
 #
 # Source of truth:
 #   <repo>/kayra-os/rootfs
 #
+# The tool is split into a few small tasks. Every task always copies, there is
+# no change detection, no backup and no dry-run; running it twice is harmless.
+#
 # Targets:
-#   usr/local/lib/kayra/              /usr/local/lib/kayra/
-#   usr/local/libexec/<service>/      /usr/local/libexec/<service>/
-#   etc/sv/<service>/                 /etc/sv/<service>/
-#   usr/local/bin/kayra-*             /usr/local/bin/
-#   etc/runit/core-services/          /etc/runit/core-services/   (--core)
+#   scripts    usr/local/lib/kayra/      -> /usr/local/lib/kayra/    (0644)
+#              usr/local/bin/kayra-*    -> /usr/local/bin/          (0755)
+#   lang       usr/local/share/kayra/lang/ -> /usr/local/share/kayra/lang/ (0644)
+#   data       usr/local/share/kayra/data/ -> /usr/local/share/kayra/data/ (0644)
+#   services   etc/sv/<name>/            -> /etc/sv/<name>/         (0755, run/finish)
+#              usr/local/libexec/<name>/ -> /usr/local/libexec/<name>/
+#              then "sv restart <name>" for every service found
+#   core       etc/runit/core-services/  -> /etc/runit/core-services/ (0755)
+#   config     etc/skel/.config/         -> $HOME/.config/          (0644, user owned)
+#   all        scripts + lang + data + services + core   (config is NOT included)
 #
-# Backups:
-#   ~/.local/var/kayra-deploy/<timestamp>/<relative path>
-#   With --root DIR: DIR/.kayra-deploy-backups/<timestamp>/
+# Before anything is installed every shell file is checked with "bash -n"; on a
+# syntax error nothing is installed.
 #
-# Output is console only; the script does not write to socklog.
-#
-# Examples:
-#   sudo utils/kayra-deploy --all
-#   sudo utils/kayra-deploy --library --service pkg-jobs
-#   sudo utils/kayra-deploy --service pkg-jobs --service pkg-events
-#   sudo utils/kayra-deploy --user
-#   sudo utils/kayra-deploy --all --dry-run
-#   sudo utils/kayra-deploy --root /tmp/stage --all
+# Usage:
+#   sudo utils/kayra-deploy scripts
+#   sudo utils/kayra-deploy scripts data
+#   sudo utils/kayra-deploy services
+#   sudo utils/kayra-deploy config
+#   sudo utils/kayra-deploy all
+#   sudo utils/kayra-deploy            # same as "all"
 #
 set -uo pipefail
 export LC_ALL=C.UTF-8
 
-PROG=${0##*/}
 SCRIPT_DIR=$(cd -- "$(dirname -- "$0")" && pwd -P)
-DEFAULT_REPO=$(dirname -- "$SCRIPT_DIR")
-ORIG_ARGS=("$@")
-
-REPO=${KAYRA_REPO:-$DEFAULT_REPO}
-ROOT=
-BACKUP_DIR=
-KEEP=10
-DO_ALL=0
-DO_LIBRARY=0
-DO_USER=0
-DO_CORE=0
-DO_PULL=0
-DRY_RUN=0
-NO_RESTART=0
-FORCE=0
-FORCE_RESTART=0
-LIST=0
-SEL_SERVICES=()
-
-CHANGED=0
-UNCHANGED=0
-FAILED=0
-BACKUP_CREATED=0
-LIB_CHANGED=0
-declare -A RESTART=()
-
-usage() {
-  cat <<'EOF'
-Usage: kayra-deploy [OPTIONS]
-
-Targets (default: --all):
-  --all                 library + all services + user scripts
-  --library             all shell libraries in usr/local/lib/kayra/
-  --service NAME        only this service (repeatable; includes the library)
-  --user                only user scripts (usr/local/bin/kayra-*)
-  --core                core-services files (no restart)
-
-Options:
-  --no-restart          copy only, do not restart services
-  --force-restart       restart selected services even when unchanged
-  --force               copy even when checksums match
-  --dry-run             show actions, change nothing
-  --root DIR            stage under DIR (testing or mounted image)
-  --repo DIR            repository root (default: parent of utils/)
-  --pull                git pull --ff-only before deploying
-  --backup-dir DIR      override the backup root
-  --keep N              keep the last N backup sessions (default 10)
-  --list                list discovered targets
-  -h, --help            show this help
-EOF
-}
-
-info() { printf '[%s] %s: %s\n' "$(date +%H:%M:%S)" "$PROG" "$*"; }
-warn() { printf '[%s] %s: warning: %s\n' "$(date +%H:%M:%S)" "$PROG" "$*" >&2; }
-err()  { printf '[%s] %s: error: %s\n' "$(date +%H:%M:%S)" "$PROG" "$*" >&2; }
-die()  { err "$*"; exit 1; }
-
-while (( $# )); do
-  case $1 in
-    --all)           DO_ALL=1 ;;
-    --library)       DO_LIBRARY=1 ;;
-    --user)          DO_USER=1 ;;
-    --core)          DO_CORE=1 ;;
-    --service)       [[ $# -ge 2 ]] || die "--service requires a name"
-                     SEL_SERVICES+=("$2"); shift ;;
-    --service=*)     SEL_SERVICES+=("${1#*=}") ;;
-    --no-restart)    NO_RESTART=1 ;;
-    --force-restart) FORCE_RESTART=1 ;;
-    --force)         FORCE=1 ;;
-    --dry-run)       DRY_RUN=1 ;;
-    --root)          [[ $# -ge 2 ]] || die "--root requires a directory"
-                     ROOT=$2; shift ;;
-    --root=*)        ROOT=${1#*=} ;;
-    --repo)          [[ $# -ge 2 ]] || die "--repo requires a directory"
-                     REPO=$2; shift ;;
-    --repo=*)        REPO=${1#*=} ;;
-    --pull)          DO_PULL=1 ;;
-    --backup-dir)    [[ $# -ge 2 ]] || die "--backup-dir requires a directory"
-                     BACKUP_DIR=$2; shift ;;
-    --backup-dir=*)  BACKUP_DIR=${1#*=} ;;
-    --keep)          [[ $# -ge 2 ]] || die "--keep requires a number"
-                     KEEP=$2; shift ;;
-    --keep=*)        KEEP=${1#*=} ;;
-    --list)          LIST=1 ;;
-    -h|--help)       usage; exit 0 ;;
-    *)               usage >&2; die "unknown option: $1" ;;
-  esac
-  shift
-done
-
-[[ $KEEP =~ ^[0-9]+$ ]] || die "--keep must be a number"
-(( KEEP >= 1 )) || die "--keep must be at least 1"
-
-if (( ! DO_ALL && ! DO_LIBRARY && ! DO_USER && ! DO_CORE && ${#SEL_SERVICES[@]} == 0 )); then
-  DO_ALL=1
-fi
-if (( DO_ALL && ${#SEL_SERVICES[@]} )); then
-  die "--all cannot be combined with --service"
-fi
-
-REPO=$(cd -- "$REPO" 2>/dev/null && pwd -P) || die "repo not found: $REPO"
+REPO=${KAYRA_REPO:-$(dirname -- "$SCRIPT_DIR")}
 SRC=$REPO/kayra-os/rootfs
+
+die() { printf 'kayra-deploy: %s\n' "$*" >&2; exit 1; }
+
 [[ -d $SRC ]] || die "not a Kayra repo (missing kayra-os/rootfs): $REPO"
+(( EUID == 0 )) || die "run as root (sudo)"
 
-if (( DO_PULL )); then
-  if (( DRY_RUN )); then
-    info "would run git pull --ff-only"
-  else
-    if [[ -n ${SUDO_USER:-} ]]; then
-      sudo -u "$SUDO_USER" git -C "$REPO" pull --ff-only || die "git pull failed"
-    else
-      git -C "$REPO" pull --ff-only || die "git pull failed"
-    fi
-    new_args=()
-    for a in "${ORIG_ARGS[@]}"; do
-      [[ $a == --pull ]] || new_args+=("$a")
-    done
-    info "re-exec after git pull"
-    exec "$SCRIPT_DIR/$PROG" "${new_args[@]}"
-  fi
-fi
-
-# Identity used for backup ownership.
+# Identity used for the user owned files of the config task.
 DEPLOY_USER=${SUDO_USER:-$(id -un)}
 DEPLOY_UID=${SUDO_UID:-$(id -u "$DEPLOY_USER")}
 DEPLOY_GID=${SUDO_GID:-$(id -g "$DEPLOY_USER")}
 DEPLOY_HOME=$(getent passwd "$DEPLOY_USER" | cut -d: -f6)
 [[ -n $DEPLOY_HOME ]] || die "cannot resolve home directory for $DEPLOY_USER"
 
-# Staging root.
-if [[ -n $ROOT ]]; then
-  if [[ -d $ROOT ]]; then
-    ROOT=$(cd -- "$ROOT" && pwd -P)
-  elif (( DRY_RUN )); then
-    ROOT=$(realpath -m -- "$ROOT")
-  else
-    mkdir -p -- "$ROOT" || die "cannot create root: $ROOT"
-    ROOT=$(cd -- "$ROOT" && pwd -P)
-  fi
-fi
-
-if [[ -n $ROOT ]]; then
-  BACKUP_ROOT=${BACKUP_DIR:-$ROOT/.kayra-deploy-backups}
-else
-  BACKUP_ROOT=${BACKUP_DIR:-$DEPLOY_HOME/.local/var/kayra-deploy}
-fi
-STAMP=$(date +%Y%m%d-%H%M%S)-$$
-BACKUP_SESSION=$BACKUP_ROOT/$STAMP
-
-LIB_DIR=usr/local/lib/kayra
-SVC_ETC=etc/sv
-SVC_EXEC=usr/local/libexec
-USER_BIN=usr/local/bin
-CORE_REL=etc/runit/core-services
-
-dest_path() { printf '%s/%s' "${ROOT%/}" "$1"; }
-
-rel_path() {
-  local p=$1
-  if [[ -n $ROOT ]]; then
-    printf '%s' "${p#"${ROOT%/}/"}"
-  else
-    printf '%s' "${p#/}"
-  fi
+# sync_dir <src-rel> <dst> <mode>
+sync_dir() {
+  local rel=$1 dst=$2 mode=$3
+  [[ -d $SRC/$rel ]] || return 0
+  install -d -m 0755 -o root -g root "$dst" || die "cannot create: $dst"
+  find "$SRC/$rel" -type f -exec install -m "$mode" -o root -g root {} "$dst/" \;
 }
 
-service_names() {
-  find "$SRC/$SVC_ETC" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' 2>/dev/null | sort
+task_scripts() {
+  sync_dir usr/local/lib/kayra /usr/local/lib/kayra 0644
+  sync_dir usr/local/bin       /usr/local/bin       0755
 }
 
-is_shell() {
-  local f=$1
-  [[ -f $f ]] || return 1
-  head -n1 "$f" 2>/dev/null |
-    grep -qE '^#!.*(bash|/sh|env[[:space:]]+(bash|sh))'
+task_lang() {
+  sync_dir usr/local/share/kayra/lang /usr/local/share/kayra/lang 0644
 }
 
-mode_for() {
-  local rel=$1
-  case $rel in
-    usr/local/lib/*)                                printf '0644' ;;
-    usr/local/bin/*)                                printf '0755' ;;
-    usr/local/libexec/*)                            printf '0755' ;;
-    etc/sv/*/run|etc/sv/*/finish|etc/sv/*/log/run)  printf '0755' ;;
-    etc/runit/core-services/*)                      printf '0755' ;;
-    *)                                              printf '0644' ;;
-  esac
+task_data() {
+  sync_dir usr/local/share/kayra/data /usr/local/share/kayra/data 0644
 }
 
-backup_file() {
-  local dst=$1 rel out
-  [[ -e $dst ]] || return 0
-  rel=$(rel_path "$dst")
-
-  if (( DRY_RUN )); then
-    info "would back up $rel"
-    return 0
-  fi
-
-  if (( ! BACKUP_CREATED )); then
-    install -d -m 0700 -o "$DEPLOY_USER" -g "$DEPLOY_GID" "$BACKUP_SESSION" \
-      || die "cannot create backup directory: $BACKUP_SESSION"
-    BACKUP_CREATED=1
-  fi
-
-  out=$BACKUP_SESSION/$rel
-  install -d -m 0700 -o "$DEPLOY_USER" -g "$DEPLOY_GID" "$(dirname -- "$out")" \
-    || die "cannot create backup path: $out"
-  cp -a -- "$dst" "$out" || die "backup failed: $rel"
-  chown -R "$DEPLOY_USER:$DEPLOY_GID" "$out" 2>/dev/null || true
+task_services() {
+  local d n
+  for d in "$SRC"/etc/sv/*/; do
+    [[ -d $d ]] || continue
+    n=${d%/}; n=${n##*/}
+    sync_dir "etc/sv/$n" "/etc/sv/$n" 0755
+    sync_dir "usr/local/libexec/$n" "/usr/local/libexec/$n" 0755
+    sv restart "$n" || printf 'kayra-deploy: warning: %s not restarted\n' "$n" >&2
+  done
 }
 
-deploy_file() {
-  local rel=$1 src dst mode tmp
-  src=$SRC/$rel
-  dst=$(dest_path "$rel")
-
-  if [[ ! -f $src ]]; then
-    warn "missing source: $rel"
-    return 2
-  fi
-
-  mode=$(mode_for "$rel")
-
-  if [[ -f $dst ]] && cmp -s -- "$src" "$dst" && (( ! FORCE )); then
-    info "unchanged $rel"
-    UNCHANGED=$((UNCHANGED + 1))
-    return 1
-  fi
-
-  if (( DRY_RUN )); then
-    info "would install $rel ($mode)"
-    CHANGED=$((CHANGED + 1))
-    return 0
-  fi
-
-  backup_file "$dst"
-  install -d -m 0755 -o root -g root "$(dirname -- "$dst")" \
-    || die "cannot create directory: $(dirname -- "$dst")"
-
-  tmp=$dst.tmp.$$
-  install -m "$mode" -o root -g root "$src" "$tmp" \
-    || die "copy failed: $rel"
-
-  if is_shell "$tmp"; then
-    bash -n "$tmp" || { rm -f -- "$tmp"; die "syntax error: $rel"; }
-  fi
-
-  mv -f -- "$tmp" "$dst" || die "install failed: $rel"
-  info "installed $rel"
-  CHANGED=$((CHANGED + 1))
-  return 0
+task_core() {
+  sync_dir etc/runit/core-services /etc/runit/core-services 0755
 }
 
-deploy_tree() {
-  local rel_dir=$1 f rel rc
-  [[ -d $SRC/$rel_dir ]] || return 1
-
+# config copies the skel configuration into the user's home. Files the user
+# owns or edits are kept: settings.conf, app-pins.list and the first-login flag
+# are skipped.
+task_config() {
+  local src=$SRC/etc/skel/.config f rel dst
+  [[ -d $src ]] || return 0
   while IFS= read -r -d '' f; do
-    rel=${f#"$SRC/"}
-    deploy_file "$rel"
-    rc=$?
-    (( rc == 2 )) && FAILED=1
-  done < <(find "$SRC/$rel_dir" -type f -print0 | sort -z)
-
-  return 0
+    rel=${f#"$src/"}
+    case $rel in
+      kayra/settings.conf|kayra/app-pins.list|kayra/.firstlogin|waybar/config) continue ;;
+    esac
+    dst=$DEPLOY_HOME/.config/$rel
+    install -d -m 0755 "$(dirname -- "$dst")" || die "cannot create: $(dirname -- "$dst")"
+    install -m 0644 -o "$DEPLOY_UID" -g "$DEPLOY_GID" "$f" "$dst" \
+      || die "cannot install: $dst"
+  done < <(find "$src" -type f -print0 2>/dev/null)
 }
 
-prune_backups() {
-  local dir=$1 d
-  [[ -d $dir ]] || return 0
-
-  local -a old
-  mapfile -t old < <(
-    find "$dir" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' |
-      sort -r | tail -n +$((KEEP + 1))
-  )
-  [[ ${#old[@]} -eq 0 ]] && return 0
-
-  for d in "${old[@]}"; do
-    info "prune backup $d"
-    rm -rf -- "$dir/$d"
-  done
+task_all() {
+  task_scripts
+  task_lang
+  task_data
+  task_services
+  task_core
 }
 
-restart_service() {
-  local name=$1
-  if [[ -n $ROOT ]]; then
-    info "skip restart $name (staging)"
-    return 0
-  fi
-  if (( DRY_RUN )); then
-    info "would restart $name"
-    return 0
-  fi
-  if [[ ! -e ${SVDIR:-/var/service}/$name ]]; then
-    warn "service not enabled: $name"
-    return 0
-  fi
-
-  info "restart $name"
-  if ! sv restart "$name" >/dev/null 2>&1; then
-    err "restart failed: $name"
-    return 1
-  fi
-
-  sleep 0.3
-  if sv status "$name" 2>/dev/null | grep -q '^run:'; then
-    info "status $name: run"
-  else
-    err "service not running: $name"
-    return 1
-  fi
-}
-
-list_targets() {
-  local s f
-  printf 'repo: %s\n' "$REPO"
-  printf 'source: %s\n' "$SRC"
-  printf 'libraries:\n'
-  if [[ -d $SRC/$LIB_DIR ]]; then
-    for f in "$SRC/$LIB_DIR"/*; do
-      [[ -e $f ]] && printf '  %s\n' "${f##*/}"
-    done
-  else
-    printf '  (missing)\n'
-  fi
-
-  printf 'services:\n'
-  while IFS= read -r s; do
-    [[ -n $s ]] && printf '  %s\n' "$s"
-  done < <(service_names)
-
-  printf 'user scripts:\n'
-  for f in "$SRC/$USER_BIN"/kayra-*; do
-    [[ -e $f ]] && printf '  %s\n' "${f##*/}"
-  done
-
-  printf 'core services:\n'
-  for f in "$SRC/$CORE_REL"/*; do
-    [[ -e $f ]] && printf '  %s\n' "${f##*/}"
-  done
-}
-
-if (( LIST )); then
-  list_targets
-  exit 0
-fi
-
-if (( ! DRY_RUN )) && (( EUID != 0 )); then
-  die "run as root (sudo), or use --dry-run"
-fi
-
-# Deployment plan.
-DEPLOY_LIB=0
-DEPLOY_ALL_SERVICES=0
-
-if (( DO_ALL )); then
-  DEPLOY_LIB=1
-  DEPLOY_ALL_SERVICES=1
-  DO_USER=1
-fi
-if (( DO_LIBRARY )); then
-  DEPLOY_LIB=1
-fi
-if (( ${#SEL_SERVICES[@]} )); then
-  DEPLOY_LIB=1
-fi
-
-RESTART_ALL=0
-if (( DEPLOY_LIB && ${#SEL_SERVICES[@]} == 0 )); then
-  RESTART_ALL=1
-fi
-
-info "repo: $REPO"
-[[ -n $ROOT ]] && info "staging root: $ROOT"
-
-services=()
-if (( DEPLOY_ALL_SERVICES )); then
-  mapfile -t services < <(service_names)
-elif (( ${#SEL_SERVICES[@]} )); then
-  services=("${SEL_SERVICES[@]}")
-fi
-
-# Validate all targets before touching the system.
-if (( ${#services[@]} )); then
-  for svc in "${services[@]}"; do
-    if [[ ! -d $SRC/$SVC_ETC/$svc && ! -d $SRC/$SVC_EXEC/$svc ]]; then
-      die "unknown service: $svc"
+# Refuse to install anything when a shell file has a syntax error.
+syntax_check() {
+  local f rc=0
+  while IFS= read -r -d '' f; do
+    head -n1 "$f" | grep -qE '^#!.*(bash|/sh|env[[:space:]]+(bash|sh))' || continue
+    if ! bash -n "$f"; then
+      printf 'kayra-deploy: syntax error: %s\n' "$f" >&2
+      rc=1
     fi
-  done
-fi
+  done < <(find "$SRC/usr/local/lib/kayra" "$SRC/usr/local/bin" \
+                 "$SRC/etc/sv" "$SRC/usr/local/libexec" \
+                 -type f -print0 2>/dev/null)
+  return "$rc"
+}
 
-if (( DO_USER )) && [[ -d $SRC/$USER_BIN ]]; then
-  for f in "$SRC/$USER_BIN"/*; do
-    [[ -e $f ]] || continue
-    [[ -f $f ]] || continue
-    base=${f##*/}
-    [[ $base == kayra-* ]] \
-      || die "user script name must start with kayra-: $base"
-  done
-fi
+syntax_check || die "syntax error(s) found; nothing installed"
 
-if (( DEPLOY_LIB )); then
-  if [[ ! -d $SRC/$LIB_DIR ]]; then
-    warn "missing library directory: $LIB_DIR"
-    FAILED=1
-  else
-    before=$CHANGED
-    deploy_tree "$LIB_DIR"
-    if (( CHANGED > before )); then
-      LIB_CHANGED=1
-    fi
-  fi
-fi
-
-if (( ${#services[@]} )); then
-  for svc in "${services[@]}"; do
-    before=$CHANGED
-    deploy_tree "$SVC_ETC/$svc"
-    deploy_tree "$SVC_EXEC/$svc"
-
-    if (( CHANGED > before )); then
-      RESTART["$svc"]=1
-    fi
-  done
-fi
-
-if (( DO_USER )); then
-  if [[ ! -d $SRC/$USER_BIN ]]; then
-    info "no user scripts ($USER_BIN missing)"
-  else
-    for f in "$SRC/$USER_BIN"/kayra-*; do
-      [[ -e $f ]] || continue
-      deploy_file "${f#"$SRC/"}" || true
-    done
-  fi
-fi
-
-if (( DO_CORE )); then
-  deploy_tree "$CORE_REL" || warn "no core services in source"
-fi
-
-# A library change affects every service that was selected.
-if (( LIB_CHANGED && ! NO_RESTART )); then
-  if (( RESTART_ALL )); then
-    while IFS= read -r svc; do
-      [[ -n $svc ]] && RESTART["$svc"]=1
-    done < <(service_names)
-  else
-    for svc in "${SEL_SERVICES[@]}"; do
-      RESTART["$svc"]=1
-    done
-  fi
-fi
-
-if (( FORCE_RESTART && ! NO_RESTART )); then
-  if (( DEPLOY_ALL_SERVICES || RESTART_ALL )); then
-    while IFS= read -r svc; do
-      [[ -n $svc ]] && RESTART["$svc"]=1
-    done < <(service_names)
-  else
-    for svc in "${SEL_SERVICES[@]}"; do
-      RESTART["$svc"]=1
-    done
-  fi
-fi
-
-if (( ! NO_RESTART && ${#RESTART[@]} )); then
-  mapfile -t rnames < <(printf '%s\n' "${!RESTART[@]}" | sort)
-  for name in "${rnames[@]}"; do
-    restart_service "$name" || FAILED=1
-  done
-fi
-
-if (( BACKUP_CREATED )) && (( ! DRY_RUN )); then
-  prune_backups "$BACKUP_ROOT"
-fi
-
-if (( FAILED )); then
-  err "completed with errors"
-  (( BACKUP_CREATED )) && err "backup: $BACKUP_SESSION"
-  exit 2
-fi
-
-if (( DRY_RUN )); then
-  info "dry-run: $CHANGED change(s), $UNCHANGED unchanged"
-else
-  info "done: $CHANGED changed, $UNCHANGED unchanged, ${#RESTART[@]} service(s) selected"
-  (( BACKUP_CREATED )) && info "backup: $BACKUP_SESSION"
-fi
+(($#)) || set -- all
+for task in "$@"; do
+  case $task in
+    scripts|lang|data|services|core|config|all) "task_$task" ;;
+    *) die "unknown task: $task" ;;
+  esac
+done
