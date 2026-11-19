@@ -92,7 +92,7 @@ case "${SELECTED#* }" in
         "/usr/local/bin/kayra-show-devices.sh" &
         ;;
     "${system_menu[SERVICES]}")
-        "$HOME/.local/bin/show-services.sh" &
+        "/usr/local/bin/kayra-show-services.sh" &
         ;;
     "${system_menu[SETTINGS]}")
         # Boolean settings submenu (automatic theme / updates).
@@ -100,6 +100,6 @@ case "${SELECTED#* }" in
         ;;
     "${system_menu[UPDATES]}")
         # Hand the manual update request over to the update flow.
-        "$HOME/.local/bin/kayra-xbps-update.sh" &
+        "/usr/local/bin/kayra-xbps-update.sh" &
         ;;
 esac

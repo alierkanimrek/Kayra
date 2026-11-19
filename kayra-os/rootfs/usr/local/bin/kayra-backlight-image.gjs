@@ -16,7 +16,7 @@ const app = new Gtk.Application({ application_id: APP_ID });
 let win = null;
 
 app.connect('activate', () => {
-    // Pencere zaten açıksa yeni bir şey yapma
+    // If the window is already open, do nothing
     if (win !== null)
         return;
 
@@ -32,7 +32,7 @@ let texture;
 try {
     texture = Gdk.Texture.new_from_filename(IMAGE);
 } catch (e) {
-    printerr(`Görsel yüklenemedi: ${IMAGE}: ${e.message}`);
+    printerr(`Could not load image: ${IMAGE}: ${e.message}`);
     app.quit();
     return;
 }

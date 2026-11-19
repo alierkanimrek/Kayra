@@ -151,7 +151,7 @@
         "tooltip": true,
         "tooltip-format": "{{APP_MENU_TOOLTIP}}",
         "on-click": "pkill fuzzel; fuzzel --anchor=top-left --log-no-syslog",
-        "on-click-right": "$HOME/.local/bin/kayra-xbps-manager.sh"
+        "on-click-right": "/usr/local/bin/kayra-xbps-manager.sh"
     },
 
     "custom/user-info": {
@@ -277,7 +277,7 @@
         "return-type": "json",
         "hide-empty-text": true,
         "tooltip": true,
-        "on-click": "$HOME/.local/bin/kayra-xbps-updates-menu.sh",
+        "on-click": "/usr/local/bin/kayra-xbps-updates-menu.sh",
         "restart-interval": 0
     },
     

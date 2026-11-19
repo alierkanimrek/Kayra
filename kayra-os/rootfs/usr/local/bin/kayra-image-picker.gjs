@@ -9,7 +9,7 @@ import Gtk from 'gi://Gtk?version=4.0';
 const THUMB_WIDTH = 320;
 const IMAGE_RE = /\.(png|jpe?g|webp|gif|bmp)$/i;
 
-// Komut satırı argümanı yoksa varsayılan klasörler
+// Default folders when no command-line argument is given
 function defaultDirs() {
     const pictures = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_PICTURES);
     const downloads = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOWNLOAD);
@@ -74,7 +74,7 @@ const found = [];
 for (const d of dirs)
     scanDir(GLib.canonicalize_filename(d, null), found);
 
-// Tekrarları kaldır, en yeni dosyayı en üste koy
+// Remove duplicates and put the newest file first
 const unique = [...new Map(found.map(f => [f.path, f])).values()];
 unique.sort((a, b) => b.mtime - a.mtime);
 
