@@ -175,6 +175,19 @@ declare -A i18n_SYSTEM_MENU=(
   [MSG_NO_ITEMS]="Öğe bulunamadı"
 )
 
+declare -A i18n_DISPLAY_SETTINGS=(
+  [NOTIFY_TITLE]="Ekran Ayarları"
+  [MSG_MISSING_CMD]="Gerekli komut bulunamadı: {CMD}"
+  [MSG_NO_SWAY]="Ekran bilgisi okunamadı."
+  [MSG_NO_OUTPUTS]="Ekran çıkışı bulunamadı."
+  [MSG_OUTPUT_INFO]="{MODE} @{REFRESH}Hz  x{SCALE}"
+  [RESOLUTION]="Çözünürlük"
+  [SCALE]="Ölçek"
+  [DISABLE]="Devre dışı bırak"
+  [MSG_APPLIED]="Ekran güncellendi: {NAME}"
+  [MSG_FAILED]="Ekran güncellenemedi: {NAME}"
+)
+
 declare -A i18n_SHOW_DEVICES=(
   [PROMPT_DEVICE]="Aygıt: "
   [MSG_NO_DEVICES]="Aygıt bulunamadı"

@@ -12,7 +12,7 @@
 #   * modules currently in use by the device   (marked with a filled dot)
 #   * other modules usable for the device      (marked with an empty dot)
 #
-# Selecting an unused module runs change-device-module.sh <device> <module>.
+# Selecting an unused module runs kayra-change-device-module.sh <device> <module>.
 #
 # On an NVIDIA graphics card an extra "detect driver" entry (magnifier icon) is
 # shown at the top of the menu and runs kayra-nvidia-detect.sh.
@@ -20,7 +20,7 @@
 # Usage: kayra-show-device-mods.sh <device-key>
 #
 # Used commands: jq, printf, fuzzel, pkill, kayra-list-devices.sh, kayra-nvidia-detect.sh,
-#                change-device-module.sh, i18n.sh, klog.sh
+#                kayra-change-device-module.sh, i18n.sh, klog.sh
 #
 export LC_ALL=C.UTF-8
 set -uo pipefail
@@ -143,7 +143,7 @@ fi
 pkill -x fuzzel 2>/dev/null || true
 
 SELECTED=$(printf '%s\n' "${MENU_LINES[@]}" | fuzzel --dmenu --log-no-syslog --hide-prompt \
-    --width 60 --lines 20 --mesg="${MSG[MSG_MESG]:-Modüller}" \
+    --width 60 --lines 20 --mesg="${MSG[MSG_MESG]:-Modules}" \
     --prompt="${MSG[PROMPT_MODULE]:-Module: }") || true
 
 [ -z "$SELECTED" ] && exit 0
@@ -176,4 +176,4 @@ fi
 
 log INFO "Selecting module $MODULE for device $DEVICE_KEY"
 
-exec "$HOME/.local/bin/change-device-module.sh" "$DEVICE_KEY" "$MODULE"
+exec "/usr/local/bin/kayra-change-device-module.sh" "$DEVICE_KEY" "$MODULE"

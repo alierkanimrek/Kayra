@@ -82,7 +82,7 @@ case "${SELECTED#* }" in
         "/usr/local/bin/kayra-keyboard-settings.sh" &
         ;;
     "${system_menu[DISPLAY]}")
-        "$HOME/.local/bin/display-settings.sh" &
+        "/usr/local/bin/kayra-display-settings.sh" &
         ;;
     "${system_menu[POWER_MODE]}")
         # TLP power profile submenu (Performance / Balanced / Power Saver / Automatic).

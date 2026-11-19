@@ -68,16 +68,16 @@ TARGET_COMMAND=""
 
 case "$SELECTED_LABEL" in
     "${appearance_menu[FONT]}")
-        TARGET_COMMAND="$HOME/.local/bin/font-settings.sh"
+        TARGET_COMMAND="/usr/local/bin/kayra-font-settings.sh"
         ;;
     "${appearance_menu[FONT_SIZE]}")
-        TARGET_COMMAND="$HOME/.local/bin/font-size-settings.sh"
+        TARGET_COMMAND="/usr/local/bin/kayra-font-size-settings.sh"
         ;;
     "${appearance_menu[CHANGE_THEME]}")
         TARGET_COMMAND="/usr/bin/nwg-look"
         ;;
     "${appearance_menu[WALLPAPER]}")
-        TARGET_COMMAND="$HOME/.local/bin/change-wallpaper.sh"
+        TARGET_COMMAND="/usr/local/bin/kayra-change-wallpaper.sh"
         ;;
 esac
 

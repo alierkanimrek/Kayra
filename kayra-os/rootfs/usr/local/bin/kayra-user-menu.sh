@@ -67,7 +67,7 @@ case "$SELECTED_LABEL" in
         TARGET_SCRIPT="$HOME/.local/bin/change-passwd.sh"
         ;;
     "${user_menu[HOME_USAGE]}")
-        TARGET_SCRIPT="$HOME/.local/bin/home-usage.sh"
+        TARGET_SCRIPT="/usr/local/bin/kayra-home-usage.sh"
         ;;
 esac
 

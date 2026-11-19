@@ -23,8 +23,8 @@ CFG="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-4.0"
 on_change() {
   auto_theme=$(conf_get auto_theme)
   if [ $auto_theme = true ]; then
-    theme_colors=$($HOME/.local/bin/theme-probe.sh) # format {"bg":"#fafafa","fg":"#3d3d3d","selected_bg":"#4b8501","selected_fg":"#ffffff"}
-    $HOME/.local/bin/change-theme.sh "$theme_colors"
+    theme_colors=$(/usr/local/bin/kayra-theme-probe.sh) # format {"bg":"#fafafa","fg":"#3d3d3d","selected_bg":"#4b8501","selected_fg":"#ffffff"}
+    /usr/local/bin/kayra-change-theme.sh "$theme_colors"
   fi
 }
 

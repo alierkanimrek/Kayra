@@ -175,6 +175,19 @@ declare -A i18n_SYSTEM_MENU=(
   [MSG_NO_ITEMS]="No items found"
 )
 
+declare -A i18n_DISPLAY_SETTINGS=(
+  [NOTIFY_TITLE]="Display Settings"
+  [MSG_MISSING_CMD]="Required command not found: {CMD}"
+  [MSG_NO_SWAY]="Could not read the display information."
+  [MSG_NO_OUTPUTS]="No display outputs found."
+  [MSG_OUTPUT_INFO]="{MODE} @{REFRESH}Hz  x{SCALE}"
+  [RESOLUTION]="Resolution"
+  [SCALE]="Scale"
+  [DISABLE]="Disable"
+  [MSG_APPLIED]="Display updated: {NAME}"
+  [MSG_FAILED]="Failed to update display: {NAME}"
+)
+
 declare -A i18n_SHOW_DEVICES=(
   [PROMPT_DEVICE]="Device: "
   [MSG_NO_DEVICES]="No devices found"
