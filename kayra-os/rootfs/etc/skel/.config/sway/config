@@ -243,7 +243,7 @@ exec_always "pkill waybar || true; waybar > $HOME/.local/var/log/waybar.log 2>&1
 
 # User Groups Control Scripts
 exec /usr/libexec/polkit-gnome-authentication-agent-1
-exec ~/.local/bin/check-groups.sh
+exec /usr/local/bin/kayra-check-groups.sh
 
 #Apps
 bindsym $mod+Ctrl+Return exec chromium

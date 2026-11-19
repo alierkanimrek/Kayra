@@ -86,7 +86,7 @@ case "${SELECTED#* }" in
         ;;
     "${system_menu[POWER_MODE]}")
         # TLP power profile submenu (Performance / Balanced / Power Saver / Automatic).
-        "$HOME/.local/bin/power-mode-menu.sh" &
+        "/usr/local/bin/kayra-power-mode-menu.sh" &
         ;;
     "${system_menu[DEVICES]}")
         "/usr/local/bin/kayra-show-devices.sh" &

@@ -198,7 +198,7 @@
         "tooltip": true,
         "tooltip-format": "{{BATTERY_TOOLTIP}}",
         "tooltip-format-charging": "{{BATTERY_TOOLTIP_CHARGING}}",
-        "on-click": "$HOME/.local/bin/power-mode-menu.sh"
+        "on-click": "/usr/local/bin/kayra-power-mode-menu.sh"
     },
 
     "wireplumber": {

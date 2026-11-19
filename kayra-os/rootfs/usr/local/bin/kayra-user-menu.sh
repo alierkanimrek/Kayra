@@ -58,13 +58,13 @@ TARGET_SCRIPT=""
 
 case "$SELECTED_LABEL" in
     "${user_menu[ADD_TO_GROUP]}")
-        TARGET_SCRIPT="$HOME/.local/bin/group-add.sh"
+        TARGET_SCRIPT="/usr/local/bin/kayra-group-add.sh"
         ;;
     "${user_menu[REMOVE_FROM_GROUP]}")
-        TARGET_SCRIPT="$HOME/.local/bin/group-remove.sh"
+        TARGET_SCRIPT="/usr/local/bin/kayra-group-remove.sh"
         ;;
     "${user_menu[CHANGE_PASSWORD]}")
-        TARGET_SCRIPT="$HOME/.local/bin/change-passwd.sh"
+        TARGET_SCRIPT="/usr/local/bin/kayra-change-passwd.sh"
         ;;
     "${user_menu[HOME_USAGE]}")
         TARGET_SCRIPT="/usr/local/bin/kayra-home-usage.sh"
