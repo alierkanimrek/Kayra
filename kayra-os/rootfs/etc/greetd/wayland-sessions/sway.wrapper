@@ -5,11 +5,10 @@ export XDG_CURRENT_DESKTOP=sway
 mkdir -p $HOME/.local/var/log
 rm $HOME/.local/var/log/sway.log
 rm $HOME/.local/var/log/kayra.log
-chmod +x $HOME/.local/bin/*
 [ -f "$HOME/.profile" ] && . "$HOME/.profile"
 
 # İlk giriş betiğini çalıştır
-[ -x "$HOME/.local/bin/first-login.sh" ] && "$HOME/.local/bin/first-login.sh"
+[ -x /usr/local/bin/kayra-first-login.sh ] && /usr/local/bin/kayra-first-login.sh
 
 # Sway'i dbus ile başlatıp logları yazdıralım (Sway -d parametresini artık sorunsuz alır)
 exec dbus-run-session sway > "$HOME/.local/var/log/sway.log" 2>&1

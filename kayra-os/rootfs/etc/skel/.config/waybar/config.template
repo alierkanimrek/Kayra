@@ -61,7 +61,7 @@
     "custom/power-button": {
         "format": "", // power
         "tooltip": false,
-        "on-click": "$HOME/.local/bin/power-menu.sh"
+        "on-click": "/usr/local/bin/kayra-power-menu.sh"
     },
 
     "custom/notification": {
@@ -116,7 +116,7 @@
         "restart-interval": 0,
         "tooltip": true,
         "escape": true,
-        "on-click": "$HOME/.local/bin/wifi-menu.sh",
+        "on-click": "/usr/local/bin/kayra-wifi-menu.sh",
         "on-click-right": "nm-connection-editor"
     },
     "custom/bluetooth": {
@@ -126,7 +126,7 @@
         "restart-interval": 0,
         "tooltip": true,
         "escape": true,
-        "on-click": "$HOME/.local/bin/bluetooth-menu.sh"
+        "on-click": "/usr/local/bin/kayra-bluetooth-menu.sh"
     },
     "custom/removable-monitor": {
         "exec": "/usr/local/bin/kayra-removable-storage-monitor.sh",
@@ -134,8 +134,8 @@
         "restart-interval": 0,
         "tooltip": true,
         "escape": true,
-        "on-click": "$HOME/.local/bin/removable-menu.sh",
-        "on-click-right": "$HOME/.local/bin/removable-eject-menu.sh"
+        "on-click": "/usr/local/bin/kayra-removable-menu.sh",
+        "on-click-right": "/usr/local/bin/kayra-removable-eject-menu.sh"
     },
 
     "custom/clipboard": {
@@ -157,14 +157,14 @@
     "custom/user-info": {
         "format": "\ue853",
         "tooltip": false,
-        "on-click": "$HOME/.local/bin/user-menu.sh",
+        "on-click": "/usr/local/bin/kayra-user-menu.sh",
         "escape": false
     },
 
     "custom/system-info": {
         "format": "\ue8b8",
         "tooltip": false,
-        "on-click": "$HOME/.local/bin/system-menu.sh",
+        "on-click": "/usr/local/bin/kayra-system-menu.sh",
         "escape": false
     },
 
@@ -172,8 +172,8 @@
         "format": "\uEF40",
         "tooltip": true,
         "tooltip-format": "{{APP_PINS_TOOLTIP}}",
-        "on-click": "$HOME/.local/bin/waybar-app-pins.sh menu",
-        "on-click-right": "$HOME/.local/bin/waybar-app-pins.sh command"
+        "on-click": "/usr/local/bin/kayra-waybar-app-pins.sh menu",
+        "on-click-right": "/usr/local/bin/kayra-waybar-app-pins.sh command"
     },
     "battery": {
         "bat": "BAT1",
@@ -260,7 +260,7 @@
         "hide-empty-text": true,
         "tooltip": true,
         "restart-interval": 0,
-        "on-click": "$HOME/.local/bin/cups-menu.sh",
+        "on-click": "/usr/local/bin/kayra-cups-menu.sh",
         "on-click-right": "xdg-open http://localhost:631"
     },
     
