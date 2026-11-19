@@ -16,7 +16,7 @@
 # * TERM/INT/HUP are trapped so the cleanup runs before exiting (status 143).
 #
 
-_si_kill_tree() {   # önce çocukları, sonra süreci sonlandırır
+_si_kill_tree() {   # kill the children first, then the process
     local c
     for c in $(pgrep -P "$1" 2>/dev/null); do _si_kill_tree "$c"; done
     kill "$1" 2>/dev/null
@@ -26,7 +26,7 @@ _si_cleanup() {
     local c
     trap - EXIT
     for c in $(pgrep -P $$ 2>/dev/null); do _si_kill_tree "$c"; done
-    # pid dosyası hâlâ bize aitse sil
+    # remove the PID file when it still belongs to us
     [ "$(cat "$_si_pidfile" 2>/dev/null)" = "$$" ] && rm -f "$_si_pidfile"
 }
 
@@ -38,7 +38,7 @@ single_instance() {
 
     if [ -r "$_si_pidfile" ]; then
         old=$(<"$_si_pidfile")
-        # PID yeniden kullanılmış olabilir: süreç gerçekten bu betik mi?
+        # PID reuse is possible: is the process really this script?
         if [ -n "$old" ] && [ "$old" != "$$" ] && [ -r "/proc/$old/cmdline" ] &&
            tr '\0' ' ' <"/proc/$old/cmdline" | grep -qF -- "$name"; then
             _si_kill_tree "$old"

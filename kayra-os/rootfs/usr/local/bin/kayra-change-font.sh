@@ -12,6 +12,7 @@ set -euo pipefail
 export LC_ALL=C
 
 source /usr/local/lib/kayra/klog.sh
+source /usr/local/lib/kayra/settings-conf.sh
 
 # Configuration files to modify (add your own file paths here)
 FILES=(
@@ -37,13 +38,8 @@ if [[ ! -f "$SETTINGS_FILE" ]]; then
     exit 1
 fi
 
-# Source settings file and get current font value
-source "$SETTINGS_FILE" || {
-    log "ERROR" "$SETTINGS_FILE not found." 
-    exit 1
-}
-
-OLD_TEXT="$font"
+# Get the current font value from settings.conf
+OLD_TEXT="$(conf_get font)"
 
 if [[ -z "$OLD_TEXT" ]]; then
     log "ERROR" "Error: no text to replace found in $SETTINGS_FILE."
@@ -84,9 +80,7 @@ for file in "${FILES[@]}"; do
 done
 
 if [[ "$FAILED" -eq 0 ]]; then
-    # Escape special characters for safe sed replacement
-    NEW_ESC=$(printf '%s' "$NEW_TEXT" | sed -e 's/[\/&]/\\&/g')
-    sed -i "s/^font=.*/font=\"${NEW_ESC}\"/" "$SETTINGS_FILE"
+    conf_set font "$NEW_TEXT"
     log "INFO" "$NEW_TEXT font succesfuly applied."
 else
     log "ERROR" "Some files failed to update, $SETTINGS_FILE was not changed."

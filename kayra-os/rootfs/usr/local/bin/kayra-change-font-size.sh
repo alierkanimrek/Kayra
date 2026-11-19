@@ -8,6 +8,7 @@ set -euo pipefail
 export LC_ALL=C
 
 source /usr/local/lib/kayra/klog.sh
+source /usr/local/lib/kayra/settings-conf.sh
 
 if [[ $# -ne 1 ]]; then
     echo "Usage: change-font-size.sh <size 8...48>" >&2
@@ -30,14 +31,10 @@ ALACRITTY_CONFIG="$HOME/.config/alacritty/alacritty.toml"
 
 # Update settings.conf
 if [[ -f "$SETTINGS_FILE" ]]; then
-    if grep -q "^font_size=" "$SETTINGS_FILE"; then
-        sed -i "s/^font_size=.*/font_size=$SIZE/" "$SETTINGS_FILE"
-    else
-        echo "font_size=$SIZE" >> "$SETTINGS_FILE"
-    fi
-    log "DEBUG" "Font size changed to $SIZE in kayra $SETTINGS_FILE"
+    conf_set font_size "$SIZE"
+    log "DEBUG" "Font size changed to $SIZE in $SETTINGS_FILE"
 else
-    log "ERROR" "SETTINGS_FILE not fonud."
+    log "ERROR" "Settings file not found: $SETTINGS_FILE"
     exit 1
 fi
 

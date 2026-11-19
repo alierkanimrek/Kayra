@@ -27,8 +27,14 @@ conf_get() {
 conf_set() {
     local key="$1"
     local value="$2"
+    local esc
     if [ -f "$CONFIG_FILE" ]; then
-        sed -i "s/^${key}=.*/${key}=\"${value}\"/" "$CONFIG_FILE"
+        esc=$(printf '%s' "$value" | sed -e 's/[\/&\\]/\\&/g')
+        if grep -q "^${key}=" "$CONFIG_FILE"; then
+            sed -i "s/^${key}=.*/${key}=\"${esc}\"/" "$CONFIG_FILE"
+        else
+            printf '%s="%s"\n' "$key" "$value" >> "$CONFIG_FILE"
+        fi
     fi
 }
 

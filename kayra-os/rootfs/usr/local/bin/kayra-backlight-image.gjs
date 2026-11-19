@@ -3,11 +3,7 @@ import Gtk from 'gi://Gtk?version=4.0';
 import GLib from 'gi://GLib';
 import Gdk from 'gi://Gdk?version=4.0';
 
-const IMAGE = GLib.build_filenamev([
-    GLib.get_home_dir(),
-    '.local', 'bin', 'data',
-    'backlight-testing-image.png',
-]);
+const IMAGE = '/usr/local/share/kayra/data/backlight-testing-image.png';
 
 const APP_ID = 'local.imgshow';
 const SHOW_MS = 3000;
