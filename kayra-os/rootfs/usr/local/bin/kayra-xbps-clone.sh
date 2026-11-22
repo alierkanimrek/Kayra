@@ -44,14 +44,14 @@ trap 'xbps_status_clear; xbps_lock_release' EXIT
 
 rm -rf "${PACKAGES_DIR:?}"/*
 xbps_status_set "${MSG[LOCK_DOWNLOAD]}"
-log DEBUG "${MSG[LOCK_DOWNLOAD]}"
+log DEBUG "Downloading software data"
 
 nice -10 git clone https://github.com/void-linux/void-packages.git "$PACKAGES_DIR"
 
 echo XBPS_ALLOW_RESTRICTED=yes >> "$PACKAGES_DIR/etc/conf"
 
 xbps_status_set "${MSG[LOCK_PREPARE]}"
-log DEBUG "${MSG[LOCK_PREPARE]}"
+log DEBUG "Preparing build environment"
 
 # xbps-src runs inside the masterdir, which has its own package database and
 # its own pkgdb lock, so it does not conflict with the host lock held here.
@@ -59,4 +59,4 @@ cd "$PACKAGES_DIR"
 nice -10 ./xbps-src binary-bootstrap
 
 notify_ok "${MSG[APP_NAME]}" "${MSG[DOWNLOAD_OK]}"
-log DEBUG "${MSG[DOWNLOAD_OK]}"
+log DEBUG "Software data downloaded, ready for installation"

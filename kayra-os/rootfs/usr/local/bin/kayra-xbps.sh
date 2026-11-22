@@ -76,32 +76,32 @@ build_and_install_source() {
 
     if ! cd "$PACKAGES_DIR"; then
         notify_error "${MSG[APP_NAME]}" "${MSG[CD_ERR]}"
-        log ERROR "${MSG[CD_ERR]}"
+        log ERROR "Software local repo not found"
         return 1
     fi
     xbps_status_set "${MSG[LOCK_UPDATE]}"
     if ! fetch_out=$(git fetch 2>&1); then
         notify_error "${MSG[APP_NAME]}" "$p"$'\n'"${MSG[INSTALL_FAIL]}"
-        log ERROR "${MSG[INSTALL_FAIL]}: git fetch msg:$fetch_out"
+        log ERROR "Failed to install package: git fetch msg:$fetch_out"
         return 1
     fi
     if ! status_out=$(git status -uno 2>&1); then
         notify_error "${MSG[APP_NAME]}" "$p"$'\n'"${MSG[INSTALL_FAIL]}"
-        log ERROR "${MSG[INSTALL_FAIL]}: git status msg:$status_out"
+        log ERROR "Failed to install package: git status msg:$status_out"
         return 1
     fi
     xbps_status_set "${MSG[LOCK_UPDATE_INFO]}"
     if echo "$status_out" | grep -q "behind"; then
         if ! pull_out=$(git pull 2>&1); then
             notify_error "${MSG[APP_NAME]}" "$p"$'\n'"${MSG[INSTALL_FAIL]}"
-            log ERROR "${MSG[INSTALL_FAIL]}: git pull msg:$pull_out"
+            log ERROR "Failed to install package: git pull msg:$pull_out"
             return 1
         fi
     fi
     xbps_status_set "$(i18n_template "${MSG[LOCK_BUILD]}" PACKAGE="$p")"
     if ! compile_out=$(./xbps-src pkg "$p" 2>&1); then
         notify_error "${MSG[APP_NAME]}" "$p"$'\n'"${MSG[INSTALL_FAIL]}"
-        log ERROR "${MSG[INSTALL_FAIL]}: xbps-src pkg $p msg:$compile_out"
+        log ERROR "Failed to install package: xbps-src pkg $p msg:$compile_out"
         return 1
     fi
     xbps_status_set "$(i18n_template "${MSG[LOCK_INSTALL]}" PACKAGE="$p")"
@@ -110,7 +110,7 @@ build_and_install_source() {
     if [[ -z "$xbpsdir" ]]; then
         # An empty directory would make "-R /" use the root as the repository.
         notify_error "${MSG[APP_NAME]}" "$p"$'\n'"${MSG[INSTALL_FAIL]}"
-        log ERROR "${MSG[INSTALL_FAIL]}: built package not found for $p"
+        log ERROR "Failed to install package: built package not found for $p"
         return 1
     fi
     xbps_run_native pkexec xbps-install -Sy -R "$xbpsdir/" "$p" || ret=$?
@@ -120,7 +120,7 @@ build_and_install_source() {
         return 0
     fi
     notify_error "${MSG[APP_NAME]}" "$p"$'\n'"${MSG[INSTALL_FAIL]}"
-    log ERROR "${MSG[INSTALL_FAIL]}: xbps-install $p msg:$output"
+    log ERROR "Failed to install package: xbps-install $p msg:$output"
     return 1
 }
 
@@ -168,7 +168,7 @@ if xbps-query -S "$pkg" >/dev/null 2>&1; then
                 notify_ok "${MSG[APP_NAME]}" "$pkg"$'\n'"${MSG[REMOVE_OK]}"
             else
                 notify_error "${MSG[APP_NAME]}" "$pkg"$'\n'"${MSG[REMOVE_FAIL]}"
-                log ERROR "${MSG[REMOVE_FAIL]}: xbps-remove $pkg msg:$output"
+                log ERROR "Failed to remove package: xbps-remove $pkg msg:$output"
             fi
             ;;
         update)
@@ -182,7 +182,7 @@ if xbps-query -S "$pkg" >/dev/null 2>&1; then
                     notify_ok "${MSG[APP_NAME]}" "$pkg"$'\n'"${MSG[UPDATE_PKG_OK]}"
                 else
                     notify_error "${MSG[APP_NAME]}" "$pkg"$'\n'"${MSG[UPDATE_PKG_FAIL]}"
-                    log ERROR "${MSG[UPDATE_PKG_FAIL]}: xbps-install $pkg msg:$output"
+                    log ERROR "Failed to update package: xbps-install $pkg msg:$output"
                 fi
             else
                 check_lock
@@ -213,7 +213,7 @@ if xbps-query -R "$pkg" >/dev/null 2>&1; then
             notify_ok "${MSG[APP_NAME]}" "$pkg"$'\n'"${MSG[INSTALL_OK]}"
         else
             notify_error "${MSG[APP_NAME]}" "$pkg"$'\n'"${MSG[INSTALL_FAIL]}"
-            log ERROR "${MSG[INSTALL_FAIL]}: xbps-install $pkg msg:$output"
+            log ERROR "Failed to install package: xbps-install $pkg msg:$output"
         fi
     fi
     cleanup_and_exit

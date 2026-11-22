@@ -270,7 +270,6 @@ declare -A I18N_REMOVABLE_STORAGE_MONITOR=(
   [NEW_STORAGE]="New storage device"
   [ACTION_OPEN]="Open"
   [ACTION_MOUNT]="Mount"
-  [ACTION_DEFAULT]="Open"
   [TOOLTIP_EMPTY]="No removable storage devices"
   [TOOLTIP_PRESENT]="Removable storage devices"
   [TOOLTIP_RIGHT_CLICK_INFO]="Right click: Eject device"
@@ -437,5 +436,4 @@ declare -A i18n_POWER_MODE_MENU=(
   [MSG_AUTO_SET]="Switched to the automatic power profile"
   [MSG_SET_FAILED]="Could not set the power mode"
   [NOTIFY_COMMAND_NOT_FOUND]="Command not found: {COMMAND}"
-  [NOTIFY_UNAVAILABLE]="Power profile control is unavailable"
 )

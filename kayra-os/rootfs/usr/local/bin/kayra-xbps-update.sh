@@ -139,7 +139,7 @@ fi
 # Refresh the void-packages tree so the source templates are current.
 if ! cd "$PACKAGES_DIR"; then
     notify_error "${MSG[APP_NAME]}" "${MSG[CD_ERR]}"
-    log ERROR "${MSG[CD_ERR]}"
+    log ERROR "Software local repo not found"
     exit 0
 fi
 if git fetch 2>/dev/null; then

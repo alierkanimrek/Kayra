@@ -270,7 +270,6 @@ declare -A I18N_REMOVABLE_STORAGE_MONITOR=(
   [NEW_STORAGE]="Yeni depolama birimi"
   [ACTION_OPEN]="Aç"
   [ACTION_MOUNT]="Bağla"
-  [ACTION_DEFAULT]="Aç"
   [TOOLTIP_EMPTY]="Çıkarılabilir depolama aygıtı yok"
   [TOOLTIP_PRESENT]="Çıkarılabilir depolama aygıtları"
   [TOOLTIP_RIGHT_CLICK_INFO]="Sağ tık: Aygıtı çıkar"
@@ -437,5 +436,4 @@ declare -A i18n_POWER_MODE_MENU=(
   [MSG_AUTO_SET]="Otomatik güç profiline geçildi"
   [MSG_SET_FAILED]="Güç modu ayarlanamadı"
   [NOTIFY_COMMAND_NOT_FOUND]="Komut bulunamadı: {COMMAND}"
-  [NOTIFY_UNAVAILABLE]="Güç profili denetimi kullanılamıyor"
 )

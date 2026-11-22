@@ -61,8 +61,8 @@ Source -> live target:
 - Source libraries with absolute paths from `/usr/local/lib/kayra/`.
 - Read the UI language from `lang` in `settings.conf` via `settings-conf.sh`;
   never use a `lang/current.sh` symlink.
-- Log with `klog.sh`; translate with `i18n.sh` (English + Turkish).
-- Notify with `notify.sh`; use Material Symbols codepoints.
+- Log with `klog.sh` ; with embedded only English messages.
+- Notify with `notify.sh`; use translated messages with `i18n.sh`. use Material Symbols codepoints.
 - Read/write settings with `settings-conf.sh`.
 - Guard continuous loops with `single_instance.sh`.
 - Fuzzel: `--log-no-syslog --minimal-lines`; `--hide-prompt` when no input
