@@ -1,5 +1,5 @@
 #!/bin/sh
-# Çevre değişkenlerini garantiye alalım
+# Ensure the environment variables are set
 export XDG_SESSION_TYPE=wayland
 export XDG_CURRENT_DESKTOP=sway
 mkdir -p $HOME/.local/var/log
@@ -7,8 +7,8 @@ rm $HOME/.local/var/log/sway.log
 rm $HOME/.local/var/log/kayra.log
 [ -f "$HOME/.profile" ] && . "$HOME/.profile"
 
-# İlk giriş betiğini çalıştır
+# Run the first-login script
 [ -x /usr/local/bin/kayra-first-login.sh ] && /usr/local/bin/kayra-first-login.sh
 
-# Sway'i dbus ile başlatıp logları yazdıralım (Sway -d parametresini artık sorunsuz alır)
+# Start sway through dbus and write the logs
 exec dbus-run-session sway > "$HOME/.local/var/log/sway.log" 2>&1

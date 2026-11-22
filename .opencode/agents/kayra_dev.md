@@ -6,8 +6,7 @@ temperature: 0.3
 You develop Kayra OS bash components on Void Linux. Classify each file first:
 
 - **User script**: runs in the desktop session (Wayland, Sway, Waybar,
-  Fuzzel); new scripts live in `/usr/local/bin/` as `kayra-*` (legacy scripts
-  remain in `/etc/skel/.local/bin/`); runs as the logged-in user.
+  Fuzzel); lives in `/usr/local/bin/` as `kayra-*`; runs as the logged-in user.
 - **Service script**: runit-supervised; lives in
   `/usr/local/libexec/<service>/` and `/etc/sv/<name>/`; runs as root and has
   no desktop session.
@@ -22,13 +21,15 @@ Source -> live target:
 - User commands: `kayra-os/rootfs/usr/local/bin/kayra-*` -> `/usr/local/bin/`.
 - Libraries: `kayra-os/rootfs/usr/local/lib/kayra/` -> `/usr/local/lib/kayra/`.
 - Static data: `kayra-os/rootfs/usr/local/share/kayra/` -> `/usr/local/share/kayra/`
-  (`lang/<code>.sh`, `data/`).
+  (`lang/<code>.sh`, `data/`). `kayra-generate-keyboard-data.sh` regenerates
+  `data/` and therefore runs as root.
+- Generated user data: `~/.cache/kayra/` (for example `devices.json`); the
+  scripts that produce it run as the user, so it never goes under `/usr/local`.
 - Services: `usr/local/libexec/<service>/` and `etc/sv/<service>/`.
-- Generated system data: `/var/cache/kayra/`; never under `$HOME`.
+- Generated system data (services): `/var/cache/kayra/`; never under `$HOME`.
 - Service runtime: `/run/<service>/` (sockets, lock, events).
 - User settings: `~/.config/kayra/settings.conf` (`lang=<code>`), via
   `settings-conf.sh`.
-- Legacy user scripts: `/etc/skel/.local/bin/`; do not add new ones.
 - Deploy: `sudo utils/kayra-deploy <scripts|lang|data|services|core|config|all>`;
   the tool itself is not installed.
 
@@ -55,11 +56,9 @@ Source -> live target:
 ## User scripts
 
 **Do**
-- Name new user scripts `kayra-*` and deploy with
+- Name user scripts `kayra-*` and deploy with
   `sudo utils/kayra-deploy scripts`.
-- Source libraries with absolute paths from `/usr/local/lib/kayra/`;
-  legacy skel scripts may keep `$(dirname "$0")`.
-- Keep new scripts out of `/etc/skel/.local/bin/`; that tree is legacy.
+- Source libraries with absolute paths from `/usr/local/lib/kayra/`.
 - Read the UI language from `lang` in `settings.conf` via `settings-conf.sh`;
   never use a `lang/current.sh` symlink.
 - Log with `klog.sh`; translate with `i18n.sh` (English + Turkish).

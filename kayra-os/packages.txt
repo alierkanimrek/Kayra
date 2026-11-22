@@ -37,12 +37,16 @@ libadwaita
 adwaita-qt
 adwaita-qt6
 tecla
+gjs
+xkeyboard-config
 
 # Desktop Shell and Menus
 sway
+swaybg
 swaylock
 Waybar
 SwayNotificationCenter
+libnotify
 fuzzel
 greetd
 ReGreet
@@ -90,6 +94,7 @@ nano
 mousepad
 firefox
 flatpak
+baobab
 
 # Appearance, Themes and Fonts
 nwg-look
@@ -122,3 +127,6 @@ python3-pipx
 unzip
 inotify-tools
 jq
+pciutils
+usbutils
+kmod

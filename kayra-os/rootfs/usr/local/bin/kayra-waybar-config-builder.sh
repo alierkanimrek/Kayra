@@ -6,7 +6,8 @@
 # template file ~/.config/waybar/config.template, where every translatable
 # text is marked with a {{PLACEHOLDER}} marker. This script replaces each
 # marker with the matching text of the active language file
-# (lang/current.sh, loaded through i18n.sh) and writes the result to
+# (/usr/local/share/kayra/lang/<code>.sh, selected by the "lang" key of
+# settings.conf and loaded through i18n.sh) and writes the result to
 # ~/.config/waybar/config.jsonc.
 #
 # Important instructions:
