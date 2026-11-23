@@ -17,7 +17,7 @@ jobs:
           sudo apt-get install -y \
             git make gcc \
             xorriso squashfs-tools syslinux syslinux-utils \
-            dosfstools parted mtools liblz4-tool wget
+            dosfstools parted mtools lz4 wget
 
       - name: Bootstrap static xbps tools
         run: |
