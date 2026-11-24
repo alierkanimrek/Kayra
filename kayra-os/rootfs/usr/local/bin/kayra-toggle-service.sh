@@ -3,74 +3,43 @@
 # kayra-toggle-service.sh - Changes the state of a runit service.
 #
 # Called from kayra-show-services.sh when a service is selected:
-#   kayra-toggle-service.sh <service-name> [state]
-#   e.g. kayra-toggle-service.sh sshd running
+#   kayra-toggle-service.sh <service-name> [state] [protected]
+#   e.g. kayra-toggle-service.sh sshd running false
 #
-# * Service definition: /etc/sv/<name>
-# * Enabled service:   /var/service/<name> (symlink handled by runsvdir)
+# The actual work is done by the kayra-system-services job socket. This script
+# is the user-facing client:
+#   * It validates the service name and finds the state when it is missing.
+#   * A running service offers "Stop" and "Restart" in an actionable
+#     notification.
+#   * A stopped service is started, a disabled service is enabled and started.
+#   * The handler sends its events back on the same connection; this script
+#     turns the terminal event into a notification. No separate monitor runs.
 #
-# The optional second argument is the state that kayra-show-services.sh read with
-# the root helper (running, stopped or disabled). When it is missing, the
-# state is guessed from the process table (sv-lib.sh).
+# Protected services are reported by the service manager in the list response.
+# A running protected service never opens the stop/restart prompt; the user
+# gets a translated information notification instead. The service enforces the
+# same rule on its own.
 #
-# Behavior:
-#   running  -> an actionable notification with a "Stop" and a "Restart"
-#               button is shown, the selected action is executed
-#   stopped  -> the service is started                  (sv up)
-#   disabled -> the service is enabled and started      (symlink + sv up)
+# If the service manager cannot be reached (service stopped, socket permission
+# or timeout), a translated error notification is shown. The same happens when
+# the request gets no response.
 #
-# The services listed in PROTECTED_SERVICES are never stopped or restarted,
-# stopping them would break the running session (D-Bus, the greeter, the log
-# daemons and the polkit agent). They can still be started.
+# Usage: kayra-toggle-service.sh <service-name> [running|stopped|disabled] [true|false]
 #
-# A protected service is detected before the root helper is started, so no
-# password is asked when such a service would be stopped.
-#
-# The runit control commands need root privileges, they are executed
-# through pkexec, so a polkit password dialog is shown while changing a
-# service. The root helper is the permanent script kayra-sv-toggle-helper.sh.
-#
-# Important instructions:
-#   * Only a plain service name is accepted, a name with a path would leave
-#     the service directory.
-#   * The action of the user is read from the notification with notify_action
-#     (notify.sh). The notification stays on screen while waiting for the
-#     answer.
-#   * The result of the helper is read from its output: STARTED, STOPPED,
-#     RESTARTED, ENABLED, PROTECTED, NOTFOUND or FAILED.
-#   * The log messages are in English, the notification texts come from the
-#     language file (i18n_TOGGLE_SERVICE).
-#
-# Usage: kayra-toggle-service.sh <service-name> [running|stopped|disabled]
-#
-# Used commands: pkexec, pgrep, notify-send (via notify.sh)
+# Used commands: notify-send (via notify.sh), jq (via services-client.sh),
+#                socat, flock
 #
 
 set -uo pipefail
 
 export LC_ALL=C.UTF-8
 
-SCRIPT_DIR="$(cd -- "$(dirname -- "$(readlink -f "$0")")" && pwd)"
-
-SV_DIR="/etc/sv"
-SERVICE_DIR="/var/service"
-HELPER="/usr/local/bin/kayra-sv-toggle-helper.sh"
-
-# Services that must stay running, they can not be stopped or restarted.
-PROTECTED_SERVICES=(
-    dbus
-    greetd
-    socklog-unix
-    nanoklogd
-    polkitd
-)
-
 source /usr/local/lib/kayra/i18n.sh
 declare -n MSG=i18n_TOGGLE_SERVICE
 
 source /usr/local/lib/kayra/klog.sh
 source /usr/local/lib/kayra/notify.sh
-source /usr/local/lib/kayra/sv-lib.sh
+source /usr/local/lib/kayra/services-client.sh
 
 # Icon of the notifications (Material Symbols codepoint).
 ICON_SERVICE=$(printf '%b' '\U000E726')   # services
@@ -90,13 +59,147 @@ msg_service() {
     i18n_template "$(msg_text "$1" "$2")" "SERVICE=$SERVICE"
 }
 
-# Returns 0 when the service is protected and must not be stopped.
-is_protected() {
-    [[ " ${PROTECTED_SERVICES[*]} " == *" $SERVICE "* ]]
+# Returns the message of a key with the service name of an event in it.
+msg_event() {
+    i18n_template "$(msg_text "$1" "$2")" "SERVICE=$EVENT_SERVICE"
+}
+
+manager_unavailable() {
+    log ERROR "kayra-system-services is not reachable"
+    notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+        "$(msg_text MSG_MANAGER_UNAVAILABLE 'Service manager is not running')"
+}
+
+# Reads the state and the protected flag from the service manager.
+lookup_service() {
+    local list line
+
+    if ! list=$(services_list); then
+        manager_unavailable
+        return 1
+    fi
+
+    line=$(awk -F'\t' -v service="$SERVICE" '
+        $1 == service { print $2 "\t" $3; exit }
+    ' <<<"$list")
+
+    if [ -z "$line" ]; then
+        log WARN "Service not found: $SERVICE"
+        notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+            "$(msg_service MSG_NOT_FOUND 'Service not found: {SERVICE}')"
+        return 1
+    fi
+
+    IFS=$'\t' read -r STATE PROTECTED <<<"$line"
+    return 0
+}
+
+# Turns the terminal events of the last request into notifications.
+NOTIFIED=0
+
+show_events() {
+    local line event
+
+    NOTIFIED=0
+
+    for line in "${SERVICES_EVENTS[@]}"; do
+        event=$("${JQ:-jq}" -r '.event // empty' <<<"$line" 2>/dev/null)
+        EVENT_SERVICE=$("${JQ:-jq}" -r '.data.service // empty' <<<"$line" 2>/dev/null)
+        [ -n "$EVENT_SERVICE" ] || EVENT_SERVICE="$SERVICE"
+
+        case "$event" in
+            started)
+                log INFO "Service $EVENT_SERVICE started"
+                notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_event MSG_STARTED 'Service {SERVICE} started')"
+                NOTIFIED=1
+                ;;
+            stopped)
+                log INFO "Service $EVENT_SERVICE stopped"
+                notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_event MSG_STOPPED 'Service {SERVICE} stopped')"
+                NOTIFIED=1
+                ;;
+            restarted)
+                log INFO "Service $EVENT_SERVICE restarted"
+                notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_event MSG_RESTARTED 'Service {SERVICE} restarted')"
+                NOTIFIED=1
+                ;;
+            enabled)
+                log INFO "Service $EVENT_SERVICE enabled and started"
+                notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_event MSG_ENABLED 'Service {SERVICE} enabled and started')"
+                NOTIFIED=1
+                ;;
+            protected)
+                log WARN "Service $EVENT_SERVICE is protected"
+                notify_warn "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_event MSG_PROTECTED 'Service {SERVICE} can not be stopped')"
+                NOTIFIED=1
+                ;;
+            notfound)
+                log WARN "Service not found: $EVENT_SERVICE"
+                notify_warn "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_event MSG_NOT_FOUND 'Service not found: {SERVICE}')"
+                NOTIFIED=1
+                ;;
+            failed)
+                log ERROR "Failed to change service: $EVENT_SERVICE"
+                notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_event MSG_FAILED 'Failed to toggle service {SERVICE}')"
+                NOTIFIED=1
+                ;;
+        esac
+    done
+}
+
+# Sends an action request and shows the result.
+send_action() {
+    local action=$1
+
+    log INFO "Changing service $SERVICE: $action"
+
+    if ! services_action "$action" "$SERVICE"; then
+        manager_unavailable
+        return 1
+    fi
+
+    show_events
+    (( NOTIFIED == 1 )) && return 0
+
+    # The handler normally emits an event. This fallback keeps the user
+    # informed when a response arrives without a terminal event.
+    if services_result_ok; then
+        case "$action" in
+            start)
+                notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_service MSG_STARTED 'Service {SERVICE} started')"
+                ;;
+            stop)
+                notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_service MSG_STOPPED 'Service {SERVICE} stopped')"
+                ;;
+            restart)
+                notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_service MSG_RESTARTED 'Service {SERVICE} restarted')"
+                ;;
+            enable)
+                notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
+                    "$(msg_service MSG_ENABLED 'Service {SERVICE} enabled and started')"
+                ;;
+        esac
+    else
+        notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+            "$(msg_service MSG_FAILED 'Failed to toggle service {SERVICE}')"
+    fi
+
+    return 0
 }
 
 SERVICE="${1:-}"
 STATE="${2:-}"
+PROTECTED="${3:-}"
 
 if [ -z "$SERVICE" ]; then
     log ERROR "No service name given"
@@ -109,101 +212,48 @@ case "$SERVICE" in
     */*|.|..)
         log ERROR "Invalid service name: $SERVICE"
         echo "$(msg_service MSG_NOT_FOUND 'Service not found: {SERVICE}')" >&2
+        notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+            "$(msg_service MSG_NOT_FOUND 'Service not found: {SERVICE}')"
         exit 1
         ;;
 esac
 
-if [ ! -d "$SV_DIR/$SERVICE" ]; then
-    log WARN "Service directory not found: $SV_DIR/$SERVICE"
+if [ ! -d "/etc/sv/$SERVICE" ]; then
+    log WARN "Service directory not found: /etc/sv/$SERVICE"
     echo "$(msg_service MSG_NOT_FOUND 'Service not found: {SERVICE}')" >&2
-    exit 1
-fi
-
-if [ ! -r "$HELPER" ]; then
-    log ERROR "Root helper not found: $HELPER"
     notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
-        "$(msg_service MSG_FAILED 'Failed to toggle service {SERVICE}')"
+        "$(msg_service MSG_NOT_FOUND 'Service not found: {SERVICE}')"
     exit 1
 fi
 
-if ! command -v pkexec >/dev/null 2>&1; then
-    log ERROR "pkexec is not installed"
-    notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
-        "$(msg_service MSG_FAILED 'Failed to toggle service {SERVICE}')"
-    exit 1
-fi
-
-# The state from the menu is trusted, otherwise it is guessed.
-case "$STATE" in
-    running|stopped|disabled) ;;
-    *) STATE=$(sv_guess_state "$SERVICE") ;;
+case "$PROTECTED" in
+    true|false) ;;
+    *) PROTECTED="" ;;
 esac
 
-# ------------------------------------------------------------------
-# run_action <start|stop|restart|enable>
-# ------------------------------------------------------------------
-# Protected services are checked before the root helper is called, so no
-# password is asked when a protected service would be stopped or restarted.
-run_action() {
-    local action="$1" result
+case "$STATE" in
+    running|stopped|disabled) ;;
+    *) STATE="" ;;
+esac
 
-    if [ "$action" != "start" ] && [ "$action" != "enable" ] && is_protected; then
-        log WARN "Service $SERVICE is protected, it can not be stopped or restarted"
-        notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
-            "$(msg_service MSG_PROTECTED 'Service {SERVICE} can not be stopped')"
-        return 1
-    fi
+if [ -z "$STATE" ] || [ -z "$PROTECTED" ]; then
+    lookup_service || exit 1
+fi
 
-    result=$(pkexec /bin/sh "$HELPER" "$action" "$SERVICE" "${PROTECTED_SERVICES[@]}" 2>/dev/null)
-    [ -z "$result" ] && result="FAILED"
-
-    case "$result" in
-        STARTED)
-            log INFO "Service $SERVICE started"
-            notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
-                "$(msg_service MSG_STARTED 'Service {SERVICE} started')"
-            ;;
-        STOPPED)
-            log INFO "Service $SERVICE stopped"
-            notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
-                "$(msg_service MSG_STOPPED 'Service {SERVICE} stopped')"
-            ;;
-        RESTARTED)
-            log INFO "Service $SERVICE restarted"
-            notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
-                "$(msg_service MSG_RESTARTED 'Service {SERVICE} restarted')"
-            ;;
-        ENABLED)
-            log INFO "Service $SERVICE enabled and started"
-            notify_ok "$(msg_text NOTIFY_TITLE 'Services')" \
-                "$(msg_service MSG_ENABLED 'Service {SERVICE} enabled and started')"
-            ;;
-        PROTECTED)
-            log WARN "Service $SERVICE is protected, it can not be stopped"
-            notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
-                "$(msg_service MSG_PROTECTED 'Service {SERVICE} can not be stopped')"
-            return 1
-            ;;
-        NOTFOUND)
-            log WARN "Service not found: $SERVICE"
-            notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
-                "$(msg_service MSG_NOT_FOUND 'Service not found: {SERVICE}')"
-            return 1
-            ;;
-        *)
-            log ERROR "Failed to change service: $SERVICE"
-            notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
-                "$(msg_service MSG_FAILED 'Failed to toggle service {SERVICE}')"
-            return 1
-            ;;
-    esac
-}
+[ -n "$PROTECTED" ] || PROTECTED="false"
 
 # ------------------------------------------------------------------
 # Act according to the state of the service
 # ------------------------------------------------------------------
 case "$STATE" in
     running)
+        if [ "$PROTECTED" = "true" ]; then
+            log WARN "Service $SERVICE is protected, it can not be stopped or restarted"
+            notify_info "$(msg_text NOTIFY_TITLE 'Services')" \
+                "$(msg_service MSG_PROTECTED 'Service {SERVICE} can not be stopped')"
+            exit 0
+        fi
+
         # A running service offers the stop and restart actions in an
         # actionable notification.
         ACTION=$(notify_action "$(msg_text NOTIFY_TITLE 'Services')" \
@@ -213,12 +263,10 @@ case "$STATE" in
 
         case "$ACTION" in
             stop)
-                log INFO "Stopping service: $SERVICE"
-                run_action stop
+                send_action stop
                 ;;
             restart)
-                log INFO "Restarting service: $SERVICE"
-                run_action restart
+                send_action restart
                 ;;
             *)
                 log INFO "No action selected for service: $SERVICE"
@@ -226,12 +274,10 @@ case "$STATE" in
         esac
         ;;
     stopped)
-        log INFO "Starting service: $SERVICE"
-        run_action start
+        send_action start
         ;;
     disabled)
-        log INFO "Enabling service: $SERVICE"
-        run_action enable
+        send_action enable
         ;;
 esac
 

@@ -2,7 +2,11 @@
 #
 # kayra-show-services.sh - Lists the system services in a fuzzel menu.
 #
-# The services are read from the runit service directories:
+# The list and the service states come from the kayra-system-services job
+# socket. The service runs as root and reads the runit control files, so this
+# script needs neither pkexec nor a root helper.
+#
+# The services are read from the runit service directories by the service:
 #   /etc/sv/<name>       installed service definitions
 #   /var/service/<name>  enabled (supervised) service
 #
@@ -11,15 +15,15 @@
 #   ■  stopped   (the service is not running)
 # Services that are not supervised are marked with the "(disabled)" suffix.
 #
-# Selecting a service runs kayra-toggle-service.sh <service> <state>:
+# Selecting a service runs kayra-toggle-service.sh <service> <state> <protected>:
 #   * a running service opens an actionable notification with a "Stop" and a
 #     "Restart" button,
 #   * a stopped service is started,
 #   * a disabled service is enabled and started.
 #
-# The service states are read with the root helper kayra-sv-status-helper.sh,
-# because the runit control files are only readable by root. If the helper
-# cannot be used, the states are guessed from the running processes.
+# The service manager is only reachable for members of the "wheel" group
+# (socket 0660 root:wheel). A user outside that group gets a translated
+# notification.
 #
 # Important instructions:
 #   * The prompt line is shown, so the service can be searched by typing a
@@ -34,25 +38,19 @@
 #
 # Usage: kayra-show-services.sh
 #
-# Used commands: awk, grep, pgrep, pkexec, fuzzel, pkill
-#                (state helpers in sv-lib.sh)
+# Used commands: awk, fuzzel, pkill (via services-client.sh: socat, flock, jq)
 #
 
 set -uo pipefail
 
 export LC_ALL=C.UTF-8
 
-SCRIPT_DIR="$(cd -- "$(dirname -- "$(readlink -f "$0")")" && pwd)"
-
-SV_DIR="/etc/sv"
-SERVICE_DIR="/var/service"
-HELPER="/usr/local/bin/kayra-sv-status-helper.sh"
-
 source /usr/local/lib/kayra/i18n.sh
 declare -n MSG=i18n_SHOW_SERVICES
 
 source /usr/local/lib/kayra/klog.sh
-source /usr/local/lib/kayra/sv-lib.sh
+source /usr/local/lib/kayra/notify.sh
+source /usr/local/lib/kayra/services-client.sh
 
 # Returns the message of a key, the fallback is used when the key is
 # missing. The fallback is passed as a separate argument, a placeholder
@@ -79,38 +77,16 @@ if ! command -v fuzzel >/dev/null 2>&1; then
     exit 1
 fi
 
-if [ ! -d "$SV_DIR" ]; then
-    log ERROR "Service directory not found: $SV_DIR"
-    echo "$(msg_text MSG_NO_SERVICES 'No services found')" >&2
-    exit 1
-fi
-
 # ------------------------------------------------------------------
-# Service states
+# Read the service list from the service manager
 # ------------------------------------------------------------------
-# The state file format is: "<service-name><TAB><running|stopped|disabled>"
-
-# Fallback without root: the state is guessed from the process table, the
-# program that the run script starts is searched in the process list.
-guess_states() {
-    local name dir
-
-    for dir in "$SV_DIR"/*; do
-        [ -d "$dir" ] || continue
-        name="${dir##*/}"
-        printf '%s\t%s\n' "$name" "$(sv_guess_state "$name")"
-    done
-}
-
 STATE_DATA=""
 
-if [ -r "$HELPER" ] && command -v pkexec >/dev/null 2>&1; then
-    STATE_DATA=$(pkexec /bin/sh "$HELPER" 2>/dev/null)
-fi
-
-if [ -z "$STATE_DATA" ]; then
-    log WARN "Could not read the service states with the root helper, guessing from the processes"
-    STATE_DATA=$(guess_states)
+if ! STATE_DATA=$(services_list); then
+    log ERROR "kayra-system-services is not reachable"
+    notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
+        "$(msg_text MSG_MANAGER_UNAVAILABLE 'Service manager is not running')"
+    exit 1
 fi
 
 # ------------------------------------------------------------------
@@ -119,6 +95,7 @@ fi
 declare -a LINES=()
 declare -a SERVICES=()
 declare -a STATES=()
+declare -a PROTECTED=()
 
 mapfile -t LINES < <(awk -F'\t' \
     -v running="$ICON_RUNNING" \
@@ -132,9 +109,10 @@ mapfile -t LINES < <(awk -F'\t' \
 
 mapfile -t SERVICES < <(awk -F'\t' '$1 != "" { print $1 }' <<< "$STATE_DATA")
 mapfile -t STATES < <(awk -F'\t' '$1 != "" { print $2 }' <<< "$STATE_DATA")
+mapfile -t PROTECTED < <(awk -F'\t' '$1 != "" { print ($3 == "true" ? "true" : "false") }' <<< "$STATE_DATA")
 
 if [ "${#LINES[@]}" -eq 0 ]; then
-    log WARN "No services found in $SV_DIR"
+    log WARN "No services found in /etc/sv"
     echo "$(msg_text MSG_NO_SERVICES 'No services found')" >&2
     exit 0
 fi
@@ -168,7 +146,8 @@ done
 
 SERVICE="${SERVICES[$SELECTED_INDEX]}"
 STATE="${STATES[$SELECTED_INDEX]:-}"
+SERVICE_PROTECTED="${PROTECTED[$SELECTED_INDEX]:-false}"
 
 log INFO "Changing service: $SERVICE (state: ${STATE:-unknown})"
 
-exec /usr/local/bin/kayra-toggle-service.sh "$SERVICE" "$STATE"
+exec /usr/local/bin/kayra-toggle-service.sh "$SERVICE" "$STATE" "$SERVICE_PROTECTED"

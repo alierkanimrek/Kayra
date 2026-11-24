@@ -17,7 +17,8 @@
 #   data       usr/local/share/kayra/data/ -> /usr/local/share/kayra/data/ (0644)
 #   services   etc/sv/<name>/            -> /etc/sv/<name>/         (0755, run/finish)
 #              usr/local/libexec/<name>/ -> /usr/local/libexec/<name>/
-#              then "sv restart <name>" for every service found
+#              enable the service when it is not linked yet, then
+#              "sv restart <name>" for every service found
 #   core       etc/runit/core-services/  -> /etc/runit/core-services/ (0755)
 #   config     etc/skel/.config/         -> $HOME/.config/          (0644, user owned)
 #   all        scripts + lang + data + services + core   (config is NOT included)
@@ -74,13 +75,35 @@ task_data() {
 }
 
 task_services() {
-  local d n
+  local d n enabled i
   for d in "$SRC"/etc/sv/*/; do
     [[ -d $d ]] || continue
     n=${d%/}; n=${n##*/}
     sync_dir "etc/sv/$n" "/etc/sv/$n" 0755
     sync_dir "usr/local/libexec/$n" "/usr/local/libexec/$n" 0755
-    sv restart "$n" || printf 'kayra-deploy: warning: %s not restarted\n' "$n" >&2
+    # Enable the service when it is not linked yet, so the development
+    # deployment also works on a fresh system. A new link needs a moment
+    # before runsvdir creates supervise/ok; without the wait "sv restart"
+    # fails with "file does not exist".
+    enabled=0
+    if [[ -d /var/service && ! -e /var/service/$n ]]; then
+      if ln -s "/etc/sv/$n" "/var/service/$n"; then
+        enabled=1
+      else
+        printf 'kayra-deploy: warning: %s not enabled\n' "$n" >&2
+      fi
+    fi
+    if (( enabled )); then
+      for ((i = 0; i < 50; i++)); do
+        [[ -e /var/service/$n/supervise/ok ]] && break
+        sleep 0.1
+      done
+      sv up "/var/service/$n" >/dev/null 2>&1 ||
+        printf 'kayra-deploy: warning: %s not started\n' "$n" >&2
+    else
+      sv restart "/var/service/$n" >/dev/null 2>&1 ||
+        printf 'kayra-deploy: warning: %s not restarted\n' "$n" >&2
+    fi
   done
 }
 

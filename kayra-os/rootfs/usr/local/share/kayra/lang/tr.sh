@@ -211,11 +211,13 @@ declare -A i18n_SHOW_DEVICE_MODS=(
 )
 
 declare -A i18n_SHOW_SERVICES=(
+  [NOTIFY_TITLE]="Servisler"
   [MSG_MESG]="Servisler"
   [PROMPT_SERVICE]="Servis: "
   [MSG_NO_SERVICES]="Servis bulunamadı"
   [LABEL_DISABLED]="devre dışı"
   [MSG_NO_FUZZEL]="fuzzel kurulu değil"
+  [MSG_MANAGER_UNAVAILABLE]="Servis yöneticisi çalışmıyor"
 )
 
 declare -A i18n_TOGGLE_SERVICE=(
@@ -230,6 +232,7 @@ declare -A i18n_TOGGLE_SERVICE=(
   [ACTION_RESTART]="Yeniden Başlat"
   [MSG_FAILED]="{SERVICE} servisi değiştirilemedi"
   [MSG_NOT_FOUND]="Servis bulunamadı: {SERVICE}"
+  [MSG_MANAGER_UNAVAILABLE]="Servis yöneticisi çalışmıyor"
   [MSG_USAGE]="Kullanım: toggle-service.sh <servis-adı>"
 )
 

@@ -211,11 +211,13 @@ declare -A i18n_SHOW_DEVICE_MODS=(
 )
 
 declare -A i18n_SHOW_SERVICES=(
+  [NOTIFY_TITLE]="Services"
   [MSG_MESG]="Services"
   [PROMPT_SERVICE]="Service: "
   [MSG_NO_SERVICES]="No services found"
   [LABEL_DISABLED]="disabled"
   [MSG_NO_FUZZEL]="fuzzel is not installed"
+  [MSG_MANAGER_UNAVAILABLE]="Service manager is not running"
 )
 
 declare -A i18n_TOGGLE_SERVICE=(
@@ -230,6 +232,7 @@ declare -A i18n_TOGGLE_SERVICE=(
   [ACTION_RESTART]="Restart"
   [MSG_FAILED]="Failed to toggle service {SERVICE}"
   [MSG_NOT_FOUND]="Service not found: {SERVICE}"
+  [MSG_MANAGER_UNAVAILABLE]="Service manager is not running"
   [MSG_USAGE]="Usage: toggle-service.sh <service-name>"
 )
 
