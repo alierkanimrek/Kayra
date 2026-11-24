@@ -438,5 +438,5 @@ declare -A i18n_POWER_MODE_MENU=(
   [MSG_SET]="Power mode set to {PROFILE}"
   [MSG_AUTO_SET]="Switched to the automatic power profile"
   [MSG_SET_FAILED]="Could not set the power mode"
-  [NOTIFY_COMMAND_NOT_FOUND]="Command not found: {COMMAND}"
+  [MSG_SERVICE_UNAVAILABLE]="Power service is not running"
 )

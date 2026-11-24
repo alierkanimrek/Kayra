@@ -438,5 +438,5 @@ declare -A i18n_POWER_MODE_MENU=(
   [MSG_SET]="Güç modu {PROFILE} olarak ayarlandı"
   [MSG_AUTO_SET]="Otomatik güç profiline geçildi"
   [MSG_SET_FAILED]="Güç modu ayarlanamadı"
-  [NOTIFY_COMMAND_NOT_FOUND]="Komut bulunamadı: {COMMAND}"
+  [MSG_SERVICE_UNAVAILABLE]="Güç servisi çalışmıyor"
 )
