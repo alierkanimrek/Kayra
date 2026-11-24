@@ -9,17 +9,31 @@
 #   conf_get  key            # prints the value (without quotes)
 #   conf_set  key "value"    # rewrites the key line as key="value"
 #   conf_wait_change [secs]  # blocks until settings.conf changes or timeout
+#   system_conf_get key      # prints the value from /etc/default/kayra.conf
 #
 # Note: conf_set needs the file to already exist; create it first.
 
 # Path of the settings file
 CONFIG_FILE="${HOME}/.config/kayra/settings.conf"
 
+# Path of the system wide defaults file (root owned, world readable). It holds
+# system settings such as required_groups, not user preferences.
+SYSTEM_CONFIG_FILE="/etc/default/kayra.conf"
+
 # Prints the value of the given key
 conf_get() {
     local key="$1"
     if [ -f "$CONFIG_FILE" ]; then
         grep "^${key}=" "$CONFIG_FILE" | cut -d'=' -f2- | sed 's/^"//;s/"$//'
+    fi
+}
+
+# Prints the value of the given key from the system wide defaults file.
+# Prints nothing when the file or the key is missing.
+system_conf_get() {
+    local key="$1"
+    if [ -f "$SYSTEM_CONFIG_FILE" ]; then
+        grep "^${key}=" "$SYSTEM_CONFIG_FILE" | cut -d'=' -f2- | sed 's/^"//;s/"$//'
     fi
 }
 

@@ -5,7 +5,7 @@
 # Lists the groups the user is a member of and removes the selected one
 # with "usermod -G". Exception groups are shown with a lock icon and cannot be
 # removed; the exception list is the required_groups list from
-# ~/.config/kayra/settings.conf (via settings-conf.sh), so it stays in sync
+# /etc/default/kayra.conf (via settings-conf.sh), so it stays in sync
 # with kayra-check-groups.sh and kayra-fix-groups.sh. When the auto_group_management
 # setting is "false" the exception list is empty and every group can be
 # removed.
@@ -41,14 +41,11 @@ AUTO_GROUP_MANAGEMENT="$(conf_get auto_group_management | head -n1 || true)"
 
 # Exception groups - the user cannot be removed from these while automatic
 # group management is enabled. The list is the required_groups list from
-# settings.conf, so it stays in sync with kayra-check-groups.sh and kayra-fix-groups.sh.
-# Fallback used when the required_groups key is missing from settings.conf.
-DEFAULT_REQUIRED_GROUPS="users wheel disk floppy cdrom optical storage kvm audio video input dialout plugdev scanner usbmon lp lpadmin bluetooth socklog"
-
+# /etc/default/kayra.conf, so it stays in sync with kayra-check-groups.sh and
+# kayra-fix-groups.sh. Group names never contain spaces, so plain word
+# splitting is safe here.
 if [[ "$AUTO_GROUP_MANAGEMENT" == "true" ]]; then
-    # Group names never contain spaces, so plain word splitting is safe here.
-    EXCEPTION_GROUPS_STR="$(conf_get required_groups | head -n1 || true)"
-    [[ -z "$EXCEPTION_GROUPS_STR" ]] && EXCEPTION_GROUPS_STR="$DEFAULT_REQUIRED_GROUPS"
+    EXCEPTION_GROUPS_STR="$(system_conf_get required_groups | head -n1 || true)"
     EXCEPTION_GROUPS=( $EXCEPTION_GROUPS_STR )
 else
     # Free mode: every group can be removed.

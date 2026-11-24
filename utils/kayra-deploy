@@ -20,8 +20,12 @@
 #              enable the service when it is not linked yet, then
 #              "sv restart <name>" for every service found
 #   core       etc/runit/core-services/  -> /etc/runit/core-services/ (0755)
+#   system     etc/default/kayra.conf    -> /etc/default/kayra.conf  (0644)
+#   migrate    prune obsolete keys (required_groups) from every user
+#              ~/.config/kayra/settings.conf, keeping owner and mode
 #   config     etc/skel/.config/         -> $HOME/.config/          (0644, user owned)
-#   all        scripts + lang + data + services + core   (config is NOT included)
+#   all        scripts + lang + data + services + core + system + migrate
+#              (config is NOT included)
 #
 # Before anything is installed every shell file is checked with "bash -n"; on a
 # syntax error nothing is installed.
@@ -111,6 +115,30 @@ task_core() {
   sync_dir etc/runit/core-services /etc/runit/core-services 0755
 }
 
+# system installs the system wide defaults file (required_groups).
+task_system() {
+  local src=$SRC/etc/default/kayra.conf
+  [[ -f $src ]] || return 0
+  install -d -m 0755 -o root -g root /etc/default || die "cannot create: /etc/default"
+  install -m 0644 -o root -g root "$src" /etc/default/kayra.conf \
+    || die "cannot install: /etc/default/kayra.conf"
+}
+
+# migrate prunes the required_groups key that moved to /etc/default/kayra.conf
+# from every user settings file. sed -i replaces the file, so the original
+# owner and group are restored afterwards.
+task_migrate() {
+  local conf owner
+  for conf in /home/*/.config/kayra/settings.conf /root/.config/kayra/settings.conf; do
+    [[ -f $conf ]] || continue
+    grep -q '^required_groups=' "$conf" || continue
+    owner=$(stat -c '%u:%g' "$conf")
+    sed -i '/^required_groups=/d' "$conf"
+    chown "$owner" "$conf"
+    printf 'kayra-deploy: removed legacy required_groups from %s\n' "$conf"
+  done
+}
+
 # config copies the skel configuration into the user's home. Files the user
 # owns or edits are kept: settings.conf, app-pins.list and the first-login flag
 # are skipped.
@@ -135,6 +163,8 @@ task_all() {
   task_data
   task_services
   task_core
+  task_system
+  task_migrate
 }
 
 # Refuse to install anything when a shell file has a syntax error.
@@ -157,7 +187,7 @@ syntax_check || die "syntax error(s) found; nothing installed"
 (($#)) || set -- all
 for task in "$@"; do
   case $task in
-    scripts|lang|data|services|core|config|all) "task_$task" ;;
+    scripts|lang|data|services|core|system|migrate|config|all) "task_$task" ;;
     *) die "unknown task: $task" ;;
   esac
 done

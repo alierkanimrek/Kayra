@@ -7,7 +7,7 @@
 # a button that adds the missing groups. The button is handled by this
 # script, so no swaync script rule is needed for it.
 #
-# The required group list is read from ~/.config/kayra/settings.conf
+# The required group list is system wide data read from /etc/default/kayra.conf
 # (key: required_groups) with settings-conf.sh, so it stays in sync with
 # kayra-fix-groups.sh and kayra-group-remove.sh. The check is skipped when the
 # auto_group_management setting is "false" (the user manages groups manually).
@@ -36,14 +36,11 @@ if [[ "$AUTO_GROUP_MANAGEMENT" != "true" ]]; then
     exit 0
 fi
 
-# Fallback used when the required_groups key is missing from settings.conf.
-DEFAULT_REQUIRED_GROUPS="users wheel disk floppy cdrom optical storage kvm audio video input dialout plugdev scanner usbmon lp lpadmin bluetooth socklog"
-
-# Required system groups are read from settings.conf (key: required_groups) so
-# kayra-check-groups.sh, kayra-fix-groups.sh and kayra-group-remove.sh always share one list.
-# Group names never contain spaces, so plain word splitting is safe here.
-REQUIRED_GROUPS_STR="$(conf_get required_groups | head -n1 || true)"
-[[ -z "$REQUIRED_GROUPS_STR" ]] && REQUIRED_GROUPS_STR="$DEFAULT_REQUIRED_GROUPS"
+# Required system groups are system wide data read from /etc/default/kayra.conf
+# (key: required_groups) so kayra-check-groups.sh, kayra-fix-groups.sh and
+# kayra-group-remove.sh always share one list. Group names never contain spaces,
+# so plain word splitting is safe here.
+REQUIRED_GROUPS_STR="$(system_conf_get required_groups | head -n1 || true)"
 REQUIRED_GROUPS=( $REQUIRED_GROUPS_STR )
 
 # The user whose membership is checked.

@@ -6,7 +6,7 @@
 # "usermod -aG" and reports the result with a notification. It is started by
 # the action button of the kayra-check-groups.sh notification.
 #
-# The required group list is read from ~/.config/kayra/settings.conf
+# The required group list is system wide data read from /etc/default/kayra.conf
 # (key: required_groups) with settings-conf.sh, so it stays in sync with
 # kayra-check-groups.sh and kayra-group-remove.sh.
 #
@@ -24,14 +24,11 @@ source /usr/local/lib/kayra/klog.sh
 source /usr/local/lib/kayra/notify.sh
 source /usr/local/lib/kayra/settings-conf.sh
 
-# Fallback used when the required_groups key is missing from settings.conf.
-DEFAULT_REQUIRED_GROUPS="users wheel disk floppy cdrom optical storage kvm audio video input dialout plugdev scanner usbmon lp lpadmin bluetooth socklog"
-
-# Required system groups are read from settings.conf (key: required_groups) so
-# kayra-check-groups.sh, kayra-fix-groups.sh and kayra-group-remove.sh always share one list.
-# Group names never contain spaces, so plain word splitting is safe here.
-REQUIRED_GROUPS_STR="$(conf_get required_groups | head -n1 || true)"
-[[ -z "$REQUIRED_GROUPS_STR" ]] && REQUIRED_GROUPS_STR="$DEFAULT_REQUIRED_GROUPS"
+# Required system groups are system wide data read from /etc/default/kayra.conf
+# (key: required_groups) so kayra-check-groups.sh, kayra-fix-groups.sh and
+# kayra-group-remove.sh always share one list. Group names never contain spaces,
+# so plain word splitting is safe here.
+REQUIRED_GROUPS_STR="$(system_conf_get required_groups | head -n1 || true)"
 REQUIRED_GROUPS=( $REQUIRED_GROUPS_STR )
 
 # The user the groups are added to.
