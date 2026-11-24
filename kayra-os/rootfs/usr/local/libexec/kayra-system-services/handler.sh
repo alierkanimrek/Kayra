@@ -28,7 +28,8 @@
 # Response codes:
 #   0 success, 1 not found, 2 protected, 3 operation failed, 4 invalid request
 #
-# Used commands: jq, sv, ln, sleep, head, logger
+# Used commands: jq, sv, ln, sleep, head, logger, grep, cut, sed,
+#                settings-conf.sh (system_conf_get)
 #
 
 set -uo pipefail
@@ -43,8 +44,13 @@ SERVICE_DIR=${SERVICE_DIR:-/var/service}
 EVENTS_FILE=${EVENTS_FILE:-/run/kayra-system-services/events.ndjson}
 
 # Services that must stay running. They can be started or enabled, but not
-# stopped or restarted. kayra-system-services protects itself as well.
-PROTECTED_SERVICES=(
+# stopped or restarted; kayra-system-services protects itself as well. The list
+# is system wide data read from /etc/default/kayra.conf (key:
+# protected_services) with settings-conf.sh, so it stays in sync with the
+# deployed defaults. DEFAULT_PROTECTED_SERVICES is only a safety fallback used
+# when the file or the key is missing, so a broken config never disables the
+# protection.
+DEFAULT_PROTECTED_SERVICES=(
     dbus
     greetd
     socklog-unix
@@ -54,6 +60,15 @@ PROTECTED_SERVICES=(
 )
 
 . /usr/local/lib/kayra/socat-link.sh
+. /usr/local/lib/kayra/settings-conf.sh
+
+# Service names never contain spaces, so splitting on whitespace is safe.
+PROTECTED_SERVICES_STR="$(system_conf_get protected_services | head -n1 || true)"
+if [ -n "$PROTECTED_SERVICES_STR" ]; then
+    read -ra PROTECTED_SERVICES <<< "$PROTECTED_SERVICES_STR"
+else
+    PROTECTED_SERVICES=( "${DEFAULT_PROTECTED_SERVICES[@]}" )
+fi
 
 if ! command -v jq >/dev/null 2>&1; then
     logger -t kayra-system-services -p user.err "jq is not installed" 2>/dev/null || true

@@ -101,7 +101,7 @@ Source -> live target:
   a VM or ISO.
 
 **Don't**
-- Don't use `klog.sh`, `i18n.sh`, `notify.sh`, `settings-conf.sh`, or
+- Don't use `klog.sh`, `i18n.sh`, `notify.sh` or
   `single_instance.sh`.
 - Don't rely on `$HOME`, user `PATH`, Wayland, DBus, polkit, Fuzzel, or
   Waybar.

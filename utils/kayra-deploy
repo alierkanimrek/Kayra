@@ -115,7 +115,8 @@ task_core() {
   sync_dir etc/runit/core-services /etc/runit/core-services 0755
 }
 
-# system installs the system wide defaults file (required_groups).
+# system installs the system wide defaults file (required_groups,
+# protected_services).
 task_system() {
   local src=$SRC/etc/default/kayra.conf
   [[ -f $src ]] || return 0

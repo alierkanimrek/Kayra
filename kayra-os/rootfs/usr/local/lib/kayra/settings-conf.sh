@@ -13,8 +13,10 @@
 #
 # Note: conf_set needs the file to already exist; create it first.
 
-# Path of the settings file
-CONFIG_FILE="${HOME}/.config/kayra/settings.conf"
+# Path of the settings file. $HOME may be unset in a root service context where
+# only the system wide file (system_conf_get) is used; the empty default keeps
+# "set -u" happy and conf_get never reads the file in that case.
+CONFIG_FILE="${HOME:-}/.config/kayra/settings.conf"
 
 # Path of the system wide defaults file (root owned, world readable). It holds
 # system settings such as required_groups, not user preferences.
