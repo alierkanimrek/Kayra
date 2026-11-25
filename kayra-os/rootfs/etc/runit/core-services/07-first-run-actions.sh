@@ -60,6 +60,10 @@ ln -s /etc/sv/bluetoothd /etc/runit/runsvdir/current
 [ -e /etc/runit/runsvdir/current/kayra-power-services ] ||
   ln -s /etc/sv/kayra-power-services /etc/runit/runsvdir/current/kayra-power-services
 
+# Kayra group management service (user scripts talk to it through /run/kayra-group-services)
+[ -e /etc/runit/runsvdir/current/kayra-group-services ] ||
+  ln -s /etc/sv/kayra-group-services /etc/runit/runsvdir/current/kayra-group-services
+
 #void-packages
 mkdir -p /var/spool/void-packages
 chown root:users /var/spool/void-packages

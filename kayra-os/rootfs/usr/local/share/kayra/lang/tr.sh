@@ -72,6 +72,7 @@ declare -A i18n_GROUP_MANAGEMENT=(
   [EXCEPTION_GROUP]="'{GROUP}' istisna grubudur, {USER} kullanıcısı bu gruptan çıkarılamaz."
   [GROUP_REMOVED]="{USER} kullanıcısı '{GROUP}' grubundan çıkarıldı."
   [REMOVE_FAILED]="'{GROUP}' grubundan çıkarma işlemi başarısız oldu."
+  [MSG_MANAGER_UNAVAILABLE]="Grup servisi çalışmıyor."
 )
 
 declare -A i18n_USER_MENU=(
@@ -140,9 +141,8 @@ declare -A i18n_CUPS_MENU=(
 )
 
 declare -A i18n_CHECK_GROUPS=(
-  [NOTIFY_MSG]="Grup üyeliği eksik"
-  [NOTIFY_ACTION]="Grup ekle"
-  [MISSING_GROUPS]="Üye olmadığınız gruplar: {GROUPS}"
+  [TITLE]="Grup Yönetimi"
+  [MSG_FAILED]="Eksik gruplar eklenemedi."
 )
 
 declare -A i18n_FIX_GROUPS=(

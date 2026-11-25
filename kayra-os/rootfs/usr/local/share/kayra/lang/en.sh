@@ -72,6 +72,7 @@ declare -A i18n_GROUP_MANAGEMENT=(
   [EXCEPTION_GROUP]="'{GROUP}' is an exception group, {USER} user cannot be removed from this group."
   [GROUP_REMOVED]="{USER} user removed from '{GROUP}' group."
   [REMOVE_FAILED]="Failed to remove from '{GROUP}' group."
+  [MSG_MANAGER_UNAVAILABLE]="Group service is not running."
 )
 
 declare -A i18n_USER_MENU=(
@@ -140,9 +141,8 @@ declare -A i18n_CUPS_MENU=(
 )
 
 declare -A i18n_CHECK_GROUPS=(
-  [NOTIFY_MSG]="Missing group membership"
-  [NOTIFY_ACTION]="Add groups"
-  [MISSING_GROUPS]="You are not a member of: {GROUPS}"
+  [TITLE]="Group Management"
+  [MSG_FAILED]="Could not add the missing groups."
 )
 
 declare -A i18n_FIX_GROUPS=(

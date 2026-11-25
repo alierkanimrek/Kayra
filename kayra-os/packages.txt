@@ -18,6 +18,8 @@ socklog-void
 daemontools
 elogind
 chrony
+shadow
+util-linux
 
 # Power Management
 tlp
