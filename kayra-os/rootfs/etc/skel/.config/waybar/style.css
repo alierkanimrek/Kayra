@@ -1,9 +1,8 @@
 /*
- * Kayra OS — Waybar Yerleşim (Layout)
- * ------------------------------------
- * Bu dosya sadece modüllerin yerleşim (padding/margin/radius) ve
- * yapısal özelliklerini içerir. Renk ve font değişikliği için
- * colors.css dosyasını düzenleyin.
+ * Kayra OS - Waybar layout
+ * ------------------------
+ * This file only defines the module layout (padding/margin/radius) and the
+ * structural properties. Colors and fonts are defined in theme.css.
  */
 @import url("theme.css");
 

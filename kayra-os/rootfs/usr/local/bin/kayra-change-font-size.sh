@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 #
-# Change Font Size - Updates font size in settings and applies to Waybar and Fuzzel
+# Change Font Size - Updates font size in settings and applies it to Waybar,
+# Fuzzel and SwayNC.
 # Usage: kayra-change-font-size.sh <size>
 # Size: integer between 8 and 48 (pixels)
+#
+# Used libraries: klog.sh, settings-conf.sh
+# Used commands: sed, pkill, swaync-client
 
 set -euo pipefail
-export LC_ALL=C
+export LC_ALL=C.UTF-8
 
 source /usr/local/lib/kayra/klog.sh
 source /usr/local/lib/kayra/settings-conf.sh
@@ -78,5 +82,7 @@ log "INFO" "Font size changed to $SIZE"
 # Reload Waybar
 pkill -SIGUSR2 waybar 2>/dev/null || true
 
-# Reload Swaync
-pkill -SIGUSR1 swaync 2>/dev/null || true
+# Reload SwayNC
+if command -v swaync-client >/dev/null 2>&1; then
+    swaync-client -rs >/dev/null 2>&1 || true
+fi

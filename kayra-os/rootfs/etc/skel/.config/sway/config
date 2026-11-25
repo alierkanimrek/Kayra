@@ -28,6 +28,7 @@ set $filemanager thunar
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 include ~/.config/sway/background.conf
+include ~/.config/sway/theme-colors.conf
 #
 # Example configuration:
 #

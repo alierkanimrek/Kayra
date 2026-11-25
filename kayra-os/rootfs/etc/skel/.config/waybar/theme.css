@@ -1,12 +1,13 @@
 /*
- * Kayra OS — Waybar Font & Renk Teması
- * ------------------------------------
- * Renk temasını değiştirmek istediğinizde SADECE bu dosyayı düzenleyin.
- * style.css dosyası bu renkleri @define-color üzerinden kullanır,
- * hiçbir modülde doğrudan renk kodu geçmez.
+ * Kayra OS - Waybar font and color theme
+ *
+ * The colors are GTK theme colors. Waybar is a GTK application, so it reads
+ * the active GTK palette directly and follows theme changes without a
+ * separate color file. The font stays in this file because the font helpers
+ * update it here.
  */
 
-/* Fontlar */
+/* Font */
 * {
     font-family: "Noto Sans Mono", "Material Symbols Outlined", monospace;
     font-size: 16px;
@@ -14,11 +15,10 @@
     min-height: 0;
 }
 
-/* ---------------- Renk Paleti (sade, 6 tanım) ---------------- */
-
-/* Zemin renkleri */
-@define-color color-bg #2c2c2c;
-@define-color color-surface #2c2c2c;
-@define-color color-fg #f7f7f7;
-@define-color color-fg-hover #e95420;
-@define-color color-warning  #d9534f;
+/* ---------------- GTK colors ---------------- */
+@define-color color-bg         @theme_bg_color;
+@define-color color-surface    @theme_base_color;
+@define-color color-fg         @theme_fg_color;
+@define-color color-fg-hover   @theme_selected_bg_color;
+@define-color color-warning    @warning_color;
+@define-color color-error      @error_color;

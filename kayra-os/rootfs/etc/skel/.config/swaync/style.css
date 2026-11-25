@@ -1,9 +1,17 @@
 /*
- * Kayra OS — SwayNotificationCenter Teması
- * Waybar renk paletine uyumlu, sade ve tutarlı tasarım
+ * Kayra OS - SwayNotificationCenter theme
+ * The colors come from the GTK theme (see theme.css); this file only defines
+ * the layout, the font and the few derived colors.
  */
 @import url("theme.css");
 
+/* Font */
+* {
+    font-family: "Noto Sans Mono", "Material Symbols Outlined", monospace;
+    font-size: 18px;
+    font-weight: normal;
+    min-height: 0;
+}
 
 /* Karartma katmanı */
 .blank-window {
@@ -101,7 +109,7 @@ window#control-center {
 }
 
 .notification:hover {
-    background-color: #454545;
+    background-color: alpha(@color-fg, 0.08);
 }
 
 .notification .summary {
