@@ -38,9 +38,7 @@ sed -i 's|^#*Out .*|Out ${HOME}/Exports/documents/|' /etc/cups/cups-pdf.conf
 ln -s /etc/sv/socklog-unix /etc/runit/runsvdir/current
 ln -s /etc/sv/nanoklogd /etc/runit/runsvdir/current
 ln -s /etc/sv/NetworkManager /etc/runit/runsvdir/current
-ln -s /etc/sv/acpid /etc/runit/runsvdir/current
 ln -s /etc/sv/dbus /etc/runit/runsvdir/current
-ln -s /etc/sv/dhcpcd /etc/runit/runsvdir/current
 ln -s /etc/sv/greetd /etc/runit/runsvdir/current
 ln -s /etc/sv/polkitd /etc/runit/runsvdir/current
 ln -s /etc/sv/udevd /etc/runit/runsvdir/current
