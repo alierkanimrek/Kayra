@@ -4,7 +4,6 @@
 #
 # Read `man 5 sway` for a complete reference.
 
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 exec dbus-update-activation-environment --all
 exec pipewire
 
@@ -21,7 +20,7 @@ set $right l
 # Your preferred terminal emulator
 set $term alacritty
 # Your preferred application launcher
-set $menu "pkill fuzzel; fuzzel --anchor=top-left --log-no-syslog"
+set $menu "pkill -x fuzzel 2>/dev/null || true; fuzzel --anchor=top-left --log-no-syslog --minimal-lines"
 set $filemanager thunar
 
 ### Output configuration
@@ -232,19 +231,27 @@ bindsym $mod+r mode "resize"
 
 
 include /etc/sway/config.d/*
-exec nm-applet --indicator
+
+# Polkit authentication agent
+exec /usr/libexec/polkit-gnome-authentication-agent-1
 
 # Notification Daemon
 exec swaync
 # Toggle control center
 bindsym $mod+Shift+n exec swaync-client -t -sw
 
+# Clipboard history watchers
+exec wl-paste --type text --watch cliphist store
+exec wl-paste --type image --watch cliphist store
+
 #Waybar
-exec_always "pkill waybar || true; waybar > $HOME/.local/var/log/waybar.log 2>&1"
+exec_always "pkill -x waybar 2>/dev/null || true; waybar > $HOME/.local/var/log/waybar.log 2>&1"
 
 # User Groups Control Scripts
-exec /usr/libexec/polkit-gnome-authentication-agent-1
 exec /usr/local/bin/kayra-check-groups.sh
+
+#Theme change monitor
+exec /usr/local/bin/kayra-theme-monitor.sh
 
 # User startup commands
 exec /usr/local/bin/kayra-autostart.sh run
@@ -254,10 +261,5 @@ bindsym $mod+Ctrl+Return exec chromium
 bindsym $mod+Shift+Return exec $filemanager
 
 #Pano
-exec wl-paste --type text --watch cliphist store
-exec wl-paste --type image --watch cliphist store 
 bindsym $mod+Shift+v cliphist list | fuzzel --dmenu --anchor=top-right --log-no-syslog | cliphist decode | wl-copy
-
-#Theme change monitor
-exec /usr/local/bin/kayra-theme-monitor.sh &
 
