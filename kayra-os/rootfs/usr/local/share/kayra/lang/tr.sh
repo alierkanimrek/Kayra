@@ -18,6 +18,7 @@ declare -A system_menu=(
   [DEVICES]="Aygıtlar"
   [SERVICES]="Servisler"
   [SETTINGS]="Ayarlar"
+  [STARTUP]="Açılış Komutları"
   [UPDATES]="Güncellemeleri Kontrol Et"
 )
 
@@ -439,4 +440,30 @@ declare -A i18n_POWER_MODE_MENU=(
   [MSG_AUTO_SET]="Otomatik güç profiline geçildi"
   [MSG_SET_FAILED]="Güç modu ayarlanamadı"
   [MSG_SERVICE_UNAVAILABLE]="Güç servisi çalışmıyor"
+)
+
+# Startup commands menu labels (icons and commands are defined in autostart.sh)
+declare -A autostart_menu=(
+  [ADD]="Açılış komutu ekle"
+  [REMOVE]="Açılış komutunu kaldır"
+  [TOGGLE]="Açılış komutunu aç/kapat"
+  [EDIT]="Açılış listesini düzenle"
+  [RUN]="Açılış komutlarını şimdi çalıştır"
+)
+
+declare -A i18n_AUTOSTART=(
+  [NOTIFY_TITLE]="Açılış Komutları"
+  [PROMPT_ADD]="Komut"
+  [MSG_ADDED]="Açılış komutu eklendi: {CMD}"
+  [MSG_ALREADY]="Listede zaten var: {CMD}"
+  [MSG_INVALID]="Geçersiz komut. # veya off: ile başlamamalı"
+  [MSG_REMOVED]="Açılış komutu kaldırıldı: {CMD}"
+  [MSG_TOGGLED]="{CMD}: {STATE}"
+  [STATE_ON]="etkin"
+  [STATE_OFF]="devre dışı"
+  [MSG_NO_COMMANDS]="Açılış komutu bulunamadı"
+  [MSG_EDIT_OPENED]="Açılış listesi açıldı"
+  [MSG_EDIT_FAILED]="Açılış listesi açılamadı"
+  [MSG_RUNNING]="Açılış komutları başlatılıyor"
+  [MSG_READ_FAILED]="Açılış listesi okunamadı"
 )

@@ -36,8 +36,8 @@ Source -> live target:
 ## Shared
 
 **Do**
-- Use bash and minimal dependencies; add required packages to
-  `kayra-os/packages.txt` and document them in the script header.
+- Use bash, simple design, understandable algorithms and minimal dependencies.
+- Add required packages to `kayra-os/packages.txt` and document them in the script header.
 - `export LC_ALL=C.UTF-8`.
 - Write comments, variable names, and log messages in English.
 - Quote variables, validate input, and fail with a clear message.

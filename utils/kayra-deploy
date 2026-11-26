@@ -141,15 +141,15 @@ task_migrate() {
 }
 
 # config copies the skel configuration into the user's home. Files the user
-# owns or edits are kept: settings.conf, app-pins.list and the first-login flag
-# are skipped.
+# owns or edits are kept: settings.conf, app-pins.list, autostart.list and the
+# first-login flag are skipped.
 task_config() {
   local src=$SRC/etc/skel/.config f rel dst
   [[ -d $src ]] || return 0
   while IFS= read -r -d '' f; do
     rel=${f#"$src/"}
     case $rel in
-      kayra/settings.conf|kayra/app-pins.list|kayra/.firstlogin|waybar/config) continue ;;
+      kayra/settings.conf|kayra/app-pins.list|kayra/autostart.list|kayra/.firstlogin|waybar/config) continue ;;
     esac
     dst=$DEPLOY_HOME/.config/$rel
     install -d -m 0755 "$(dirname -- "$dst")" || die "cannot create: $(dirname -- "$dst")"

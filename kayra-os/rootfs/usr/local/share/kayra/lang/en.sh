@@ -18,6 +18,7 @@ declare -A system_menu=(
   [DEVICES]="Devices"
   [SERVICES]="Services"
   [SETTINGS]="Settings"
+  [STARTUP]="Startup Commands"
   [UPDATES]="Check for Updates"
 )
 
@@ -439,4 +440,30 @@ declare -A i18n_POWER_MODE_MENU=(
   [MSG_AUTO_SET]="Switched to the automatic power profile"
   [MSG_SET_FAILED]="Could not set the power mode"
   [MSG_SERVICE_UNAVAILABLE]="Power service is not running"
+)
+
+# Startup commands menu labels (icons and commands are defined in autostart.sh)
+declare -A autostart_menu=(
+  [ADD]="Add startup command"
+  [REMOVE]="Remove startup command"
+  [TOGGLE]="Enable/disable startup command"
+  [EDIT]="Edit startup list"
+  [RUN]="Run startup commands now"
+)
+
+declare -A i18n_AUTOSTART=(
+  [NOTIFY_TITLE]="Startup Commands"
+  [PROMPT_ADD]="Command"
+  [MSG_ADDED]="Added startup command: {CMD}"
+  [MSG_ALREADY]="Already in the list: {CMD}"
+  [MSG_INVALID]="Invalid command. Do not start with # or off:"
+  [MSG_REMOVED]="Removed startup command: {CMD}"
+  [MSG_TOGGLED]="{CMD}: {STATE}"
+  [STATE_ON]="enabled"
+  [STATE_OFF]="disabled"
+  [MSG_NO_COMMANDS]="No startup commands found"
+  [MSG_EDIT_OPENED]="Opened the startup list"
+  [MSG_EDIT_FAILED]="Could not open the startup list"
+  [MSG_RUNNING]="Starting startup commands"
+  [MSG_READ_FAILED]="Could not read the startup list"
 )

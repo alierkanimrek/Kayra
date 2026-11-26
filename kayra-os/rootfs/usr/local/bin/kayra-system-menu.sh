@@ -3,7 +3,8 @@
 # kayra-system-menu.sh - Kayra OS system menu.
 #
 # Launches the different system tools from a fuzzel dmenu: appearance, language,
-# keyboard, display, power mode, devices, services and the software update check.
+# keyboard, display, power mode, devices, services, startup commands and the
+# software update check.
 #
 # The menu labels come from the system_menu array in the language file
 # (lang/en.sh, lang/tr.sh). The icons and the commands are hard coded here and
@@ -27,6 +28,7 @@ declare -a ORDER=(
     DEVICES
     SERVICES
     SETTINGS
+    STARTUP
     UPDATES
 )
 
@@ -40,6 +42,7 @@ declare -A ICONS=(
     [DEVICES]="E1B1"
     [SERVICES]="E726"
     [SETTINGS]="F560"
+    [STARTUP]="E9A8"
     [UPDATES]="E923"
 )
 
@@ -97,6 +100,10 @@ case "${SELECTED#* }" in
     "${system_menu[SETTINGS]}")
         # Boolean settings submenu (automatic theme / updates).
         "/usr/local/bin/kayra-settings-menu.sh" &
+        ;;
+    "${system_menu[STARTUP]}")
+        # User startup command manager.
+        "/usr/local/bin/kayra-autostart.sh" menu &
         ;;
     "${system_menu[UPDATES]}")
         # Hand the manual update request over to the update flow.
