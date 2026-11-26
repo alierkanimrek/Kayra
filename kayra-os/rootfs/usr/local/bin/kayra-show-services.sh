@@ -21,9 +21,8 @@
 #   * a stopped service is started,
 #   * a disabled service is enabled and started.
 #
-# The service manager is only reachable for members of the "wheel" group
-# (socket 0660 root:wheel). A user outside that group gets a translated
-# notification.
+# The service manager is only reachable for members of the fixed "kayra-admin"
+# group (socket 0660 root:kayra-admin). A regular user exits silently.
 #
 # Important instructions:
 #   * The prompt line is shown, so the service can be searched by typing a
@@ -44,6 +43,9 @@
 set -uo pipefail
 
 export LC_ALL=C.UTF-8
+
+source /usr/local/lib/kayra/admin.sh
+require_kayra_admin
 
 source /usr/local/lib/kayra/i18n.sh
 declare -n MSG=i18n_SHOW_SERVICES

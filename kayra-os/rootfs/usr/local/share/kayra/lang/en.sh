@@ -70,7 +70,6 @@ declare -A i18n_GROUP_MANAGEMENT=(
   [GROUP_ADDED]="{USER} user added to '{GROUP}' group."
   [ADD_FAILED]="Failed to add to '{GROUP}' group."
   [NO_GROUPS_TO_REMOVE]="No groups available to remove."
-  [EXCEPTION_GROUP]="'{GROUP}' is an exception group, {USER} user cannot be removed from this group."
   [GROUP_REMOVED]="{USER} user removed from '{GROUP}' group."
   [REMOVE_FAILED]="Failed to remove from '{GROUP}' group."
   [MSG_MANAGER_UNAVAILABLE]="Group service is not running."
@@ -141,18 +140,6 @@ declare -A i18n_CUPS_MENU=(
   [CANCEL_FAIL]="Job {JOB} on {PRINTER} could not be canceled."
 )
 
-declare -A i18n_CHECK_GROUPS=(
-  [TITLE]="Group Management"
-  [MSG_FAILED]="Could not add the missing groups."
-)
-
-declare -A i18n_FIX_GROUPS=(
-  [TITLE_SUCCESS]="Groups added"
-  [MSG_SUCCESS]="Log out and log back in for this to take effect."
-  [TITLE_FAILED]="Operation cancelled or failed"
-  [MSG_FAILED]="Failed to add the missing groups."
-)
-
 declare -A i18n_APPEARANCE_MENU=(
   [MSG_NO_ITEMS]="No items found"
   [NOTIFY_TITLE]="Appearance Settings"
@@ -163,7 +150,6 @@ declare -A i18n_SETTINGS_MENU=(
   [MSG_NO_ITEMS]="No settings found"
   [LABEL_auto_theme]="Automatic Theme Switching"
   [LABEL_auto_update]="Track Updates"
-  [LABEL_auto_group_management]="Manage Groups"
   [LABEL_plane_mode_icon]="Airplane Mode Icon"
   [NOTIFY_TITLE]="System Settings"
   [MSG_TOGGLED]="{LABEL}: {STATE}"

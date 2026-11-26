@@ -73,4 +73,10 @@ git config --global --add safe.directory /var/spool/void-packages
 #PDF Printer
 lpadmin -p PDF -E -v cups-pdf:/ -P /usr/share/cups/model/CUPS-PDF_opt.ppd
 
+# One-time group setup for the installation user (wheel, kayra-admin and the
+# required_groups list). The helper is idempotent and root-only.
+if [ -x /usr/local/bin/kayra-first-run-groups.sh ]; then
+    /usr/local/bin/kayra-first-run-groups.sh || true
+fi
+
 touch "$MARKER"

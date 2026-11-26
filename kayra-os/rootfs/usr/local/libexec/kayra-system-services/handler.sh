@@ -57,6 +57,8 @@ DEFAULT_PROTECTED_SERVICES=(
     nanoklogd
     polkitd
     kayra-system-services
+    kayra-group-services
+    kayra-power-services
 )
 
 . /usr/local/lib/kayra/socat-link.sh

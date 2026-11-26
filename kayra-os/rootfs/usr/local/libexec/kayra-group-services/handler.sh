@@ -12,16 +12,14 @@
 #   list   [user]         list groups with the membership and internal flags
 #   add    [user group]   add the user to the group (usermod -aG)
 #   remove [user group]   remove the user from the group (gpasswd -d)
-#   fix    [user]         add the required groups from /etc/default/kayra.conf
 #
-# The required group list is system wide data read from /etc/default/kayra.conf
-# (key: required_groups) with settings-conf.sh. The exception policy of the
-# remove command (which groups a user may not leave) is handled by the client;
-# the service only refuses the primary group. The list response still reports
-# the required groups so the client can draw its menu consistently.
+# The socket is only reachable for members of the fixed kayra-admin group, so
+# the service does not distinguish callers. The remove command refuses only the
+# primary group. Internal groups (names starting with "_") are hidden from the
+# list and cannot be added.
 #
 # Every mutating command emits one terminal event before the response:
-#   added, removed, fixed       level 1 (info)
+#   added, removed              level 1 (info)
 #   unchanged                   level 1 (info)
 #   notfound                    level 3 (warn)
 #   failed                      level 4 (err)
@@ -30,8 +28,7 @@
 #   0 success, 1 user or group not found, 3 operation failed,
 #   4 invalid request, 5 target user not allowed
 #
-# Used commands: jq, usermod, gpasswd, id, getent, timeout, logger, awk,
-#                settings-conf.sh (system_conf_get)
+# Used commands: jq, usermod, gpasswd, id, getent, timeout, logger, awk
 #
 
 set -uo pipefail
@@ -44,7 +41,6 @@ umask 027
 EVENTS_FILE=${EVENTS_FILE:-/run/kayra-group-services/events.ndjson}
 
 . /usr/local/lib/kayra/socat-link.sh
-. /usr/local/lib/kayra/settings-conf.sh
 
 if ! command -v jq >/dev/null 2>&1; then
     logger -t kayra-group-services -p user.err \
@@ -130,13 +126,6 @@ event_data() {  # event_data <user> [group]
     '
 }
 
-required_groups_json() {
-    local str
-
-    str=$(system_conf_get required_groups | head -n1 || true)
-    jq -cn --arg str "$str" '$str | split(" ") | map(select(length > 0))'
-}
-
 groups_json() {  # groups_json <user> -> array of the current group names
     jq -cn --arg str "$(id -Gn "$1" 2>/dev/null | tr ' ' '\n' | sort -u | tr '\n' ' ')" '
         $str | split(" ") | map(select(length > 0))
@@ -167,13 +156,6 @@ result_data() {  # result_data <user> <group> <changed>
     jq -cn --arg user "$1" --arg group "$2" --argjson changed "$3" \
         --argjson groups "$(groups_json "$1")" '
         {user: $user, group: $group, changed: $changed, groups: $groups}
-    '
-}
-
-fix_data() {  # fix_data <user> <added-json> <skipped-json>
-    jq -cn --arg user "$1" --argjson added "$2" --argjson skipped "$3" \
-        --argjson groups "$(groups_json "$1")" '
-        {user: $user, added: $added, skipped: $skipped, groups: $groups}
     '
 }
 
@@ -215,16 +197,15 @@ fail_action() {  # fail_action <action> <user> <group> <reason>
 # Command handlers
 # ------------------------------------------------------------------
 handle_list() {  # handle_list <user>
-    local user=$1 groups required primary data
+    local user=$1 groups primary data
 
     groups=$(list_groups_json "$user") || groups='[]'
-    required=$(required_groups_json) || required='[]'
     primary=$(user_primary_group "$user" 2>/dev/null || true)
 
     data=$(jq -cn --arg user "$user" --arg primary "$primary" \
-        --argjson required "$required" --argjson groups "$groups" '
-        {user: $user, primary: $primary, required: $required, groups: $groups}
-    ') || data='{"groups":[],"required":[]}'
+        --argjson groups "$groups" '
+        {user: $user, primary: $primary, groups: $groups}
+    ') || data='{"groups":[]}'
 
     respond true 0 "" "$data"
 }
@@ -313,64 +294,6 @@ handle_remove() {  # handle_remove <user> <group>
         "$(result_data "$user" "$group" true)"
 }
 
-handle_fix() {  # handle_fix <user>
-    local user=$1 required available members plan status group
-    local -a add_groups=() skip_groups=()
-    local added_json skipped_json missing_csv
-
-    required=$(required_groups_json) || required='[]'
-    available=$(getent group 2>/dev/null | cut -d: -f1 | sort -u | tr '\n' ' ')
-    available=" $available "
-    members=$(user_group_list "$user")
-
-    # One line per required group: "add<TAB>name" or "skip<TAB>name".
-    mapfile -t plan < <(
-        jq -r '.[]' <<<"$required" | awk -F'\t' \
-            -v available="$available" -v members="$members" '
-            NF == 0 { next }
-            index(available, " " $0 " ") == 0 { print "skip\t" $0; next }
-            index(members, " " $0 " ") == 0 { print "add\t" $0 }
-        '
-    )
-
-    for line in "${plan[@]}"; do
-        [ -n "$line" ] || continue
-        status=${line%%$'\t'*}
-        group=${line#*$'\t'}
-        valid_group_name "$group" || continue
-        case "$status" in
-            add)  add_groups+=("$group") ;;
-            skip) skip_groups+=("$group") ;;
-        esac
-    done
-
-    added_json=$(printf '%s\n' "${add_groups[@]+"${add_groups[@]}"}" |
-        jq -R -s 'split("\n") | map(select(length > 0))')
-    skipped_json=$(printf '%s\n' "${skip_groups[@]+"${skip_groups[@]}"}" |
-        jq -R -s 'split("\n") | map(select(length > 0))')
-
-    if (( ${#add_groups[@]} == 0 )); then
-        log_svc info "No missing required groups for user $user"
-        respond true 0 "No missing required groups" \
-            "$(fix_data "$user" "$added_json" "$skipped_json")"
-        return 0
-    fi
-
-    missing_csv=$(IFS=,; printf '%s' "${add_groups[*]}")
-    if ! timeout 120 usermod -aG "$missing_csv" "$user" >/dev/null 2>&1; then
-        fail_action fix "$user" "" "usermod failed"
-        return 0
-    fi
-
-    log_svc info "Required groups added for user $user: $missing_csv"
-    emit_event "$SL_LVL_INFO" fixed \
-        "Required groups added for user $user: $missing_csv" \
-        "$(jq -cn --arg user "$user" --argjson added "$added_json" \
-            '{user: $user, added: $added}')"
-    respond true 0 "Required groups added" \
-        "$(fix_data "$user" "$added_json" "$skipped_json")"
-}
-
 invalid_request() {  # invalid_request <message>
     log_svc warn "$1"
     respond false 4 "$1" '{}'
@@ -397,7 +320,7 @@ parm=$(jq -c 'if ((.parm | type) == "array") or ((.parm | type) == "object")
 [ -n "$parm" ] || parm='[]'
 
 case "$cmd" in
-    list|fix)   need=1 ;;
+    list)       need=1 ;;
     add|remove) need=2 ;;
     *)
         invalid_request "Invalid command"
@@ -424,9 +347,6 @@ fi
 case "$cmd" in
     list)
         handle_list "$user"
-        ;;
-    fix)
-        handle_fix "$user"
         ;;
     add|remove)
         group=$(parm_str 1)

@@ -70,7 +70,6 @@ declare -A i18n_GROUP_MANAGEMENT=(
   [GROUP_ADDED]="{USER} kullanıcısı '{GROUP}' grubuna eklendi."
   [ADD_FAILED]="'{GROUP}' grubuna ekleme işlemi başarısız oldu."
   [NO_GROUPS_TO_REMOVE]="Çıkarılabilecek bir grup bulunamadı."
-  [EXCEPTION_GROUP]="'{GROUP}' istisna grubudur, {USER} kullanıcısı bu gruptan çıkarılamaz."
   [GROUP_REMOVED]="{USER} kullanıcısı '{GROUP}' grubundan çıkarıldı."
   [REMOVE_FAILED]="'{GROUP}' grubundan çıkarma işlemi başarısız oldu."
   [MSG_MANAGER_UNAVAILABLE]="Grup servisi çalışmıyor."
@@ -141,18 +140,6 @@ declare -A i18n_CUPS_MENU=(
   [CANCEL_FAIL]="{PRINTER} yazıcısındaki {JOB} işi iptal edilemedi."
 )
 
-declare -A i18n_CHECK_GROUPS=(
-  [TITLE]="Grup Yönetimi"
-  [MSG_FAILED]="Eksik gruplar eklenemedi."
-)
-
-declare -A i18n_FIX_GROUPS=(
-  [TITLE_SUCCESS]="Gruplar eklendi"
-  [MSG_SUCCESS]="Değişikliklerin etkili olması için çıkış yapıp tekrar giriş yapın."
-  [TITLE_FAILED]="İşlem iptal edildi veya başarısız oldu"
-  [MSG_FAILED]="Eksik gruplar eklenemedi."
-)
-
 declare -A i18n_APPEARANCE_MENU=(
   [MSG_NO_ITEMS]="Öğe bulunamadı"
   [NOTIFY_TITLE]="Görünüm Ayarları"
@@ -163,7 +150,6 @@ declare -A i18n_SETTINGS_MENU=(
   [MSG_NO_ITEMS]="Ayar bulunamadı"
   [LABEL_auto_theme]="Otomatik Tema Değişimi"
   [LABEL_auto_update]="Güncellemeleri Takip Et"
-  [LABEL_auto_group_management]="Grupları Yönet"
   [LABEL_plane_mode_icon]="Uçak Modu Simgesi"
   [NOTIFY_TITLE]="Sistem Ayarları"
   [MSG_TOGGLED]="{LABEL}: {STATE}"

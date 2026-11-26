@@ -8,9 +8,10 @@
 # menu. The menu entries are plain group names, without icons.
 #
 # The service runs as root, so the script needs neither pkexec nor a root
-# helper. The job socket is only reachable for members of the "wheel" group
-# (socket 0660 root:wheel). When the service is not reachable a translated
-# error notification is shown.
+# helper. The job socket is only reachable for members of the fixed
+# "kayra-admin" group (socket 0660 root:kayra-admin). A regular user exits
+# silently; when the service is not reachable an admin gets a translated error
+# notification.
 #
 # Usage: kayra-group-add.sh [fuzzel parameters...]
 #
@@ -19,6 +20,9 @@
 
 set -euo pipefail
 export LC_ALL=C.UTF-8
+
+source /usr/local/lib/kayra/admin.sh
+require_kayra_admin
 
 source /usr/local/lib/kayra/i18n.sh
 declare -n MSG=i18n_GROUP_MANAGEMENT

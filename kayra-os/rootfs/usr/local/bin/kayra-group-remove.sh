@@ -3,16 +3,13 @@
 # kayra-group-remove.sh - Remove the user from a group via a fuzzel menu.
 #
 # Lists the groups the user is a member of and removes the selected one with
-# "gpasswd -d" through the kayra-group-services job socket. Exception groups
-# are shown with a lock icon and cannot be removed; the exception policy is
-# managed by this client: the exception list is the required_groups list from
-# /etc/default/kayra.conf (via settings-conf.sh) while the auto_group_management
-# setting is "true". When that setting is "false" the exception list is empty
-# and every group can be removed. The service only refuses the primary group.
+# "gpasswd -d" through the kayra-group-services job socket. Every group except
+# the primary group can be removed. The service only refuses the primary group.
 #
 # The service runs as root, so the script needs neither pkexec nor a root
-# helper. When the service is not reachable a translated error notification is
-# shown.
+# helper. The job socket is only reachable for members of the fixed
+# "kayra-admin" group. A regular user exits silently; when the service is not
+# reachable an admin gets a translated error notification.
 #
 # Usage: kayra-group-remove.sh [fuzzel parameters...]
 #
@@ -23,20 +20,21 @@
 set -euo pipefail
 export LC_ALL=C.UTF-8
 
+source /usr/local/lib/kayra/admin.sh
+require_kayra_admin
+
 source /usr/local/lib/kayra/i18n.sh
 declare -n MSG=i18n_GROUP_MANAGEMENT
 
 source /usr/local/lib/kayra/klog.sh
 source /usr/local/lib/kayra/notify.sh
-source /usr/local/lib/kayra/settings-conf.sh
 source /usr/local/lib/kayra/groups-client.sh
 
 # The user the group is removed from.
 TARGET_USER="$(id -un)"
 
 # Material symbols used in front of every menu entry.
-ICON_MEMBER=$(printf '%b' '\U000E7EF')      # group
-ICON_EXCEPTION=$(printf '%b' '\U000E897')  # lock, the group can not be left
+ICON_MEMBER=$(printf '%b' '\U000E7EF')  # group
 
 # Returns the message of a key, the fallback is used when the key is
 # missing. The fallback is passed as a separate argument, a placeholder
@@ -53,32 +51,6 @@ manager_unavailable() {
         "$(msg_text MSG_MANAGER_UNAVAILABLE 'Group service is not running.')"
 }
 
-# Automatic group management: when "true" (default) the required groups are
-# protected and cannot be removed from the menu. When "false" the user is free
-# to add or remove any group.
-AUTO_GROUP_MANAGEMENT="$(conf_get auto_group_management | head -n1 || true)"
-[[ -z "$AUTO_GROUP_MANAGEMENT" ]] && AUTO_GROUP_MANAGEMENT="true"
-
-# Exception groups - the user cannot be removed from these while automatic
-# group management is enabled. Group names never contain spaces, so plain word
-# splitting is safe here.
-if [[ "$AUTO_GROUP_MANAGEMENT" == "true" ]]; then
-    EXCEPTION_GROUPS_STR="$(system_conf_get required_groups | head -n1 || true)"
-    EXCEPTION_GROUPS=( $EXCEPTION_GROUPS_STR )
-else
-    # Free mode: every group can be removed.
-    EXCEPTION_GROUPS=()
-fi
-
-# Exception groups as one space padded list for an exact match.
-EXCEPTION_LIST=" ${EXCEPTION_GROUPS[*]:-} "
-
-# Returns 0 when the given group is an exception group. The match is exact,
-# so a group name is never treated as a pattern.
-is_exception() {
-    printf '%s\n' "$1" | awk -v list="$EXCEPTION_LIST" 'index(list, " " $0 " ") > 0 { found = 1 } END { exit !found }'
-}
-
 # Returns the terminal event of the last request, empty when none arrived.
 terminal_event() {
     local line event result=""
@@ -86,7 +58,7 @@ terminal_event() {
     for line in "${GROUPS_EVENTS[@]}"; do
         event=$("${GROUPS_JQ:-jq}" -r '.event // empty' <<<"$line" 2>/dev/null)
         case "$event" in
-            added|removed|fixed|unchanged|notfound|failed) result=$event ;;
+            added|removed|unchanged|notfound|failed) result=$event ;;
         esac
     done
     printf '%s' "$result"
@@ -117,11 +89,7 @@ fi
 # Menu entries: the icon in front of the group name.
 declare -a MENU_LINES=()
 for group in "${USER_GROUPS[@]}"; do
-    if is_exception "$group"; then
-        MENU_LINES+=("$ICON_EXCEPTION $group")
-    else
-        MENU_LINES+=("$ICON_MEMBER $group")
-    fi
+    MENU_LINES+=("$ICON_MEMBER $group")
 done
 
 # Window width of the longest menu entry (icon counted as 3 characters).
@@ -139,14 +107,6 @@ SELECTED=$(printf '%s\n' "${MENU_LINES[@]}" | fuzzel --dmenu --log-no-syslog --m
 SELECTED_GROUP="${SELECTED#* }"
 
 [[ -z "$SELECTED_GROUP" ]] && exit 0
-
-# If exception group: do not perform the operation.
-if is_exception "$SELECTED_GROUP"; then
-    log INFO "Group $SELECTED_GROUP is an exception group, removal skipped for user $TARGET_USER"
-    notify_warn "${MSG[TITLE]}" \
-        "$(i18n_template "${MSG[EXCEPTION_GROUP]}" GROUP="$SELECTED_GROUP" USER="$TARGET_USER")"
-    exit 0
-fi
 
 log INFO "Removing user $TARGET_USER from group $SELECTED_GROUP"
 

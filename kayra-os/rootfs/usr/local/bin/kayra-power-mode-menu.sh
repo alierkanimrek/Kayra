@@ -13,7 +13,9 @@
 #   performance|balanced|power-saver   tlpctl set <profile>
 #   auto                               tlp start (AC/battery automatic mode)
 #
-# The service is the only way to change a profile. When it can not be reached
+# The service is the only way to change a profile. Only members of the fixed
+# kayra-admin group can reach its socket; a regular user exits silently, so
+# the Waybar click does nothing. When an admin can not reach the service
 # (service stopped, socket permission or timeout) a translated error
 # notification is shown and nothing is changed.
 #
@@ -29,6 +31,9 @@
 
 set -uo pipefail
 export LC_ALL=C.UTF-8
+
+source /usr/local/lib/kayra/admin.sh
+require_kayra_admin
 
 source /usr/local/lib/kayra/i18n.sh
 declare -n MSG=i18n_POWER_MODE_MENU

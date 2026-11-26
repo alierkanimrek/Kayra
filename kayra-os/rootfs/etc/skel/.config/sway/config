@@ -247,9 +247,6 @@ exec wl-paste --type image --watch cliphist store
 #Waybar
 exec_always "pkill -x waybar 2>/dev/null || true; waybar > $HOME/.local/var/log/waybar.log 2>&1"
 
-# User Groups Control Scripts
-exec /usr/local/bin/kayra-check-groups.sh
-
 #Theme change monitor
 exec /usr/local/bin/kayra-theme-monitor.sh
 

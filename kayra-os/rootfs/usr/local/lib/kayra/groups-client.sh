@@ -26,7 +26,6 @@
 #       Returns 1 when the service is not reachable or the request failed.
 #   groups_add <user> <group>
 #   groups_remove <user> <group>
-#   groups_fix <user>
 #       Send a mutation request. Return 0 when a res line was received, 1 on a
 #       transport error. The caller reads the events/res globals.
 #   groups_result_ok
@@ -39,10 +38,10 @@
 #   GROUPS_EVENTS  array of evt lines received for the last request
 #
 # IMPORTANT
-#   groups_call, groups_add, groups_remove and groups_fix update globals in the
-#   caller shell. Do not call them inside $(...) or a pipeline when the globals
-#   are needed; the subshell would keep the changes. groups_list is safe in
-#   $(...) because it prints its result.
+#   groups_call, groups_add and groups_remove update globals in the caller
+#   shell. Do not call them inside $(...) or a pipeline when the globals are
+#   needed; the subshell would keep the changes. groups_list is safe in $(...)
+#   because it prints its result.
 #
 # Used commands: socat, flock (via socat-link.sh), jq, date
 #
@@ -134,14 +133,6 @@ groups_remove() {  # groups_remove <user> <group>
     parm=$("$GROUPS_JQ" -cn --arg user "$user" --arg group "$group" \
         '[$user, $group]') || return 1
     groups_call remove "$parm"
-}
-
-groups_fix() {  # groups_fix <user>
-    local user=${1:?user required}
-    local parm
-
-    parm=$("$GROUPS_JQ" -cn --arg user "$user" '[$user]') || return 1
-    groups_call fix "$parm"
 }
 
 groups_result_ok() {

@@ -20,9 +20,11 @@
 # gets a translated information notification instead. The service enforces the
 # same rule on its own.
 #
-# If the service manager cannot be reached (service stopped, socket permission
-# or timeout), a translated error notification is shown. The same happens when
-# the request gets no response.
+# The socket is only reachable for members of the fixed kayra-admin group. A
+# regular user exits silently before any request is sent. If an admin cannot
+# reach the service manager (service stopped, socket permission or timeout), a
+# translated error notification is shown. The same happens when the request
+# gets no response.
 #
 # Usage: kayra-toggle-service.sh <service-name> [running|stopped|disabled] [true|false]
 #
@@ -33,6 +35,9 @@
 set -uo pipefail
 
 export LC_ALL=C.UTF-8
+
+source /usr/local/lib/kayra/admin.sh
+require_kayra_admin
 
 source /usr/local/lib/kayra/i18n.sh
 declare -n MSG=i18n_TOGGLE_SERVICE

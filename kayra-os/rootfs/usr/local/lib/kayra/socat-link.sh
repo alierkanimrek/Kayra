@@ -89,9 +89,9 @@
 #     exec 2>&1
 #     install -d -m 0755 -o root -g root /run/myservice
 #     [ -e /run/myservice/job.lock ] ||
-#       install -m 0640 -o root -g wheel /dev/null /run/myservice/job.lock
+#       install -m 0640 -o root -g kayra-admin /dev/null /run/myservice/job.lock
 #     . /usr/local/lib/kayra/socat-link.sh
-#     SL_SOCK_MODE=0660 SL_SOCK_GROUP=wheel \
+#     SL_SOCK_MODE=0660 SL_SOCK_GROUP=kayra-admin \
 #       sl_serve /run/myservice/job.sock /usr/local/libexec/myservice/handler.sh
 #
 #   Handler (runit starts one process per connection; the lock is already

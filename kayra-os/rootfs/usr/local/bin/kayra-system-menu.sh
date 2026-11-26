@@ -15,22 +15,27 @@
 set -euo pipefail
 export LC_ALL=C.UTF-8
 
+source /usr/local/lib/kayra/admin.sh
+
 source /usr/local/lib/kayra/i18n.sh
 declare -n MSG=i18n_SYSTEM_MENU
 
-# Display order of the menu entries
+# Display order of the menu entries. Power mode and services go through
+# Kayra root sockets and are only shown to kayra-admin members.
 declare -a ORDER=(
     APPEARANCE_THEME
     LANGUAGE
     KEYBOARD
     DISPLAY
-    POWER_MODE
-    DEVICES
-    SERVICES
-    SETTINGS
-    STARTUP
-    UPDATES
 )
+if is_kayra_admin; then
+    ORDER+=(POWER_MODE)
+fi
+ORDER+=(DEVICES)
+if is_kayra_admin; then
+    ORDER+=(SERVICES)
+fi
+ORDER+=(SETTINGS STARTUP UPDATES)
 
 # Material Design Nerd Font icons per menu key
 declare -A ICONS=(

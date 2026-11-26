@@ -13,19 +13,21 @@
 set -euo pipefail
 export LC_ALL=C.UTF-8
 
+source /usr/local/lib/kayra/admin.sh
+
 source /usr/local/lib/kayra/i18n.sh
 declare -n MSG=i18n_USER_MENU
 
 source /usr/local/lib/kayra/klog.sh
 source /usr/local/lib/kayra/notify.sh
 
-# Display order of the menu entries
-declare -a ORDER=(
-    ADD_TO_GROUP
-    REMOVE_FROM_GROUP
-    CHANGE_PASSWORD
-    HOME_USAGE
-)
+# Display order of the menu entries. Group management is admin-only; the
+# other entries stay available to every user.
+declare -a ORDER=()
+if is_kayra_admin; then
+    ORDER+=(ADD_TO_GROUP REMOVE_FROM_GROUP)
+fi
+ORDER+=(CHANGE_PASSWORD HOME_USAGE)
 
 # Material Design Nerd Font icons per menu key
 declare -A ICONS=(

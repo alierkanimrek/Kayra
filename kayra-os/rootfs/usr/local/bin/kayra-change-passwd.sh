@@ -6,7 +6,7 @@
 # simulating it with a pty wrapper (expect/python/socat), the script runs
 # passwd inside a real terminal (alacritty) and types the passwords with
 # "wtype" synthetic keyboard input. This avoids additional languages
-# (python/expect), sudo, wheel group or pkexec.
+# (python/expect), sudo or pkexec.
 #
 # The passwords are collected with fuzzel in password mode. The prompt is
 # kept here because the user has to know which password is being asked.

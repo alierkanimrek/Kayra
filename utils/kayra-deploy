@@ -21,11 +21,15 @@
 #              "sv restart <name>" for every service found
 #   core       etc/runit/core-services/  -> /etc/runit/core-services/ (0755)
 #   system     etc/default/kayra.conf    -> /etc/default/kayra.conf  (0644)
-#   migrate    prune obsolete keys (required_groups) from every user
-#              ~/.config/kayra/settings.conf, keeping owner and mode
+#   admin      create the kayra-admin group and add the deploy caller
+#   migrate    prune obsolete keys (required_groups, auto_group_management)
+#              from every user ~/.config/kayra/settings.conf, keeping owner
+#              and mode
+#   cleanup    remove the retired Kayra helpers and the kayra-check-groups
+#              line from the user sway configs
 #   config     etc/skel/.config/         -> $HOME/.config/          (0644, user owned)
-#   all        scripts + lang + data + services + core + system + migrate
-#              (config is NOT included)
+#   all        scripts + lang + data + core + system + admin + migrate
+#              + cleanup + services (config is NOT included)
 #
 # Before anything is installed every shell file is checked with "bash -n"; on a
 # syntax error nothing is installed.
@@ -34,6 +38,8 @@
 #   sudo utils/kayra-deploy scripts
 #   sudo utils/kayra-deploy scripts data
 #   sudo utils/kayra-deploy services
+#   sudo utils/kayra-deploy admin
+#   sudo utils/kayra-deploy cleanup
 #   sudo utils/kayra-deploy config
 #   sudo utils/kayra-deploy all
 #   sudo utils/kayra-deploy            # same as "all"
@@ -125,18 +131,63 @@ task_system() {
     || die "cannot install: /etc/default/kayra.conf"
 }
 
-# migrate prunes the required_groups key that moved to /etc/default/kayra.conf
-# from every user settings file. sed -i replaces the file, so the original
-# owner and group are restored afterwards.
+# admin creates the fixed Kayra administrator group and adds the deploy
+# caller. It is safe to run repeatedly. The first-boot helper performs the same
+# setup for the installation user on a fresh system.
+task_admin() {
+  local user=${DEPLOY_USER:-root}
+
+  getent group kayra-admin >/dev/null ||
+    groupadd -r kayra-admin || die "cannot create group: kayra-admin"
+
+  if [[ $user != root ]]; then
+    usermod -aG kayra-admin "$user" ||
+      die "cannot add $user to kayra-admin"
+  fi
+
+  printf 'kayra-deploy: kayra-admin ready (members: %s)\n' \
+    "$(getent group kayra-admin | cut -d: -f4)"
+}
+
+# migrate prunes keys that moved out of the user settings files
+# (required_groups, auto_group_management). sed -i replaces the file, so the
+# original owner and mode are restored afterwards.
 task_migrate() {
-  local conf owner
+  local conf owner mode
   for conf in /home/*/.config/kayra/settings.conf /root/.config/kayra/settings.conf; do
     [[ -f $conf ]] || continue
-    grep -q '^required_groups=' "$conf" || continue
+    grep -qE '^(required_groups|auto_group_management)=' "$conf" || continue
     owner=$(stat -c '%u:%g' "$conf")
-    sed -i '/^required_groups=/d' "$conf"
+    mode=$(stat -c '%a' "$conf")
+    sed -i -E '/^(required_groups|auto_group_management)=/d' "$conf"
     chown "$owner" "$conf"
-    printf 'kayra-deploy: removed legacy required_groups from %s\n' "$conf"
+    chmod "$mode" "$conf"
+    printf 'kayra-deploy: removed obsolete group settings from %s\n' "$conf"
+  done
+}
+
+# cleanup removes the retired helpers from older deployments and prunes the
+# obsolete sway exec line. These files are no longer shipped by the repository.
+task_cleanup() {
+  local f owner mode
+  for f in \
+    /usr/local/bin/kayra-check-groups.sh \
+    /usr/local/bin/kayra-fix-groups.sh \
+    /usr/local/bin/kayra-sv-status-helper.sh \
+    /usr/local/bin/kayra-sv-toggle-helper.sh; do
+    [[ -e $f ]] || continue
+    rm -f "$f" && printf 'kayra-deploy: removed %s\n' "$f"
+  done
+
+  for f in /home/*/.config/sway/config /root/.config/sway/config; do
+    [[ -f $f ]] || continue
+    grep -qF 'kayra-check-groups.sh' "$f" || continue
+    owner=$(stat -c '%u:%g' "$f")
+    mode=$(stat -c '%a' "$f")
+    sed -i '/kayra-check-groups\.sh/d' "$f"
+    chown "$owner" "$f"
+    chmod "$mode" "$f"
+    printf 'kayra-deploy: removed kayra-check-groups from %s\n' "$f"
   done
 }
 
@@ -162,10 +213,12 @@ task_all() {
   task_scripts
   task_lang
   task_data
-  task_services
   task_core
   task_system
+  task_admin
   task_migrate
+  task_cleanup
+  task_services
 }
 
 # Refuse to install anything when a shell file has a syntax error.
@@ -188,7 +241,7 @@ syntax_check || die "syntax error(s) found; nothing installed"
 (($#)) || set -- all
 for task in "$@"; do
   case $task in
-    scripts|lang|data|services|core|system|migrate|config|all) "task_$task" ;;
+    scripts|lang|data|services|core|system|admin|migrate|cleanup|config|all) "task_$task" ;;
     *) die "unknown task: $task" ;;
   esac
 done

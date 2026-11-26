@@ -8,7 +8,7 @@
 # Selecting an entry toggles the value (true <-> false) and saves it.
 #
 # Currently: automatic theme switching, automatic package update checks and
-# automatic group management.
+# the airplane mode icon.
 #
 # Add a setting: put its key in SETTING_KEYS, and its translated label as
 # [LABEL_<key>] in i18n_SETTINGS_MENU (lang/en.sh, lang/tr.sh).
@@ -38,7 +38,6 @@ source /usr/local/lib/kayra/notify.sh
 SETTING_KEYS=(
     auto_theme
     auto_update
-    auto_group_management
     plane_mode_icon
 )
 
