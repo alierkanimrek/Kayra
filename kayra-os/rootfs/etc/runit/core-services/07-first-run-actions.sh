@@ -80,7 +80,14 @@ chmod 770 /var/spool/void-packages
 git config --global --add safe.directory /var/spool/void-packages
 
 #PDF Printer
-lpadmin -p PDF -E -v cups-pdf:/ -P /usr/share/cups/model/CUPS-PDF_opt.ppd
+# cupsd is started later by stage 2, so lpadmin cannot reach a running
+# scheduler here. Seed the queue files instead; cupsd reads them when it
+# starts and completes the missing printer attributes itself.
+install -d -m 0755 -o root -g lp /etc/cups/ppd
+install -m 0644 -o root -g lp \
+    /usr/share/cups/model/CUPS-PDF_opt.ppd /etc/cups/ppd/PDF.ppd
+install -m 0600 -o root -g lp \
+    /usr/local/share/kayra/cups/printers.conf /etc/cups/printers.conf
 
 # One-time group setup for the installation user (wheel, kayra-admin and the
 # required_groups list). The helper is idempotent and root-only.
