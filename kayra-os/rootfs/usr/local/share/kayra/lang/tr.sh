@@ -37,15 +37,13 @@ declare -A i18n_HOME_USAGE=(
 )
 
 declare -A i18n_CHANGE_PASSWD=(
-  [PROMPT_CURRENT]="Mevcut şifre: "
-  [PROMPT_NEW]="Yeni şifre: "
-  [PROMPT_NEW_REPEAT]="Yeni şifre (tekrar): "
+  [WINDOW_TITLE]="Şifre değiştir"
   [NOTIFY_TITLE]="Şifre değiştirme"
   [MSG_NOT_INSTALLED]="{BIN} kurulu değil (xbps-install -S {BIN})"
+  [MSG_TERMINAL_FAILED]="Terminal açılamadı. Şifre değiştirme başlatılmadı."
   [MSG_CANCELLED]="İşlem iptal edildi"
-  [MSG_MISMATCH]="Yeni şifreler birbiriyle eşleşmiyor."
   [MSG_SUCCESS]="Şifre başarıyla değiştirildi."
-  [MSG_FAILED]="Şifre değiştirilemedi. Mevcut şifre hatalı olabilir."
+  [MSG_FAILED]="Şifre değiştirilemedi. Mevcut şifre hatalı olabilir veya yeni şifre reddedilmiş olabilir."
 )
 
 declare -A i18n_WIFI_MENU=(
@@ -293,6 +291,7 @@ declare -A i18n_LANGUAGE_SETTINGS=(
 
 declare -A i18n_LANGUAGE_ADD=(
   [NOTIFY_TITLE]="Dil Ekle"
+  [PROMPT_SEARCH]="Ara: "
   [MSG_NO_LOCALES]="Eklenecek yeni UTF-8 yereli bulunamadı."
   [MSG_MISSING_TRANSLATION]="{CODE} için Kayra arayüz çevirisi yok. İngilizce arayüz kullanılacak. {LOCALE} dil menüsüne eklensin mi?"
   [BUTTON_ADD]="Ekle"

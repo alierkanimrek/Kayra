@@ -1,24 +1,23 @@
 #!/usr/bin/env bash
 #
-# kayra-change-passwd.sh - Change the user password via a fuzzel menu.
+# kayra-change-passwd.sh - Change the user password in a real terminal.
 #
-# Design: passwd(1) requires reading the input from a real tty. Instead of
-# simulating it with a pty wrapper (expect/python/socat), the script runs
-# passwd inside a real terminal (alacritty) and types the passwords with
-# "wtype" synthetic keyboard input. This avoids additional languages
-# (python/expect), sudo or pkexec.
+# Design: passwd(1) reads the current and new passwords directly from a real
+# TTY. The script opens alacritty and runs passwd there, so the passwords
+# never pass through command line arguments, environment variables or
+# synthetic keyboard input. The terminal closes automatically when passwd
+# finishes and the script reports the result with a notification.
 #
-# The passwords are collected with fuzzel in password mode. The prompt is
-# kept here because the user has to know which password is being asked.
-# The "OK" info window has no prompt and therefore uses --hide-prompt.
+# The exit code of passwd is written to a temporary file by the wrapper that
+# runs inside the terminal. Alacritty itself does not expose the child exit
+# code, so the temporary file is the only reliable result channel. The file
+# contains only the numeric exit code, never a password.
 #
 # Dependencies:
-#   - fuzzel      (xbps-install -S fuzzel)
 #   - alacritty   (xbps-install -S alacritty)
-#   - wtype       (xbps-install -S wtype)   -- Wayland synthetic keyboard input
 #   - libnotify   (for notify-send, xbps-install -S libnotify)
 #
-# Used commands: fuzzel, alacritty, wtype, notify-send, pkill, mktemp, id, passwd
+# Used commands: alacritty, notify-send, mktemp, id, passwd, head, rm
 #
 set -uo pipefail
 export LC_ALL=C.UTF-8
@@ -30,134 +29,56 @@ source /usr/local/lib/kayra/klog.sh
 source /usr/local/lib/kayra/notify.sh
 
 USER_NAME="$(id -un)"
-WIN_CLASS="fuzzelpasswd"
-RESULT_FILE="$(mktemp /tmp/fuzzelpasswd.XXXXXX)"
-
-# Common fuzzel options for the menus of this script.
-FUZZEL_OPTS=(--lines=1 --anchor=top-right --log-no-syslog --minimal-lines)
-
-# Maximum wait time for the passwd process, in tenths of a second.
-WAIT_TICKS=50
+RESULT_FILE="$(mktemp /tmp/kayra-change-passwd.XXXXXX)"
 
 cleanup() {
     rm -f "$RESULT_FILE"
 }
 trap cleanup EXIT
 
-# Close any leftover fuzzel windows before each menu
-close_fuzzel() {
-    pkill -x fuzzel 2>/dev/null || true
-    sleep 0.05
-}
-
-# Open fuzzel dmenu for hidden (password) input, return typed text
-ask_password() {
-    local prompt="$1"
-    close_fuzzel
-    printf '' | fuzzel --dmenu --password --prompt="$prompt" "${FUZZEL_OPTS[@]}" 2>/dev/null
-}
-
-# Simple info window (closed with OK). No prompt needed, so the prompt line
-# is hidden and the message itself is shown as a menu entry.
-info_box() {
-    local msg="$1"
-    close_fuzzel
-    printf '%s\nOK\n' "$msg" | fuzzel --dmenu --hide-prompt "${FUZZEL_OPTS[@]}" >/dev/null 2>&1
-}
-
-# Type text via wtype, then press Enter
-type_and_enter() {
-    local text="$1"
-    wtype -- "$text"
-    sleep 0.15
-    wtype -k Return
-}
-
 log INFO "Password change started for user $USER_NAME"
 
 # --- Dependency check -----------------------------------------------
-for bin in fuzzel alacritty wtype notify-send; do
+for bin in alacritty notify-send passwd; do
     if ! command -v "$bin" >/dev/null 2>&1; then
         log ERROR "Required command $bin is not installed"
-        info_box "$(i18n_template "${MSG[MSG_NOT_INSTALLED]}" BIN="$bin")"
         notify_error "${MSG[NOTIFY_TITLE]}" \
             "$(i18n_template "${MSG[MSG_NOT_INSTALLED]}" BIN="$bin")"
         exit 1
     fi
 done
 
-# --- 1) Ask for current password -------------------------------------
-CURRENT_PASS="$(ask_password "${MSG[PROMPT_CURRENT]}")"
-if [[ -z "$CURRENT_PASS" ]]; then
-    log INFO "Password change cancelled at the current password prompt"
-    notify_info "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_CANCELLED]}"
-    exit 1
-fi
+# --- Run passwd in a real terminal -----------------------------------
+# The wrapper writes only the exit code to RESULT_FILE. The password is read
+# by passwd from the terminal and never touches the script.
+alacritty --title "${MSG[WINDOW_TITLE]}" -e \
+    bash -c 'passwd "$1"; rc=$?; printf "%s\n" "$rc" > "$2"; exit "$rc"' \
+    _ "$USER_NAME" "$RESULT_FILE"
+ALACRITTY_STATUS=$?
 
-# --- 2) Ask for new password twice -----------------------------------
-NEW_PASS1="$(ask_password "${MSG[PROMPT_NEW]}")"
-if [[ -z "$NEW_PASS1" ]]; then
-    log INFO "Password change cancelled at the new password prompt"
-    notify_info "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_CANCELLED]}"
-    unset CURRENT_PASS
-    exit 1
-fi
-
-NEW_PASS2="$(ask_password "${MSG[PROMPT_NEW_REPEAT]}")"
-if [[ -z "$NEW_PASS2" ]]; then
-    log INFO "Password change cancelled at the new password repeat prompt"
-    notify_info "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_CANCELLED]}"
-    unset CURRENT_PASS NEW_PASS1
-    exit 1
-fi
-
-if [[ "$NEW_PASS1" != "$NEW_PASS2" ]]; then
-    log WARN "The new passwords do not match"
-    notify_error "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_MISMATCH]}"
-    unset CURRENT_PASS NEW_PASS1 NEW_PASS2
-    exit 1
-fi
-
-# --- 3) Clean up stray window, open passwd in real terminal -----------
-pkill -f "alacritty --class $WIN_CLASS" 2>/dev/null || true
-close_fuzzel
-
-alacritty --class "$WIN_CLASS" -e bash -c \
-    "passwd '$USER_NAME'; echo \$? > '$RESULT_FILE'" &
-
-# Wait for window to open and passwd to show first prompt
-sleep 0.7
-
-# --- 4) Type passwords in sequence -----------------------------------
-type_and_enter "$CURRENT_PASS"
-sleep 0.4
-type_and_enter "$NEW_PASS1"
-sleep 0.4
-type_and_enter "$NEW_PASS2"
-
-# --- 5) Wait for result ----------------------------------------------
-STATUS=1
-ticks=0
-while [[ ! -s "$RESULT_FILE" ]] && ((ticks < WAIT_TICKS)); do
-    sleep 0.1
-    ticks=$((ticks + 1))
-done
-
+# --- Read the result --------------------------------------------------
+STATUS=""
 if [[ -s "$RESULT_FILE" ]]; then
-    STATUS="$(cat "$RESULT_FILE")"
-else
-    log WARN "Timeout while waiting for the passwd result"
+    STATUS="$(head -n1 "$RESULT_FILE")"
 fi
 
-pkill -f "alacritty --class $WIN_CLASS" 2>/dev/null || true
-unset CURRENT_PASS NEW_PASS1 NEW_PASS2
+if [[ ! "$STATUS" =~ ^[0-9]+$ ]]; then
+    if [[ "$ALACRITTY_STATUS" -ne 0 ]]; then
+        log ERROR "Could not open the terminal for the password change"
+        notify_error "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_TERMINAL_FAILED]}"
+    else
+        log INFO "Password change cancelled or terminal closed before passwd finished"
+        notify_info "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_CANCELLED]}"
+    fi
+    exit 1
+fi
 
 if [[ "$STATUS" -eq 0 ]]; then
     log INFO "Password changed successfully for user $USER_NAME"
     notify_ok "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_SUCCESS]}"
-else
-    log ERROR "Password change failed for user $USER_NAME"
-    notify_error "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_FAILED]}"
+    exit 0
 fi
 
+log ERROR "Password change failed for user $USER_NAME (passwd exit code $STATUS)"
+notify_error "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_FAILED]}"
 exit "$STATUS"

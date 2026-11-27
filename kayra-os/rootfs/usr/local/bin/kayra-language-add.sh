@@ -3,10 +3,15 @@
 # kayra-language-add.sh - Add a system locale to the Kayra language registry.
 #
 # Admin only. Lists the UTF-8 locales from /etc/default/libc-locales that are
-# not yet represented in languages.tsv. If there is no lang/<code>.sh, it warns
-# that the Kayra interface will stay in English and asks for confirmation
-# before writing the registry entry. It does not generate the locale; selecting
-# the new entry in the language menu generates it when needed.
+# not yet represented in languages.tsv. Entries are searchable by locale code
+# and by the English language name from /usr/share/i18n/locales (for example
+# "de_DE.UTF-8 - German"). If there is no lang/<code>.sh, it warns that the
+# Kayra interface will stay in English and asks for confirmation before writing
+# the registry entry. It does not generate the locale; selecting the new entry
+# in the language menu generates it when needed.
+#
+# The list is long, so the fuzzel height is left at its default and the search
+# prompt stays visible.
 #
 # The language code is the part before the first "_" of the locale
 # (de_DE.UTF-8 -> de). Locales whose code is already in the registry are not
@@ -18,6 +23,7 @@
 #   - fuzzel      (xbps-install -S fuzzel)
 #   - libnotify   (for notify-send, xbps-install -S libnotify)
 #   - jq, socat   (via locale-client.sh)
+#   - glibc-locales (provides /usr/share/i18n/locales for the English names)
 #
 # Used commands: fuzzel, pkill, awk, sort, jq, locale-client.sh
 #
@@ -50,6 +56,23 @@ if [[ ! -r "$LOCALE_DB" ]]; then
     exit 1
 fi
 
+# locale_language_name <locale> -> English language name from glibc
+# Falls back to the locale code when the source file or language field is
+# missing. The source files are installed by glibc-locales.
+locale_language_name() {
+    local locale=${1:-}
+    local base file name
+
+    base=${locale%%.*}
+    file="/usr/share/i18n/locales/$base"
+
+    if [[ -r "$file" ]]; then
+        name=$(awk -F'"' '/^language[ \t]+"/ { print $2; exit }' "$file" 2>/dev/null)
+    fi
+
+    printf '%s' "${name:-$locale}"
+}
+
 # Existing codes and locales from the registry.
 declare -A EXISTING_CODES=() EXISTING_LOCALES=()
 while IFS=$'\t' read -r code locale rest; do
@@ -59,7 +82,7 @@ while IFS=$'\t' read -r code locale rest; do
 done < "$REGISTRY"
 
 # All UTF-8 locales listed by the package, without C/POSIX.
-declare -a RAW=() AVAILABLE=()
+declare -a RAW=() LINES=() LOCALES=() DISPLAY_NAMES=()
 mapfile -t RAW < <(
     awk '
         {
@@ -79,10 +102,21 @@ for locale in "${RAW[@]}"; do
     [[ $code =~ ^[a-z]{2,3}$ ]] || continue
     [[ -n ${EXISTING_LOCALES[$locale]:-} ]] && continue
     [[ -n ${EXISTING_CODES[$code]:-} ]] && continue
-    AVAILABLE+=("$locale")
+
+    name=$(locale_language_name "$locale")
+    if [[ -z "$name" || "$name" == "$locale" ]]; then
+        name="$locale"
+        line="$locale"
+    else
+        line="$locale - $name"
+    fi
+
+    LINES+=("$line")
+    LOCALES+=("$locale")
+    DISPLAY_NAMES+=("$name")
 done
 
-if (( ${#AVAILABLE[@]} == 0 )); then
+if (( ${#LINES[@]} == 0 )); then
     log INFO "No new UTF-8 locales found"
     notify_info "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_NO_LOCALES]}"
     exit 0
@@ -90,15 +124,23 @@ fi
 
 pkill -x fuzzel 2>/dev/null || true
 
-MAX_WIDTH=$(printf '%s\n' "${AVAILABLE[@]}" | awk '{ n = length($0) - 1 + 3; if (n > m) m = n } END { print m+0 }')
+MAX_WIDTH=$(printf '%s\n' "${LINES[@]}" | awk '{ n = length($0) - 1 + 3; if (n > m) m = n } END { print m+0 }')
 
-SELECTED=$(printf '%s\n' "${AVAILABLE[@]}" | fuzzel --dmenu --anchor=top-right \
-    --log-no-syslog --minimal-lines --lines="${#AVAILABLE[@]}" \
-    --width="$MAX_WIDTH" --hide-prompt "$@") || true
+# Long list: leave the height to fuzzel and keep the search prompt visible.
+SELECTED=$(printf '%s\n' "${LINES[@]}" | fuzzel --dmenu --anchor=top-right \
+    --log-no-syslog --width="$MAX_WIDTH" \
+    --prompt="${MSG[PROMPT_SEARCH]:-Search: }" "$@") || true
 
 [[ -z "$SELECTED" ]] && exit 0
 
-LOCALE="$SELECTED"
+SEL_INDEX=$(printf '%s\n' "${LINES[@]}" |
+    awk -v sel="$SELECTED" '$0 == sel { print NR - 1; exit }')
+[[ -z "$SEL_INDEX" ]] && exit 0
+
+LOCALE="${LOCALES[$SEL_INDEX]}"
+NAME="${DISPLAY_NAMES[$SEL_INDEX]}"
+[[ -z "$LOCALE" ]] && exit 0
+
 CODE="${LOCALE%%_*}"
 
 if [[ ! "$CODE" =~ ^[a-z]{2,3}$ ]]; then
@@ -121,10 +163,10 @@ if [[ ! -f "$LANG_DIR/$CODE.sh" ]]; then
 fi
 
 LANGUAGE_LIST="${CODE}:en"
-NATIVE_NAME="$LOCALE"
-NAME_EN="$LOCALE"
+NATIVE_NAME="${NAME:-$LOCALE}"
+NAME_EN="$NATIVE_NAME"
 
-log INFO "Adding language: code=$CODE locale=$LOCALE"
+log INFO "Adding language: code=$CODE locale=$LOCALE name=$NATIVE_NAME"
 
 if ! locale_add "$CODE" "$LOCALE" "$LANGUAGE_LIST" "$NATIVE_NAME" "$NAME_EN"; then
     log ERROR "Language service is not reachable"

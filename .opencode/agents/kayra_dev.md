@@ -65,8 +65,13 @@ Source -> live target:
 - Notify with `notify.sh`; use translated messages with `i18n.sh`. use Material Symbols codepoints.
 - Read/write settings with `settings-conf.sh`.
 - Guard continuous loops with `single_instance.sh`.
-- Fuzzel: `--log-no-syslog --minimal-lines`; `--hide-prompt` when no input
-  is needed; `pkill -x fuzzel 2>/dev/null || true` before opening.
+- Fuzzel: `--log-no-syslog`; `pkill -x fuzzel 2>/dev/null || true` before opening.
+- Short, fixed menus may use `--minimal-lines`; use `--hide-prompt` only when no
+  input is needed.
+- Long or variable lists (for example the locale list): show a translated
+  search prompt (`--prompt=...`, never `--hide-prompt`) and leave the height to
+  fuzzel. Do not pass `--lines=<element count>` and do not use
+  `--minimal-lines`; use fuzzel's default height.
 - Fuzzel width:
   `MAX_WIDTH=$(printf '%s\n' "${LINES[@]}" | awk '{ n = length($0) - 1 + 3; if (n > m) m = n } END { print m+0 }')`
 - Use `jq` for Waybar module output.

@@ -37,15 +37,13 @@ declare -A i18n_HOME_USAGE=(
 )
 
 declare -A i18n_CHANGE_PASSWD=(
-  [PROMPT_CURRENT]="Current password: "
-  [PROMPT_NEW]="New password: "
-  [PROMPT_NEW_REPEAT]="New password (again): "
+  [WINDOW_TITLE]="Change password"
   [NOTIFY_TITLE]="Password change"
   [MSG_NOT_INSTALLED]="{BIN} is not installed (xbps-install -S {BIN})"
+  [MSG_TERMINAL_FAILED]="The terminal could not be opened. Password change was not started."
   [MSG_CANCELLED]="Operation cancelled"
-  [MSG_MISMATCH]="New passwords do not match."
   [MSG_SUCCESS]="Password changed successfully."
-  [MSG_FAILED]="Password change failed. Current password may be incorrect."
+  [MSG_FAILED]="Password change failed. The current password may be incorrect or the new password was rejected."
 )
 
 declare -A i18n_WIFI_MENU=(
@@ -293,6 +291,7 @@ declare -A i18n_LANGUAGE_SETTINGS=(
 
 declare -A i18n_LANGUAGE_ADD=(
   [NOTIFY_TITLE]="Add Language"
+  [PROMPT_SEARCH]="Search: "
   [MSG_NO_LOCALES]="No new UTF-8 locales were found."
   [MSG_MISSING_TRANSLATION]="There is no Kayra interface translation for {CODE}. The English interface will be used. Add {LOCALE} to the language menu?"
   [BUTTON_ADD]="Add"
