@@ -16,11 +16,12 @@
 #     current state. "Stop now" and "do not start at boot" are separate
 #     actions: a stopped service still starts at boot, a down file stops the
 #     automatic start without removing the service link.
-#   * "Details" shows the state, PID, uptime, boot policy and "sv check"
-#     result. A "Show log records" button opens the log stream of the service
-#     in a terminal window (kayra-show-service-logs.sh, tail -F); "Close"
-#     dismisses the detail notification. A one-shot "sv once" test is in the
-#     action menu for a stopped or failed service.
+#   * "Details" shows the state, PID, uptime, boot policy and the optional
+#     "sv check" result (the check script is not required). A "Show log
+#     records" button opens the log stream of the service in a terminal
+#     window (kayra-show-service-logs.sh, tail -F); "Close" dismisses the
+#     detail notification. A one-shot "sv once" test is in the action menu
+#     for a stopped or failed service.
 #   * The handler sends its events back on the same connection; this script
 #     turns the terminal event into a notification. No separate monitor runs.
 #
@@ -410,12 +411,13 @@ load_detail() {  # fills SERVICES_RES with the detail response
 }
 
 build_detail_body() {
-    local state boot pid uptime check_ok check_message body
+    local state boot pid uptime check_defined check_ok check_message body
 
     state=$("${JQ:-jq}" -r '.data.state // "unknown"' <<<"$SERVICES_RES")
     boot=$("${JQ:-jq}" -r '.data.boot // "auto"' <<<"$SERVICES_RES")
     pid=$("${JQ:-jq}" -r '.data.pid // ""' <<<"$SERVICES_RES")
     uptime=$("${JQ:-jq}" -r '.data.uptime // ""' <<<"$SERVICES_RES")
+    check_defined=$("${JQ:-jq}" -r '.data.check.defined // empty' <<<"$SERVICES_RES")
     check_ok=$("${JQ:-jq}" -r '.data.check.ok // false' <<<"$SERVICES_RES")
     check_message=$("${JQ:-jq}" -r '.data.check.message // ""' <<<"$SERVICES_RES")
 
@@ -427,7 +429,9 @@ build_detail_body() {
         body="$body"$'\n'"$(msg_text LABEL_PROTECTED 'protected')"
     fi
 
-    if [ "$check_ok" = "true" ]; then
+    if [ "$check_defined" = "false" ]; then
+        body="$body"$'\n'"$(msg_text LABEL_CHECK 'Check'): $(msg_text CHECK_UNDEFINED 'not defined')"
+    elif [ "$check_ok" = "true" ]; then
         body="$body"$'\n'"$(msg_text LABEL_CHECK 'Check'): $(msg_text CHECK_OK 'ready')"
     else
         body="$body"$'\n'"$(msg_text LABEL_CHECK 'Check'): $(msg_text CHECK_FAILED 'not ready')"

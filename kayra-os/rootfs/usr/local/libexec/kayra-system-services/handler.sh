@@ -17,9 +17,12 @@
 #   disable <service>    "sv down" and remove the /var/service link
 #   boot-off <service>   create /etc/sv/<service>/down (no start at boot)
 #   boot-on <service>    remove /etc/sv/<service>/down
-#   check <service>      "sv check", read-only
+#   check <service>      "sv check", read-only; "defined" tells whether the
+#                        optional check script exists
 #   once <service>       "sv once", run a stopped service once
-#   detail <service>     state, pid, uptime and check result (no log lines)
+#   detail <service>     state, pid, uptime and check result (no log lines);
+#                        check.defined is false when the service has no check
+#                        script
 #
 # States:
 #   running   the /var/service link exists, "sv status" reports run:
@@ -302,8 +305,17 @@ disable_service() {  # disable_service <service>
     return 0
 }
 
-check_service() {  # check_service <service>; sets CHECK_OK and CHECK_MSG
+check_service() {  # check_service <service>; sets CHECK_DEFINED, CHECK_OK, CHECK_MSG
     local service=$1 output rc
+
+    # The check script is optional. Without it "sv check" only reports whether
+    # the service is up; the detail view shows that as "check not defined"
+    # instead of turning the missing script into a check failure.
+    if [ -f "$SV_DIR/$service/check" ]; then
+        CHECK_DEFINED=true
+    else
+        CHECK_DEFINED=false
+    fi
 
     if ! link_exists "$service"; then
         CHECK_OK=false
@@ -368,8 +380,9 @@ handle_check() {  # handle_check <service>
 
     check_service "$service"
     data=$(jq -cn --arg service "$service" \
+        --argjson defined "$CHECK_DEFINED" \
         --argjson ok "$CHECK_OK" --arg message "$CHECK_MSG" \
-        '{service: $service, ok: $ok, message: $message}')
+        '{service: $service, defined: $defined, ok: $ok, message: $message}')
 
     respond true 0 "" "$data"
 }
@@ -409,6 +422,7 @@ handle_detail() {  # handle_detail <service>
         --arg status "$status_line" \
         --arg pid "$pid" \
         --arg uptime "$uptime" \
+        --argjson check_defined "$CHECK_DEFINED" \
         --argjson check_ok "$CHECK_OK" \
         --arg check_message "$CHECK_MSG" \
         --argjson protected "$protected_flag" \
@@ -420,7 +434,11 @@ handle_detail() {  # handle_detail <service>
             pid: $pid,
             uptime: $uptime,
             protected: $protected,
-            check: {ok: $check_ok, message: $check_message}
+            check: {
+                defined: $check_defined,
+                ok: $check_ok,
+                message: $check_message
+            }
         }')
 
     respond true 0 "" "$detail"

@@ -278,6 +278,7 @@ declare -A i18n_TOGGLE_SERVICE=(
   [BOOT_MANUAL]="başlamaz"
   [CHECK_OK]="hazır"
   [CHECK_FAILED]="hazır değil"
+  [CHECK_UNDEFINED]="tanımlı değil"
 )
 
 declare -A i18n_SHOW_SERVICE_LOGS=(
