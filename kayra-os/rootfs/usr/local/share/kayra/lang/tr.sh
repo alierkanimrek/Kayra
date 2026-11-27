@@ -546,3 +546,22 @@ declare -A i18n_AUTOSTART=(
   [MSG_RUNNING]="Açılış komutları başlatılıyor"
   [MSG_READ_FAILED]="Açılış listesi okunamadı"
 )
+
+# Flatpak setup (kayra-flatpak-setup.sh)
+declare -A i18n_FLATPAK_SETUP=(
+  [APP_NAME]="Flatpak"
+  [NOTIFY_TITLE]="Flatpak"
+  [MSG_NO_FLATPAK]="flatpak kurulu değil"
+  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
+  [MSG_NO_PKEXEC]="pkexec kurulu değil"
+  [MSG_NO_NETWORK]="Flathub'a ulaşmak için internet bağlantısı gerekli"
+  [SCOPE_SYSTEM]="Sistem (tüm kullanıcılar)"
+  [SCOPE_USER]="Kullanıcı (yalnızca ben)"
+  [MSG_SETUP_OK]="Flathub {SCOPE} için hazır ({COUNT} uygulama)"
+  [MSG_SETUP_FAIL]="Flathub {SCOPE} için kurulamadı"
+  [MSG_INSTALL_OK]="{APP} {SCOPE} için kuruldu"
+  [MSG_INSTALL_FAIL]="{APP} {SCOPE} için kurulamadı"
+  [MSG_INVALID_APP]="Geçersiz uygulama kimliği: {APP}"
+  [MSG_PRIVILEGE_FAIL]="Yetkilendirme başarısız"
+  [MSG_USAGE]="Kullanım: kayra-flatpak-setup.sh [--repair] [UYGULAMA_KİMLİĞİ]"
+)

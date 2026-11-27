@@ -19,9 +19,12 @@
 #              usr/local/libexec/<name>/ -> /usr/local/libexec/<name>/
 #              enable the service when it is not linked yet, then
 #              "sv restart <name>" for every service found
-#   core       etc/runit/core-services/  -> /etc/runit/core-services/ (0755)
+#   core       etc/runit/core-services/  -> /etc/runit/core-services/ (0755);
+#              removes the retired 06-flatpak.sh early-boot script
 #   session    usr/share/wayland-sessions/ -> /usr/share/wayland-sessions/
 #              (0644) installs kayra.desktop
+#   applications usr/share/applications/ -> /usr/share/applications/ (0644)
+#              installs the Kayra desktop entries
 #   system     etc/default/kayra.conf    -> /etc/default/kayra.conf  (0644)
 #   admin      create the kayra-admin group and add the deploy caller
 #   migrate    seed the locale key of every user settings.conf, remove the
@@ -30,8 +33,9 @@
 #   cleanup    remove the retired Kayra helpers, the kayra-check-groups line
 #              and the old greetd session wrapper/desktop
 #   config     etc/skel/.config/         -> $HOME/.config/          (0644, user owned)
-#   all        scripts + lang + data + core + session + system + admin
-#              + migrate + cleanup + services (config is NOT included)
+#   all        scripts + lang + data + core + session + applications
+#              + system + admin + migrate + cleanup + services
+#              (config is NOT included)
 #
 # Before anything is installed every shell file is checked with "bash -n"; on a
 # syntax error nothing is installed.
@@ -41,6 +45,7 @@
 #   sudo utils/kayra-deploy scripts data
 #   sudo utils/kayra-deploy services
 #   sudo utils/kayra-deploy session
+#   sudo utils/kayra-deploy applications
 #   sudo utils/kayra-deploy admin
 #   sudo utils/kayra-deploy cleanup
 #   sudo utils/kayra-deploy config
@@ -122,6 +127,10 @@ task_services() {
 
 task_core() {
   sync_dir etc/runit/core-services /etc/runit/core-services 0755
+  # Retired: the Flathub remote was added in stage 1, before
+  # NetworkManager had started, so the remote was left without metadata.
+  # It is replaced by the on-demand kayra-flatpak-setup.sh.
+  rm -f /etc/runit/core-services/06-flatpak.sh
 }
 
 # session installs the standard Wayland session entry. Login managers other
@@ -133,6 +142,12 @@ task_session() {
     die "cannot create: /usr/share/wayland-sessions"
   install -m 0644 -o root -g root "$src" /usr/share/wayland-sessions/kayra.desktop ||
     die "cannot install: /usr/share/wayland-sessions/kayra.desktop"
+}
+
+# applications installs the Kayra desktop entries (the application menu
+# shortcuts such as Flatpak/Flathub).
+task_applications() {
+  sync_dir usr/share/applications /usr/share/applications 0644
 }
 
 # system installs the system wide defaults file (required_groups,
@@ -322,6 +337,7 @@ task_all() {
   task_data
   task_core
   task_session
+  task_applications
   task_system
   task_admin
   task_migrate
@@ -339,7 +355,9 @@ syntax_check() {
       rc=1
     fi
   done < <(find "$SRC/usr/local/lib/kayra" "$SRC/usr/local/bin" \
+                 "$SRC/usr/local/share/kayra/lang" \
                  "$SRC/etc/sv" "$SRC/usr/local/libexec" \
+                 "$SRC/etc/runit/core-services" \
                  -type f -print0 2>/dev/null)
   return "$rc"
 }
@@ -349,7 +367,7 @@ syntax_check || die "syntax error(s) found; nothing installed"
 (($#)) || set -- all
 for task in "$@"; do
   case $task in
-    scripts|lang|data|services|core|session|system|admin|migrate|cleanup|config|all) "task_$task" ;;
+    scripts|lang|data|services|core|session|applications|system|admin|migrate|cleanup|config|all) "task_$task" ;;
     *) die "unknown task: $task" ;;
   esac
 done

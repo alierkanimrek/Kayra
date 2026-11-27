@@ -546,3 +546,22 @@ declare -A i18n_AUTOSTART=(
   [MSG_RUNNING]="Starting startup commands"
   [MSG_READ_FAILED]="Could not read the startup list"
 )
+
+# Flatpak setup (kayra-flatpak-setup.sh)
+declare -A i18n_FLATPAK_SETUP=(
+  [APP_NAME]="Flatpak"
+  [NOTIFY_TITLE]="Flatpak"
+  [MSG_NO_FLATPAK]="flatpak is not installed"
+  [MSG_NO_FUZZEL]="fuzzel is not installed"
+  [MSG_NO_PKEXEC]="pkexec is not installed"
+  [MSG_NO_NETWORK]="An internet connection is required to reach Flathub"
+  [SCOPE_SYSTEM]="System (all users)"
+  [SCOPE_USER]="User (only me)"
+  [MSG_SETUP_OK]="Flathub is ready for {SCOPE} ({COUNT} applications)"
+  [MSG_SETUP_FAIL]="Could not set up Flathub for {SCOPE}"
+  [MSG_INSTALL_OK]="{APP} installed for {SCOPE}"
+  [MSG_INSTALL_FAIL]="Could not install {APP} for {SCOPE}"
+  [MSG_INVALID_APP]="Invalid application id: {APP}"
+  [MSG_PRIVILEGE_FAIL]="Authorization failed"
+  [MSG_USAGE]="Usage: kayra-flatpak-setup.sh [--repair] [APP_ID]"
+)

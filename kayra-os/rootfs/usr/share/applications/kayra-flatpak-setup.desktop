@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Flatpak (Flathub)
+Name[tr]=Flatpak (Flathub)
+Comment=Set up Flathub for the system or the current user and install Flatpak applications
+Comment[tr]=Flathub'u sistem veya geçerli kullanıcı için kur ve Flatpak uygulamalarını yükle
+Exec=/usr/local/bin/kayra-flatpak-setup.sh
+TryExec=/usr/local/bin/kayra-flatpak-setup.sh
+Icon=system-software-install
+Terminal=false
+StartupNotify=false
+Categories=System;
+Keywords=flatpak;flathub;app;software;application;
+Keywords[tr]=flatpak;flathub;uygulama;yazılım;

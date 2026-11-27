@@ -98,6 +98,7 @@ mousepad
 firefox
 flatpak
 baobab
+gnome-system-monitor
 
 # Appearance, Themes and Fonts
 nwg-look
@@ -117,7 +118,6 @@ gutenprint
 system-config-printer
 
 # Virtualization
-libvirt
 spice-vdagent
 virtualbox-ose-guest
 virtualbox-ose-guest-dkms
