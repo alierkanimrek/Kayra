@@ -8,7 +8,8 @@
 # Resolution:
 #   lang     = settings.conf lang (empty = automatic)
 #   locale   = settings.conf locale, or registry[lang].locale, or
-#              /etc/locale.conf LANG
+#              /etc/locale.conf LANG. An empty lang skips the registry lookup:
+#              bash rejects an empty associative array subscript.
 #
 #   LANG     = locale when generated, otherwise the system LANG when it is a
 #              non-C locale, otherwise en_US.UTF-8, otherwise C.UTF-8
@@ -68,7 +69,9 @@ system_lang=${system_lang:-C.UTF-8}
 lang=$(conf_get lang | head -n1)
 desired_locale=$(conf_get locale | head -n1)
 
-[ -n "$desired_locale" ] || desired_locale=${REG_LOCALE[$lang]:-}
+if [ -z "$desired_locale" ] && [ -n "$lang" ]; then
+    desired_locale=${REG_LOCALE[$lang]:-}
+fi
 [ -n "$desired_locale" ] || desired_locale=$system_lang
 
 if is_generated "$desired_locale"; then
@@ -85,7 +88,7 @@ if [ -n "$lang" ] && [ -n "${REG_LANGUAGE[$lang]:-}" ]; then
     language=${REG_LANGUAGE[$lang]}
 else
     derived_language=${desired_locale%%_*}
-    if [ -n "${REG_LANGUAGE[$derived_language]:-}" ]; then
+    if [ -n "$derived_language" ] && [ -n "${REG_LANGUAGE[$derived_language]:-}" ]; then
         language=${REG_LANGUAGE[$derived_language]}
     elif is_c_locale "$desired_locale"; then
         language=en
