@@ -75,6 +75,7 @@ bluez
 polkit-gnome
 lxqt-policykit
 xdg-desktop-portal-wlr
+xdg-desktop-portal-gtk
 accountsservice
 
 # Files, Disks, Clipboard and Screen

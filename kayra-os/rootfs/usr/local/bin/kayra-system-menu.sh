@@ -3,8 +3,8 @@
 # kayra-system-menu.sh - Kayra OS system menu.
 #
 # Launches the different system tools from a fuzzel dmenu: appearance, language,
-# keyboard, display, date/time, power mode, devices, services, startup commands
-# and the software update check.
+# keyboard, display, date/time, printers, power mode, devices, services, startup
+# commands and the software update check.
 #
 # The menu labels come from the system_menu array in the language file
 # (lang/en.sh, lang/tr.sh). The icons and the commands are hard coded here and
@@ -28,6 +28,7 @@ declare -a ORDER=(
     KEYBOARD
     DISPLAY
     DATETIME
+    PRINTING
 )
 if is_kayra_admin; then
     ORDER+=(POWER_MODE)
@@ -45,6 +46,7 @@ declare -A ICONS=(
     [KEYBOARD]="E312"
     [DISPLAY]="E30C"
     [DATETIME]="E8B5"
+    [PRINTING]="E8AD"
     [POWER_MODE]="EA0B"
     [DEVICES]="E1B1"
     [SERVICES]="E726"
@@ -97,6 +99,10 @@ case "${SELECTED#* }" in
     "${system_menu[DATETIME]}")
         # System time zone and NTP/chrony status.
         "/usr/local/bin/kayra-datetime-settings.sh" &
+        ;;
+    "${system_menu[PRINTING]}")
+        # CUPS printer management (system-config-printer).
+        "/usr/bin/system-config-printer" &
         ;;
     "${system_menu[POWER_MODE]}")
         # TLP power profile submenu (Performance / Balanced / Power Saver / Automatic).

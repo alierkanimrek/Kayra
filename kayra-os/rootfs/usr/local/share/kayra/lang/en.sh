@@ -15,6 +15,7 @@ declare -A system_menu=(
   [KEYBOARD]="Keyboard"
   [DISPLAY]="Display"
   [DATETIME]="Date & Time"
+  [PRINTING]="Manage Printers"
   [POWER_MODE]="Power Mode"
   [DEVICES]="Devices"
   [SERVICES]="Services"

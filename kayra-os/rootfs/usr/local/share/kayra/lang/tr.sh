@@ -15,6 +15,7 @@ declare -A system_menu=(
   [KEYBOARD]="Klavye"
   [DISPLAY]="Ekran"
   [DATETIME]="Tarih ve Saat"
+  [PRINTING]="Yazıcıları Yönet"
   [POWER_MODE]="Güç Modu"
   [DEVICES]="Aygıtlar"
   [SERVICES]="Servisler"
