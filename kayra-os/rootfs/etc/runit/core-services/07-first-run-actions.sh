@@ -65,6 +65,10 @@ ln -s /etc/sv/bluetoothd /etc/runit/runsvdir/current
 [ -e /etc/runit/runsvdir/current/kayra-locale-services ] ||
   ln -s /etc/sv/kayra-locale-services /etc/runit/runsvdir/current/kayra-locale-services
 
+# Kayra time service (the date/time menu talks to it through /run/kayra-time-services)
+[ -e /etc/runit/runsvdir/current/kayra-time-services ] ||
+  ln -s /etc/sv/kayra-time-services /etc/runit/runsvdir/current/kayra-time-services
+
 #void-packages
 mkdir -p /var/spool/void-packages
 chown root:users /var/spool/void-packages

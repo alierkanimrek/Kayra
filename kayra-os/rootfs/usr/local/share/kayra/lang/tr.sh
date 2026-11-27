@@ -14,6 +14,7 @@ declare -A system_menu=(
   [LANGUAGE]="Dil"
   [KEYBOARD]="Klavye"
   [DISPLAY]="Ekran"
+  [DATETIME]="Tarih ve Saat"
   [POWER_MODE]="Güç Modu"
   [DEVICES]="Aygıtlar"
   [SERVICES]="Servisler"
@@ -158,6 +159,35 @@ declare -A i18n_SETTINGS_MENU=(
 
 declare -A i18n_SYSTEM_MENU=(
   [MSG_NO_ITEMS]="Öğe bulunamadı"
+)
+
+declare -A i18n_DATETIME_SETTINGS=(
+  [NOTIFY_TITLE]="Tarih ve Saat"
+  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
+  [MSG_NO_JQ]="jq kurulu değil"
+  [MSG_NO_ZONES]="Saat dilimi bulunamadı"
+  [MSG_NO_ITEMS]="Öğe bulunamadı"
+  [MSG_SERVICE_UNAVAILABLE]="Zaman servisi çalışmıyor"
+  [MSG_TIMEZONE_FAILED]="Saat dilimi {ZONE} olarak ayarlanamadı"
+  [MSG_TIMEZONE_CHANGED]="Saat dilimi {ZONE} olarak ayarlandı"
+  [MSG_TIMEZONE_PARTIAL]="Saat dilimi {ZONE} olarak ayarlandı, ancak /etc/rc.conf içindeki TIMEZONE ayarı kaldırılamadı."
+  [MSG_RC_CONF_OVERRIDE]="/etc/rc.conf içinde hâlâ TIMEZONE ayarı var; açılışta seçimi geçersiz kılar."
+  [MSG_NTP_ENABLED]="Otomatik saat (NTP) etkinleştirildi"
+  [MSG_NTP_DISABLED]="Otomatik saat (NTP) devre dışı bırakıldı"
+  [MSG_NTP_FAILED]="NTP ayarı değiştirilemedi"
+  [MSG_CHRONY_MISSING]="chronyc kurulu değil; NTP durumu okunamıyor"
+  [MSG_NTP_UNAVAILABLE]="NTP durumu okunamıyor"
+  [MSG_STATUS]="Geçerli saat: {TIME}  |  {ZONE}  |  NTP: {NTP}"
+  [LABEL_TIMEZONE]="Saat dilimi: {ZONE}"
+  [LABEL_NTP]="Otomatik saat (NTP): {STATE}"
+  [LABEL_NTP_DETAILS]="NTP ayrıntıları"
+  [STATE_ON_SYNCED]="açık, eşitlendi"
+  [STATE_ON_NOT_SYNCED]="açık, eşitlenmedi"
+  [STATE_ON_UNAVAILABLE]="açık, durum okunamıyor"
+  [STATE_OFF]="kapalı"
+  [ZONE_UNKNOWN]="bilinmiyor"
+  [PROMPT_TIMEZONE]="Saat dilimi: "
+  [MSG_NTP_DETAILS]=$'Başvuru: {REFERENCE}\nKatman: {STRATUM}\nSistem farkı: {OFFSET} s\nÇevrimiçi kaynak: {SOURCES}\nArtık saniye durumu: {LEAP}'
 )
 
 declare -A i18n_DISPLAY_SETTINGS=(

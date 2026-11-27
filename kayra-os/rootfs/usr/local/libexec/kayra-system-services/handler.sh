@@ -80,6 +80,7 @@ DEFAULT_PROTECTED_SERVICES=(
     kayra-system-logs
     kayra-group-services
     kayra-power-services
+    kayra-time-services
 )
 
 . /usr/local/lib/kayra/socat-link.sh

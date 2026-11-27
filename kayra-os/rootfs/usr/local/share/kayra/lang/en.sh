@@ -14,6 +14,7 @@ declare -A system_menu=(
   [LANGUAGE]="Language"
   [KEYBOARD]="Keyboard"
   [DISPLAY]="Display"
+  [DATETIME]="Date & Time"
   [POWER_MODE]="Power Mode"
   [DEVICES]="Devices"
   [SERVICES]="Services"
@@ -158,6 +159,35 @@ declare -A i18n_SETTINGS_MENU=(
 
 declare -A i18n_SYSTEM_MENU=(
   [MSG_NO_ITEMS]="No items found"
+)
+
+declare -A i18n_DATETIME_SETTINGS=(
+  [NOTIFY_TITLE]="Date & Time"
+  [MSG_NO_FUZZEL]="fuzzel is not installed"
+  [MSG_NO_JQ]="jq is not installed"
+  [MSG_NO_ZONES]="No time zones found"
+  [MSG_NO_ITEMS]="No items found"
+  [MSG_SERVICE_UNAVAILABLE]="Time service is not running"
+  [MSG_TIMEZONE_FAILED]="Could not set the time zone to {ZONE}"
+  [MSG_TIMEZONE_CHANGED]="Time zone set to {ZONE}"
+  [MSG_TIMEZONE_PARTIAL]="Time zone set to {ZONE}, but the TIMEZONE override in /etc/rc.conf could not be removed."
+  [MSG_RC_CONF_OVERRIDE]="/etc/rc.conf still sets TIMEZONE; it will override the selection at boot."
+  [MSG_NTP_ENABLED]="Automatic time (NTP) enabled"
+  [MSG_NTP_DISABLED]="Automatic time (NTP) disabled"
+  [MSG_NTP_FAILED]="Could not change the NTP setting"
+  [MSG_CHRONY_MISSING]="chronyc is not installed; NTP status is unavailable"
+  [MSG_NTP_UNAVAILABLE]="NTP status is not available"
+  [MSG_STATUS]="Current time: {TIME}  |  {ZONE}  |  NTP: {NTP}"
+  [LABEL_TIMEZONE]="Time zone: {ZONE}"
+  [LABEL_NTP]="Automatic time (NTP): {STATE}"
+  [LABEL_NTP_DETAILS]="NTP details"
+  [STATE_ON_SYNCED]="on, synchronized"
+  [STATE_ON_NOT_SYNCED]="on, not synchronized"
+  [STATE_ON_UNAVAILABLE]="on, status unavailable"
+  [STATE_OFF]="off"
+  [ZONE_UNKNOWN]="unknown"
+  [PROMPT_TIMEZONE]="Time zone: "
+  [MSG_NTP_DETAILS]=$'Reference: {REFERENCE}\nStratum: {STRATUM}\nSystem offset: {OFFSET} s\nSources online: {SOURCES}\nLeap status: {LEAP}'
 )
 
 declare -A i18n_DISPLAY_SETTINGS=(

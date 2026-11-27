@@ -230,9 +230,9 @@
         "format-alt": "{:%d.%m.%Y}",
         "tooltip-format": "{:%d %B %Y, %A}",
         "on-click": "",
+        "on-click-right": "/usr/local/bin/kayra-datetime-settings.sh",
         "actions": {
-            "on-click": "",
-            "on-click-right": "toggle"
+            "on-click": ""
         }
     },
 

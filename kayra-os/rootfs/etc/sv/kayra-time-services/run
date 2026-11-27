@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# run - runit service for the Kayra time service (kayra-time-services).
+#
+# The service owns the job socket that the date/time menu uses to change the
+# system time zone. It runs as root because /etc/localtime and /etc/rc.conf
+# are root owned. NTP itself is not managed here: the menu enables or
+# disables the chronyd service through kayra-system-services.
+#
+# Runtime layout:
+#   /run/kayra-time-services/time.sock     0660 root:kayra-admin  job socket
+#   /run/kayra-time-services/time.lock     0640 root:kayra-admin  flock lock
+#   /run/kayra-time-services/events.ndjson 0644 root:root   event stream
+#
+# The job socket is served with socat-link.sh: every connection is handled by
+# handler.sh under an exclusive flock, so jobs are serialized and the kernel
+# releases the lock when the handler exits.
+#
+# Used commands: install, chown, chmod, logger, socat (via socat-link.sh)
+#
+
+exec 2>&1
+
+export LC_ALL=C.UTF-8
+PATH=/usr/bin:/usr/sbin:/bin:/sbin
+umask 027
+
+RUN_DIR="/run/kayra-time-services"
+LOCK_FILE="$RUN_DIR/time.lock"
+EVENTS_FILE="$RUN_DIR/events.ndjson"
+HANDLER="/usr/local/libexec/kayra-time-services/handler.sh"
+
+# Fixed service paths. Exporting them keeps the handler independent from the
+# environment that socat would otherwise inherit.
+export RUN_DIR EVENTS_FILE
+
+install -d -m 0755 -o root -g root "$RUN_DIR" || exit 1
+chown root:root "$RUN_DIR" 2>/dev/null || true
+chmod 0755 "$RUN_DIR" 2>/dev/null || true
+
+# The admin group is hard coded. Create it when a service starts on an
+# upgraded system where the first-boot helper has not run yet.
+if ! getent group kayra-admin >/dev/null 2>&1; then
+    groupadd -r kayra-admin 2>/dev/null ||
+        getent group kayra-admin >/dev/null 2>&1 || exit 1
+fi
+
+[ -e "$LOCK_FILE" ] ||
+    install -m 0640 -o root -g kayra-admin /dev/null "$LOCK_FILE" || exit 1
+[ -e "$EVENTS_FILE" ] ||
+    install -m 0644 -o root -g root /dev/null "$EVENTS_FILE" || exit 1
+
+# Keep the permissions correct even when the files already existed.
+chown root:kayra-admin "$LOCK_FILE" 2>/dev/null || true
+chmod 0640 "$LOCK_FILE" 2>/dev/null || true
+chown root:root "$EVENTS_FILE" 2>/dev/null || true
+chmod 0644 "$EVENTS_FILE" 2>/dev/null || true
+
+if [ ! -x "$HANDLER" ]; then
+    logger -t kayra-time-services -p user.err \
+        "Handler not found: $HANDLER" 2>/dev/null || true
+    exit 1
+fi
+
+logger -t kayra-time-services -p user.info \
+    "Starting job socket: $RUN_DIR/time.sock" 2>/dev/null || true
+
+. /usr/local/lib/kayra/socat-link.sh
+
+SL_SOCK_MODE=0660 SL_SOCK_GROUP=kayra-admin SL_LOCK_GRACE=5 \
+    sl_serve "$RUN_DIR/time.sock" "$HANDLER"
