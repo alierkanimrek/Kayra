@@ -114,7 +114,7 @@ pkill -x fuzzel 2>/dev/null || true
 MAX_WIDTH=$(printf '%s\n' "${LINES[@]}" | awk '{ n = length($0) - 1 + 3; if (n > m) m = n } END { print m+0 }')
 
 SELECTED=$(printf '%s\n' "${LINES[@]}" |
-    fuzzel --dmenu --anchor=top-right --log-no-syslog --minimal-lines \
+    fuzzel --dmenu --anchor=top-left --log-no-syslog --minimal-lines \
         --lines="${#LINES[@]}" --width="$MAX_WIDTH" --hide-prompt) || true
 
 [ -z "$SELECTED" ] && exit 0
