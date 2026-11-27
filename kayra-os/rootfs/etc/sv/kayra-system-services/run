@@ -4,8 +4,10 @@
 #       (kayra-system-services).
 #
 # The service owns the job socket that the user scripts use to list, start,
-# stop, restart and enable runit services. It runs as root because the runit
-# control commands need root privileges.
+# stop, restart, enable and disable runit services, to set the boot policy
+# with the /etc/sv/<name>/down file, and to read the service detail. It runs
+# as root because the runit control commands and the symlink/down file
+# management need root privileges.
 #
 # Runtime layout:
 #   /run/kayra-system-services/job.sock     0660 root:kayra-admin  job socket

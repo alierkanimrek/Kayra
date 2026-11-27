@@ -22,19 +22,27 @@
 #       Sends one request. Returns 0 when a res line was received, 1 on a
 #       transport error. Sets the globals below.
 #   services_list
-#       Prints "<name><TAB><state><TAB><protected>" for every service.
+#       Prints "<name><TAB><state><TAB><protected><TAB><boot>" for every
+#       service. state: running, down, disabled, failed. boot: auto, manual.
 #       Returns 1 when the manager is not reachable or the request failed.
 #   services_action <cmd> <service>
 #       Sends an action request. Returns 0 when a res line was received,
 #       1 on a transport error. The caller reads the events/res globals.
+#   services_detail <service>
+#       Sends a detail request. Returns 0 when a res line was received,
+#       1 on a transport error. The caller reads the res globals.
+#   services_logs <service>
+#       Streams the log of the service to stdout until the connection closes
+#       (Ctrl+C in a terminal). Returns 1 when the log service is not running.
 #   services_result_ok
 #       Returns 0 when the last res has ok=true.
 #
 # GLOBALS
-#   SERVICES_SOCK    job socket (default /run/kayra-system-services/job.sock)
-#   SERVICES_LOCK    job lock   (default /run/kayra-system-services/job.lock)
-#   SERVICES_RES     last res line, empty on a transport error
-#   SERVICES_EVENTS  array of evt lines received for the last request
+#   SERVICES_SOCK      job socket (default /run/kayra-system-services/job.sock)
+#   SERVICES_LOCK      job lock   (default /run/kayra-system-services/job.lock)
+#   SERVICES_LOG_SOCK  log socket (default /run/kayra-system-logs/log.sock)
+#   SERVICES_RES       last res line, empty on a transport error
+#   SERVICES_EVENTS    array of evt lines received for the last request
 #
 # IMPORTANT
 #   services_call and services_action update globals in the caller shell.
@@ -42,13 +50,14 @@
 #   the subshell would keep the changes. services_list is safe in $(...)
 #   because it prints its result.
 #
-# Used commands: socat, flock (via socat-link.sh), jq, date
+# Used commands: socat, flock (via socat-link.sh), jq, date, cat, printf
 #
 
 . /usr/local/lib/kayra/socat-link.sh
 
 SERVICES_SOCK=${SERVICES_SOCK:-/run/kayra-system-services/job.sock}
 SERVICES_LOCK=${SERVICES_LOCK:-/run/kayra-system-services/job.lock}
+SERVICES_LOG_SOCK=${SERVICES_LOG_SOCK:-/run/kayra-system-logs/log.sock}
 
 SERVICES_RES=""
 SERVICES_EVENTS=()
@@ -103,9 +112,18 @@ services_list() {
     "$JQ" -e '.ok == true' <<<"$SERVICES_RES" >/dev/null 2>&1 || return 1
     "$JQ" -r '
         (.data.services // [])[]
-        | [.name, .state, ((.protected // false) | tostring)]
+        | [.name, .state, ((.protected // false) | tostring),
+           (.boot // "auto")]
         | @tsv
     ' <<<"$SERVICES_RES"
+}
+
+services_detail() {  # services_detail <service> -> 0 res received, 1 error
+    local service=${1:?service required}
+    local parm
+
+    parm=$("$JQ" -cn --arg service "$service" '[$service]') || return 1
+    services_call detail "$parm"
 }
 
 services_action() {  # services_action <cmd> <service> -> 0 res received, 1 error
@@ -115,6 +133,19 @@ services_action() {  # services_action <cmd> <service> -> 0 res received, 1 erro
 
     parm=$("$JQ" -cn --arg service "$service" '[$service]') || return 1
     services_call "$cmd" "$parm"
+}
+
+services_logs() {  # services_logs <service> -> streams until disconnected
+    local service=${1:?service required}
+
+    [ -n "$SL_SOCAT" ] || return 1
+    [ -S "$SERVICES_LOG_SOCK" ] || return 1
+
+    # The service name is the only request line. The rest of the stdin stays
+    # open (terminal input is forwarded and ignored by the handler), so the
+    # stream does not end before the console is closed.
+    "$SL_SOCAT" - "UNIX-CONNECT:$SERVICES_LOG_SOCK" \
+        < <(printf '%s\n' "$service"; cat)
 }
 
 services_result_ok() {

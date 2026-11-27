@@ -12,14 +12,18 @@
 #
 # Every service is marked with a Material Symbols icon:
 #   ▶  running   (the service is up)
-#   ■  stopped   (the service is not running)
-# Services that are not supervised are marked with the "(disabled)" suffix.
+#   ■  down      (the service is stopped now, starts at boot)
+#   ⛔  disabled  (there is no /var/service link)
+#   ⚠  failed    (the service could not be started)
 #
-# Selecting a service runs kayra-toggle-service.sh <service> <state> <protected>:
-#   * a running service opens an actionable notification with a "Stop" and a
-#     "Restart" button,
-#   * a stopped service is started,
-#   * a disabled service is enabled and started.
+# The suffix describes the state and the boot policy:
+#   "(disabled)"           no /var/service link
+#   "(failed)"             link exists, but "sv status" reports fail:
+#   "(does not start at boot)"  the /etc/sv/<name>/down file exists
+#
+# Selecting a service runs
+#   kayra-toggle-service.sh <service> <state> <protected> <boot>
+# and the toggle script opens the action menu for that state.
 #
 # The service manager is only reachable for members of the fixed "kayra-admin"
 # group (socket 0660 root:kayra-admin). A regular user exits silently.
@@ -58,7 +62,7 @@ source /usr/local/lib/kayra/services-client.sh
 # missing. The fallback is passed as a separate argument, a placeholder
 # inside a ${...:-default} expression would break the expansion.
 msg_text() {
-    local value="${MSG[$1]}"
+    local value="${MSG[$1]-}"
     [ -n "$value" ] || value="$2"
     printf '%s' "$value"
 }
@@ -66,12 +70,18 @@ msg_text() {
 # Material Symbols icons of the service states.
 declare -A ICONS=(
     [running]="E037"   # play_arrow
-    [stopped]="E047"   # stop
+    [down]="E047"      # stop
+    [disabled]="E14B"  # block
+    [failed]="E000"    # error
 )
 
 ICON_RUNNING=$(printf '%b' "\U000${ICONS[running]}")
-ICON_STOPPED=$(printf '%b' "\U000${ICONS[stopped]}")
+ICON_DOWN=$(printf '%b' "\U000${ICONS[down]}")
+ICON_DISABLED=$(printf '%b' "\U000${ICONS[disabled]}")
+ICON_FAILED=$(printf '%b' "\U000${ICONS[failed]}")
 DISABLED_LABEL=$(msg_text LABEL_DISABLED 'disabled')
+FAILED_LABEL=$(msg_text LABEL_FAILED 'failed')
+BOOT_OFF_LABEL=$(msg_text LABEL_BOOT_OFF 'does not start at boot')
 
 if ! command -v fuzzel >/dev/null 2>&1; then
     log ERROR "fuzzel is not installed"
@@ -98,20 +108,45 @@ declare -a LINES=()
 declare -a SERVICES=()
 declare -a STATES=()
 declare -a PROTECTED=()
+declare -a BOOTS=()
 
 mapfile -t LINES < <(awk -F'\t' \
     -v running="$ICON_RUNNING" \
-    -v stopped="$ICON_STOPPED" \
-    -v disabled="$DISABLED_LABEL" '
+    -v down="$ICON_DOWN" \
+    -v disabled_icon="$ICON_DISABLED" \
+    -v failed_icon="$ICON_FAILED" \
+    -v disabled="$DISABLED_LABEL" \
+    -v failed="$FAILED_LABEL" \
+    -v boot_off="$BOOT_OFF_LABEL" '
     $1 == "" { next }
-    $2 == "running"  { print running " " $1; next }
-    $2 == "disabled" { print stopped " " $1 "  (" disabled ")"; next }
-    { print stopped " " $1 }
+    {
+        icon = down
+        suffix = ""
+
+        if ($2 == "running") {
+            icon = running
+        } else if ($2 == "disabled") {
+            icon = disabled_icon
+            suffix = "  (" disabled ")"
+        } else if ($2 == "failed") {
+            icon = failed_icon
+            suffix = "  (" failed ")"
+        }
+
+        # The boot policy is shown for supervised services, including a
+        # running service that will not come back after a reboot.
+        if ($2 != "disabled" && $4 == "manual") {
+            suffix = suffix "  (" boot_off ")"
+        }
+
+        print icon " " $1 suffix
+    }
 ' <<< "$STATE_DATA")
 
 mapfile -t SERVICES < <(awk -F'\t' '$1 != "" { print $1 }' <<< "$STATE_DATA")
 mapfile -t STATES < <(awk -F'\t' '$1 != "" { print $2 }' <<< "$STATE_DATA")
 mapfile -t PROTECTED < <(awk -F'\t' '$1 != "" { print ($3 == "true" ? "true" : "false") }' <<< "$STATE_DATA")
+mapfile -t BOOTS < <(awk -F'\t' '$1 != "" { print ($4 == "manual" ? "manual" : "auto") }' <<< "$STATE_DATA")
 
 if [ "${#LINES[@]}" -eq 0 ]; then
     log WARN "No services found in /etc/sv"
@@ -149,7 +184,9 @@ done
 SERVICE="${SERVICES[$SELECTED_INDEX]}"
 STATE="${STATES[$SELECTED_INDEX]:-}"
 SERVICE_PROTECTED="${PROTECTED[$SELECTED_INDEX]:-false}"
+SERVICE_BOOT="${BOOTS[$SELECTED_INDEX]:-auto}"
 
-log INFO "Changing service: $SERVICE (state: ${STATE:-unknown})"
+log INFO "Changing service: $SERVICE (state: ${STATE:-unknown}, boot: $SERVICE_BOOT)"
 
-exec /usr/local/bin/kayra-toggle-service.sh "$SERVICE" "$STATE" "$SERVICE_PROTECTED"
+exec /usr/local/bin/kayra-toggle-service.sh \
+    "$SERVICE" "$STATE" "$SERVICE_PROTECTED" "$SERVICE_BOOT"

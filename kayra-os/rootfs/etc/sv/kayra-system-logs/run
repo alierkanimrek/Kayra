@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# run - runit service for the Kayra service log streamer
+#       (kayra-system-logs).
+#
+# The service owns a read-only log socket. It runs as root because the per
+# service log files and the socklog stream are root/socklog owned; the socket
+# group limits access to the Kayra administrators.
+#
+# Every connection is independent and no lock is taken: a long "tail -F" on
+# the log socket must never block the service manager.
+#
+# Runtime layout:
+#   /run/kayra-system-logs/log.sock  0660 root:kayra-admin  log socket
+#
+# Protocol:
+#   The client sends one service name line. The handler validates the name and
+#   streams the recent log lines (last 20, then follow) until the client
+#   disconnects.
+#
+# Used commands: install, groupadd, getent, logger, socat
+#
+
+exec 2>&1
+
+export LC_ALL=C.UTF-8
+PATH=/usr/bin:/usr/sbin:/bin:/sbin
+umask 027
+
+RUN_DIR="/run/kayra-system-logs"
+SOCK="$RUN_DIR/log.sock"
+HANDLER="/usr/local/libexec/kayra-system-logs/handler.sh"
+
+install -d -m 0755 -o root -g root "$RUN_DIR" || exit 1
+
+# The admin group is hard coded. Create it when a service starts on an
+# upgraded system where the first-boot helper has not run yet.
+if ! getent group kayra-admin >/dev/null 2>&1; then
+    groupadd -r kayra-admin 2>/dev/null ||
+        getent group kayra-admin >/dev/null 2>&1 || exit 1
+fi
+
+if [ ! -x "$HANDLER" ]; then
+    logger -t kayra-system-logs -p user.err \
+        "Handler not found: $HANDLER" 2>/dev/null || true
+    exit 1
+fi
+
+logger -t kayra-system-logs -p user.info \
+    "Starting log socket: $SOCK" 2>/dev/null || true
+
+exec socat \
+    "UNIX-LISTEN:${SOCK},fork,unlink-early,mode=0660,group=kayra-admin,max-children=8" \
+    "EXEC:${HANDLER},nofork,stderr"
