@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# run - runit service for the periodic SSD TRIM (kayra-trim).
+#
+# The service trims every mounted filesystem that supports discard once a
+# week. snooze waits for the next scheduled run and catches up on a missed
+# run, so a laptop that was suspended or powered off is still trimmed. The
+# time file is kept outside /run, otherwise every boot would trigger an extra
+# TRIM.
+#
+# Schedule:
+#   Every Sunday at 03:00, accepted up to 7 days late. When the time file is
+#   missing (first start) the earliest matching time is already due, so the
+#   first TRIM runs right away.
+#
+# State:
+#   /var/lib/kayra-trim/last-run   0644 root:root  snooze time file
+#
+# Used commands: install, logger, snooze
+#
+
+exec 2>&1
+
+export LC_ALL=C.UTF-8
+PATH=/usr/bin:/usr/sbin:/bin:/sbin
+umask 027
+
+STATE_DIR="/var/lib/kayra-trim"
+TIMEFILE="$STATE_DIR/last-run"
+TRIM_SCRIPT="/usr/local/libexec/kayra-trim/trim.sh"
+
+install -d -m 0755 -o root -g root "$STATE_DIR" || exit 1
+
+if [ ! -x "$TRIM_SCRIPT" ]; then
+    logger -t kayra-trim -p user.err \
+        "Trim script not found: $TRIM_SCRIPT" 2>/dev/null || true
+    exit 1
+fi
+
+logger -t kayra-trim -p user.info \
+    "Starting weekly TRIM scheduler (Sunday 03:00, 7 day catch-up)" 2>/dev/null || true
+
+exec snooze -w 0 -H 3 -s 7d -t "$TIMEFILE" -- "$TRIM_SCRIPT"

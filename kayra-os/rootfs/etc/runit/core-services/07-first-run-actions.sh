@@ -69,6 +69,10 @@ ln -s /etc/sv/bluetoothd /etc/runit/runsvdir/current
 [ -e /etc/runit/runsvdir/current/kayra-time-services ] ||
   ln -s /etc/sv/kayra-time-services /etc/runit/runsvdir/current/kayra-time-services
 
+# Kayra weekly SSD TRIM scheduler (snooze based, no user interface)
+[ -e /etc/runit/runsvdir/current/kayra-trim ] ||
+  ln -s /etc/sv/kayra-trim /etc/runit/runsvdir/current/kayra-trim
+
 #void-packages
 mkdir -p /var/spool/void-packages
 chown root:users /var/spool/void-packages
