@@ -38,9 +38,6 @@ if ! command -v log >/dev/null 2>&1; then
     log() { printf '%s\n' "$*"; }
 fi
 
-command -v fuzzel >/dev/null 2>&1 || { echo "${MSG[MSG_NO_FUZZEL]:-fuzzel is not installed}" >&2; exit 1; }
-command -v jq >/dev/null 2>&1 || { echo "${MSG[MSG_NO_JQ]:-jq is not installed}" >&2; exit 1; }
-
 # Collect the devices if the data file is missing or unreadable
 if [ ! -r "$DATA_FILE" ]; then
     [ -x "/usr/local/bin/kayra-list-devices.sh" ] && "/usr/local/bin/kayra-list-devices.sh" >/dev/null 2>&1

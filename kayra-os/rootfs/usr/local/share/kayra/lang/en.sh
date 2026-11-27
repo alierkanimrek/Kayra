@@ -164,8 +164,6 @@ declare -A i18n_SYSTEM_MENU=(
 
 declare -A i18n_DATETIME_SETTINGS=(
   [NOTIFY_TITLE]="Date & Time"
-  [MSG_NO_FUZZEL]="fuzzel is not installed"
-  [MSG_NO_JQ]="jq is not installed"
   [MSG_NO_ZONES]="No time zones found"
   [MSG_NO_ITEMS]="No items found"
   [MSG_SERVICE_UNAVAILABLE]="Time service is not running"
@@ -208,8 +206,6 @@ declare -A i18n_SHOW_DEVICES=(
   [PROMPT_DEVICE]="Device: "
   [MSG_NO_DEVICES]="No devices found"
   [MSG_NO_DATA]="No device data found"
-  [MSG_NO_FUZZEL]="fuzzel is not installed"
-  [MSG_NO_JQ]="jq is not installed"
 )
 
 declare -A i18n_SHOW_DEVICE_MODS=(
@@ -222,8 +218,6 @@ declare -A i18n_SHOW_DEVICE_MODS=(
   [MSG_ALREADY_IN_USE]="Module {MODULE} is already in use."
   [ITEM_NVIDIA_DETECT]="Detect the matching NVIDIA driver"
   [MSG_USAGE]="Usage: show-device-mods.sh <device-key>"
-  [MSG_NO_FUZZEL]="fuzzel is not installed"
-  [MSG_NO_JQ]="jq is not installed"
 )
 
 declare -A i18n_SHOW_SERVICES=(
@@ -234,7 +228,6 @@ declare -A i18n_SHOW_SERVICES=(
   [LABEL_DISABLED]="disabled"
   [LABEL_FAILED]="failed"
   [LABEL_BOOT_OFF]="does not start at boot"
-  [MSG_NO_FUZZEL]="fuzzel is not installed"
   [MSG_MANAGER_UNAVAILABLE]="Service manager is not running"
 )
 
@@ -253,7 +246,6 @@ declare -A i18n_TOGGLE_SERVICE=(
   [MSG_FAILED]="Failed to change service {SERVICE}"
   [MSG_NOT_FOUND]="Service not found: {SERVICE}"
   [MSG_MANAGER_UNAVAILABLE]="Service manager is not running"
-  [MSG_NO_FUZZEL]="fuzzel is not installed"
   [MSG_USAGE]="Usage: toggle-service.sh <service-name>"
   [MSG_DETAIL_TITLE]="Service {SERVICE}"
   [MSG_NO_TERMINAL]="Could not open a terminal window"
@@ -551,9 +543,6 @@ declare -A i18n_AUTOSTART=(
 declare -A i18n_FLATPAK_SETUP=(
   [APP_NAME]="Flatpak"
   [NOTIFY_TITLE]="Flatpak"
-  [MSG_NO_FLATPAK]="flatpak is not installed"
-  [MSG_NO_FUZZEL]="fuzzel is not installed"
-  [MSG_NO_PKEXEC]="pkexec is not installed"
   [MSG_NO_NETWORK]="An internet connection is required to reach Flathub"
   [SCOPE_SYSTEM]="System (all users)"
   [SCOPE_USER]="User (only me)"

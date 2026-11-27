@@ -367,13 +367,6 @@ choose_action() {
 
     ((${#ACTION_IDS[@]})) || return 1
 
-    command -v fuzzel >/dev/null 2>&1 || {
-        log ERROR "fuzzel is not installed"
-        notify_error "$(msg_text NOTIFY_TITLE 'Services')" \
-            "$(msg_text MSG_NO_FUZZEL 'fuzzel is not installed')"
-        return 1
-    }
-
     pkill -x fuzzel 2>/dev/null || true
 
     max_width=$(printf '%s\n' "${ACTION_LABELS[@]}" \

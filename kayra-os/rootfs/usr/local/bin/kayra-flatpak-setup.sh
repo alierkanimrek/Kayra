@@ -94,18 +94,6 @@ if ((EUID == 0)); then
     exit 1
 fi
 
-if [[ ! -x $FLATPAK_BIN ]]; then
-    log ERROR "flatpak was not found"
-    notify_error "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_NO_FLATPAK]}"
-    exit 1
-fi
-
-if ! command -v fuzzel >/dev/null 2>&1; then
-    log ERROR "fuzzel was not found"
-    notify_error "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_NO_FUZZEL]}"
-    exit 1
-fi
-
 if [[ -n $APP_ID && ! $APP_ID =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
     log ERROR "Invalid application id: $APP_ID"
     notify_error "${MSG[NOTIFY_TITLE]}" \
@@ -146,13 +134,6 @@ case "${SELECTED#* }" in
         exit 0
         ;;
 esac
-
-# pkexec is only needed for the system-wide installation.
-if [[ $SCOPE == system ]] && ! command -v pkexec >/dev/null 2>&1; then
-    log ERROR "pkexec was not found"
-    notify_error "${MSG[NOTIFY_TITLE]}" "${MSG[MSG_NO_PKEXEC]}"
-    exit 1
-fi
 
 # Fail early when there is no network. The actual work is done by the helper
 # below, so this check also tells the user why nothing was downloaded.

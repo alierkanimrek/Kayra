@@ -164,8 +164,6 @@ declare -A i18n_SYSTEM_MENU=(
 
 declare -A i18n_DATETIME_SETTINGS=(
   [NOTIFY_TITLE]="Tarih ve Saat"
-  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
-  [MSG_NO_JQ]="jq kurulu değil"
   [MSG_NO_ZONES]="Saat dilimi bulunamadı"
   [MSG_NO_ITEMS]="Öğe bulunamadı"
   [MSG_SERVICE_UNAVAILABLE]="Zaman servisi çalışmıyor"
@@ -208,8 +206,6 @@ declare -A i18n_SHOW_DEVICES=(
   [PROMPT_DEVICE]="Aygıt: "
   [MSG_NO_DEVICES]="Aygıt bulunamadı"
   [MSG_NO_DATA]="Aygıt verisi bulunamadı"
-  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
-  [MSG_NO_JQ]="jq kurulu değil"
 )
 
 declare -A i18n_SHOW_DEVICE_MODS=(
@@ -222,8 +218,6 @@ declare -A i18n_SHOW_DEVICE_MODS=(
   [MSG_ALREADY_IN_USE]="{MODULE} modülü zaten kullanımda."
   [ITEM_NVIDIA_DETECT]="Uygun NVIDIA sürücüsünü algıla"
   [MSG_USAGE]="Kullanım: show-device-mods.sh <aygıt>"
-  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
-  [MSG_NO_JQ]="jq kurulu değil"
 )
 
 declare -A i18n_SHOW_SERVICES=(
@@ -234,7 +228,6 @@ declare -A i18n_SHOW_SERVICES=(
   [LABEL_DISABLED]="devre dışı"
   [LABEL_FAILED]="başarısız"
   [LABEL_BOOT_OFF]="açılışta başlamaz"
-  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
   [MSG_MANAGER_UNAVAILABLE]="Servis yöneticisi çalışmıyor"
 )
 
@@ -253,7 +246,6 @@ declare -A i18n_TOGGLE_SERVICE=(
   [MSG_FAILED]="{SERVICE} servisi değiştirilemedi"
   [MSG_NOT_FOUND]="Servis bulunamadı: {SERVICE}"
   [MSG_MANAGER_UNAVAILABLE]="Servis yöneticisi çalışmıyor"
-  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
   [MSG_USAGE]="Kullanım: toggle-service.sh <servis-adı>"
   [MSG_DETAIL_TITLE]="Servis {SERVICE}"
   [MSG_NO_TERMINAL]="Terminal penceresi açılamadı"
@@ -551,9 +543,6 @@ declare -A i18n_AUTOSTART=(
 declare -A i18n_FLATPAK_SETUP=(
   [APP_NAME]="Flatpak"
   [NOTIFY_TITLE]="Flatpak"
-  [MSG_NO_FLATPAK]="flatpak kurulu değil"
-  [MSG_NO_FUZZEL]="fuzzel kurulu değil"
-  [MSG_NO_PKEXEC]="pkexec kurulu değil"
   [MSG_NO_NETWORK]="Flathub'a ulaşmak için internet bağlantısı gerekli"
   [SCOPE_SYSTEM]="Sistem (tüm kullanıcılar)"
   [SCOPE_USER]="Kullanıcı (yalnızca ben)"

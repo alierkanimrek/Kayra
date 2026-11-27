@@ -81,6 +81,9 @@ Source -> live target:
   (`/usr/local/libexec`, `/etc/sv`); only `/usr/local/bin/kayra-*`.
 - Don't call `notify-send` directly.
 - Don't hardcode user-facing English; use i18n.
+- Don't add `command -v` checks or missing-command messages for the
+  guaranteed tools `fuzzel`, `jq` and `pkexec`; they are provided by the
+  base image. let the command fail.
 - Don't run a permanent loop without a single-instance guard.
 
 ## Service scripts

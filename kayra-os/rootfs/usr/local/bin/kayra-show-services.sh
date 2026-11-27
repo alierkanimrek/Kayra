@@ -83,12 +83,6 @@ DISABLED_LABEL=$(msg_text LABEL_DISABLED 'disabled')
 FAILED_LABEL=$(msg_text LABEL_FAILED 'failed')
 BOOT_OFF_LABEL=$(msg_text LABEL_BOOT_OFF 'does not start at boot')
 
-if ! command -v fuzzel >/dev/null 2>&1; then
-    log ERROR "fuzzel is not installed"
-    echo "$(msg_text MSG_NO_FUZZEL 'fuzzel is not installed')" >&2
-    exit 1
-fi
-
 # ------------------------------------------------------------------
 # Read the service list from the service manager
 # ------------------------------------------------------------------

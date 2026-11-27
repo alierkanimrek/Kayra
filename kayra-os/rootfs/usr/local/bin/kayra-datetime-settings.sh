@@ -75,23 +75,6 @@ msg_format() {
 }
 
 # ------------------------------------------------------------------
-# Required commands
-# ------------------------------------------------------------------
-if ! command -v fuzzel >/dev/null 2>&1; then
-    log ERROR "fuzzel is not installed"
-    notify_error "$(msg_text NOTIFY_TITLE 'Date & Time')" \
-        "$(msg_text MSG_NO_FUZZEL 'fuzzel is not installed')"
-    exit 1
-fi
-
-if ! command -v jq >/dev/null 2>&1; then
-    log ERROR "jq is not installed"
-    notify_error "$(msg_text NOTIFY_TITLE 'Date & Time')" \
-        "$(msg_text MSG_NO_JQ 'jq is not installed')"
-    exit 1
-fi
-
-# ------------------------------------------------------------------
 # Current time zone
 # ------------------------------------------------------------------
 CURRENT_ZONE=""
