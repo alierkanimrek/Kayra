@@ -10,11 +10,14 @@
 # UID_MIN..UID_MAX range, normally the user created by the installer), creates
 # the kayra-admin group when it is missing, and adds that user to:
 #
-#   wheel          sudo/polkit
-#   kayra-admin    Kayra root services
+#   wheel                 sudo/polkit
+#   kayra-admin           Kayra root services
+#   disk storage input
+#   usbmon socklog        root-equivalent system administration groups
 #   required_groups from /etc/default/kayra.conf
 #
-# wheel is not part of required_groups: only this one-time helper grants it.
+# wheel and the root-equivalent groups are not part of required_groups: only
+# this one-time helper grants them to the installation user.
 # The script is idempotent; running it manually as root only re-applies the
 # same memberships.
 #
@@ -69,8 +72,9 @@ fi
 
 REQUIRED_GROUPS=$(system_conf_get required_groups | head -n1 || true)
 
-# The installation user always gets wheel and kayra-admin.
-GROUP_LIST="$ADMIN_GROUP wheel"
+# The installation user always gets wheel, kayra-admin and the root-equivalent
+# system administration groups. Groups that do not exist are filtered below.
+GROUP_LIST="$ADMIN_GROUP wheel disk storage input usbmon socklog"
 
 for group in $REQUIRED_GROUPS; do
     case " $GROUP_LIST " in

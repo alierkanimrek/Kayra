@@ -9,7 +9,8 @@
 # notification, because that is a real error.
 #
 # The right-click action of the module does not use this script: it opens the
-# CUPS web interface directly (xdg-open http://localhost:631).
+# printer management tool directly (system-config-printer), which uses polkit
+# for authorization.
 #
 # Commands used: lpstat, awk, sed, printf, pkill, fuzzel, cancel, log, notify.
 #

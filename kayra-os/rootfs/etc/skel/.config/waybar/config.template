@@ -261,7 +261,7 @@
         "tooltip": true,
         "restart-interval": 0,
         "on-click": "/usr/local/bin/kayra-cups-menu.sh",
-        "on-click-right": "xdg-open http://localhost:631"
+        "on-click-right": "/usr/bin/system-config-printer"
     },
     
     "custom/xbps-lock-monitor": {
