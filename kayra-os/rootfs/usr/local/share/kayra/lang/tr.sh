@@ -72,6 +72,10 @@ declare -A i18n_GROUP_MANAGEMENT=(
   [NO_GROUPS_TO_REMOVE]="Çıkarılabilecek bir grup bulunamadı."
   [GROUP_REMOVED]="{USER} kullanıcısı '{GROUP}' grubundan çıkarıldı."
   [REMOVE_FAILED]="'{GROUP}' grubundan çıkarma işlemi başarısız oldu."
+  [WHEEL_REMOVE_CONFIRM]="'wheel' grubu sudo/polkit erişimi verir. {USER} kullanıcısı '{GROUP}' grubundan çıkarılırsa bu erişim kalkar. Devam edilsin mi?"
+  [ACTION_REMOVE]="Çıkar"
+  [ACTION_CANCEL]="Vazgeç"
+  [RELOGIN_REQUIRED]="Değişikliğin geçerli olması için oturumu kapatıp yeniden açın."
   [MSG_MANAGER_UNAVAILABLE]="Grup servisi çalışmıyor."
 )
 

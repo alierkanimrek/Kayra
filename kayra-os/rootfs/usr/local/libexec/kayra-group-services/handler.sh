@@ -14,9 +14,10 @@
 #   remove [user group]   remove the user from the group (gpasswd -d)
 #
 # The socket is only reachable for members of the fixed kayra-admin group, so
-# the service does not distinguish callers. The remove command refuses only the
-# primary group. Internal groups (names starting with "_") are hidden from the
-# list and cannot be added.
+# the service does not distinguish callers. The remove command refuses the
+# primary group and the protected kayra-admin group, which is the authorization
+# boundary of the Kayra root services. Internal groups (names starting with
+# "_") are hidden from the list and cannot be added.
 #
 # Every mutating command emits one terminal event before the response:
 #   added, removed              level 1 (info)
@@ -39,6 +40,12 @@ PATH=/usr/bin:/usr/sbin:/bin:/sbin
 umask 027
 
 EVENTS_FILE=${EVENTS_FILE:-/run/kayra-group-services/events.ndjson}
+
+# Groups that the remove command never touches. kayra-admin is the
+# authorization boundary of the Kayra root services; the client hides it as
+# well, but a direct request must not bypass that. Keep the list in sync with
+# PROTECTED_GROUPS in /usr/local/bin/kayra-group-remove.sh.
+PROTECTED_REMOVE_GROUPS=" kayra-admin "
 
 . /usr/local/lib/kayra/socat-link.sh
 
@@ -266,6 +273,13 @@ handle_remove() {  # handle_remove <user> <group>
     if [ "$primary" = "$group" ]; then
         log_svc warn "The primary group can not be removed: $group"
         respond false 4 "The primary group can not be removed" \
+            "$(event_data "$user" "$group")"
+        return 0
+    fi
+
+    if [[ $PROTECTED_REMOVE_GROUPS == *" $group "* ]]; then
+        log_svc warn "The protected group can not be removed: $group"
+        respond false 4 "The protected group can not be removed" \
             "$(event_data "$user" "$group")"
         return 0
     fi

@@ -4,7 +4,11 @@
 #
 # Lists the groups the user is a member of and removes the selected one with
 # "gpasswd -d" through the kayra-group-services job socket. Every group except
-# the primary group can be removed. The service only refuses the primary group.
+# the primary group can be removed. The kayra-admin group is protected: it is
+# not listed and the service refuses to remove it. Removing the user from wheel
+# needs a confirmation, because it removes sudo/polkit access. After a change
+# the notification reminds the user to log out and in again; usermod/gpasswd
+# do not update the supplementary groups of the running session.
 #
 # The service runs as root, so the script needs neither pkexec nor a root
 # helper. The job socket is only reachable for members of the fixed
@@ -36,6 +40,16 @@ TARGET_USER="$(id -un)"
 # Material symbols used in front of every menu entry.
 ICON_MEMBER=$(printf '%b' '\U000E7EF')  # group
 
+# Groups that must never be removed through this menu. kayra-admin is the
+# authorization boundary of the Kayra root services: without it the service,
+# power and log menus disappear after the next login. The service refuses the
+# group as well, so a direct request can not bypass the menu.
+PROTECTED_GROUPS=(kayra-admin)
+
+# Groups that may be removed only after a confirmation. wheel grants
+# sudo/polkit access.
+CONFIRM_GROUPS=(wheel)
+
 # Returns the message of a key, the fallback is used when the key is
 # missing. The fallback is passed as a separate argument, a placeholder
 # inside a ${...:-default} expression would break the expansion.
@@ -64,6 +78,17 @@ terminal_event() {
     printf '%s' "$result"
 }
 
+# Returns 0 when the group is one of the given names.
+group_in_list() {
+    local group=$1 item
+    shift
+
+    for item in "$@"; do
+        [[ "$item" == "$group" ]] && return 0
+    done
+    return 1
+}
+
 # ------------------------------------------------------------------
 # Read the group list from the service manager
 # ------------------------------------------------------------------
@@ -75,9 +100,13 @@ fi
 # The primary group is not part of the list because it cannot be changed.
 PRIMARY_GROUP=$(id -gn "$TARGET_USER")
 
+# The protected groups are hidden as well; the space padded pattern is used
+# with index() so that no regular expression matching is needed.
+PROTECTED_PATTERN=" ${PROTECTED_GROUPS[*]} "
+
 mapfile -t USER_GROUPS < <(
-    awk -F'\t' -v primary="$PRIMARY_GROUP" \
-        '$2 == "1" && $1 != primary { print $1 }' <<<"$GROUP_DATA"
+    awk -F'\t' -v primary="$PRIMARY_GROUP" -v protected="$PROTECTED_PATTERN" \
+        '$2 == "1" && $1 != primary && index(protected, " " $1 " ") == 0 { print $1 }' <<<"$GROUP_DATA"
 )
 
 if [[ ${#USER_GROUPS[@]} -eq 0 ]]; then
@@ -108,6 +137,23 @@ SELECTED_GROUP="${SELECTED#* }"
 
 [[ -z "$SELECTED_GROUP" ]] && exit 0
 
+# Removing the user from a privileged group needs an explicit confirmation.
+# A closed or expired notification cancels the operation.
+if group_in_list "$SELECTED_GROUP" "${CONFIRM_GROUPS[@]}"; then
+    CONFIRM_BODY=$(i18n_template \
+        "$(msg_text WHEEL_REMOVE_CONFIRM "The 'wheel' group grants sudo/polkit access. Removing {USER} from '{GROUP}' removes this access. Continue?")" \
+        USER="$TARGET_USER" GROUP="$SELECTED_GROUP")
+
+    CONFIRM_ACTION=$(notify_action "${MSG[TITLE]}" "$CONFIRM_BODY" \
+        "remove=$(msg_text ACTION_REMOVE 'Remove')" \
+        "cancel=$(msg_text ACTION_CANCEL 'Cancel')") || CONFIRM_ACTION=""
+
+    if [[ "$CONFIRM_ACTION" != "remove" ]]; then
+        log INFO "Removal of user $TARGET_USER from group $SELECTED_GROUP cancelled"
+        exit 0
+    fi
+fi
+
 log INFO "Removing user $TARGET_USER from group $SELECTED_GROUP"
 
 if ! groups_remove "$TARGET_USER" "$SELECTED_GROUP"; then
@@ -122,11 +168,15 @@ if ! groups_result_ok; then
     exit 1
 fi
 
+# usermod/gpasswd do not update the supplementary groups of the running
+# session, so a successful change needs a new login.
+RELOGIN_NOTE="$(msg_text RELOGIN_REQUIRED 'Log out and sign in again for the change to take effect.')"
+
 case "$(terminal_event)" in
     removed)
         log INFO "User $TARGET_USER removed from group $SELECTED_GROUP"
         notify_ok "${MSG[TITLE]}" \
-            "$(i18n_template "${MSG[GROUP_REMOVED]}" USER="$TARGET_USER" GROUP="$SELECTED_GROUP")"
+            "$(i18n_template "${MSG[GROUP_REMOVED]}" USER="$TARGET_USER" GROUP="$SELECTED_GROUP") $RELOGIN_NOTE"
         ;;
     unchanged)
         log INFO "User $TARGET_USER is not a member of group $SELECTED_GROUP"
@@ -134,6 +184,6 @@ case "$(terminal_event)" in
     *)
         log INFO "User $TARGET_USER removed from group $SELECTED_GROUP"
         notify_ok "${MSG[TITLE]}" \
-            "$(i18n_template "${MSG[GROUP_REMOVED]}" USER="$TARGET_USER" GROUP="$SELECTED_GROUP")"
+            "$(i18n_template "${MSG[GROUP_REMOVED]}" USER="$TARGET_USER" GROUP="$SELECTED_GROUP") $RELOGIN_NOTE"
         ;;
 esac

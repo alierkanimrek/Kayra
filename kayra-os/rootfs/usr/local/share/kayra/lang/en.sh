@@ -72,6 +72,10 @@ declare -A i18n_GROUP_MANAGEMENT=(
   [NO_GROUPS_TO_REMOVE]="No groups available to remove."
   [GROUP_REMOVED]="{USER} user removed from '{GROUP}' group."
   [REMOVE_FAILED]="Failed to remove from '{GROUP}' group."
+  [WHEEL_REMOVE_CONFIRM]="The 'wheel' group grants sudo/polkit access. Removing {USER} from '{GROUP}' removes this access. Continue?"
+  [ACTION_REMOVE]="Remove"
+  [ACTION_CANCEL]="Cancel"
+  [RELOGIN_REQUIRED]="Log out and sign in again for the change to take effect."
   [MSG_MANAGER_UNAVAILABLE]="Group service is not running."
 )
 

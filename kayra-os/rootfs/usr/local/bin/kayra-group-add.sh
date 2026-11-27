@@ -7,6 +7,9 @@
 # starts with an underscore are system internal groups and are hidden from the
 # menu. The menu entries are plain group names, without icons.
 #
+# usermod does not update the supplementary groups of the running session, so
+# the success notification reminds the user to log out and in again.
+#
 # The service runs as root, so the script needs neither pkexec nor a root
 # helper. The job socket is only reachable for members of the fixed
 # "kayra-admin" group (socket 0660 root:kayra-admin). A regular user exits
@@ -117,11 +120,15 @@ if ! groups_result_ok; then
     exit 1
 fi
 
+# usermod does not update the supplementary groups of the running session, so
+# a successful change needs a new login.
+RELOGIN_NOTE="$(msg_text RELOGIN_REQUIRED 'Log out and sign in again for the change to take effect.')"
+
 case "$(terminal_event)" in
     added)
         log INFO "User $TARGET_USER added to group $SELECTED_GROUP"
         notify_ok "${MSG[TITLE]}" \
-            "$(i18n_template "${MSG[GROUP_ADDED]}" USER="$TARGET_USER" GROUP="$SELECTED_GROUP")"
+            "$(i18n_template "${MSG[GROUP_ADDED]}" USER="$TARGET_USER" GROUP="$SELECTED_GROUP") $RELOGIN_NOTE"
         ;;
     unchanged)
         log INFO "User $TARGET_USER is already a member of group $SELECTED_GROUP"
@@ -130,6 +137,6 @@ case "$(terminal_event)" in
         # A response without a terminal event is still a success.
         log INFO "User $TARGET_USER added to group $SELECTED_GROUP"
         notify_ok "${MSG[TITLE]}" \
-            "$(i18n_template "${MSG[GROUP_ADDED]}" USER="$TARGET_USER" GROUP="$SELECTED_GROUP")"
+            "$(i18n_template "${MSG[GROUP_ADDED]}" USER="$TARGET_USER" GROUP="$SELECTED_GROUP") $RELOGIN_NOTE"
         ;;
 esac
