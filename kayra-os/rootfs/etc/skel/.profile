@@ -1,6 +1,6 @@
-# User profile - language and locale settings
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+# User profile - non-locale session variables.
+# LANG, LANGUAGE and LC_ALL are managed by kayra-session-env.sh and applied by
+# kayra-session at login. Do not set them here.
 
 export QT_QPA_PLATFORM=wayland
 export ELM_DISPLAY=wl

@@ -20,7 +20,6 @@ mkdir -p "$(dirname "$MARKER")"
 # Regreet 
 chown -R _greeter:_greeter /var/log/regreet
 chown -R _greeter:_greeter /var/lib/regreet
-chmod +x /etc/greetd/wayland-sessions/sway.wrapper
 # Add any other one-time setup tasks below this line.
 
 #Pipewire
@@ -61,6 +60,10 @@ ln -s /etc/sv/bluetoothd /etc/runit/runsvdir/current
 # Kayra group management service (user scripts talk to it through /run/kayra-group-services)
 [ -e /etc/runit/runsvdir/current/kayra-group-services ] ||
   ln -s /etc/sv/kayra-group-services /etc/runit/runsvdir/current/kayra-group-services
+
+# Kayra locale service (the language menu talks to it through /run/kayra-locale-services)
+[ -e /etc/runit/runsvdir/current/kayra-locale-services ] ||
+  ln -s /etc/sv/kayra-locale-services /etc/runit/runsvdir/current/kayra-locale-services
 
 #void-packages
 mkdir -p /var/spool/void-packages

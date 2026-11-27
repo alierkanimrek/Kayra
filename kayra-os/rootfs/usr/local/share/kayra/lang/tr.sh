@@ -232,15 +232,37 @@ declare -A i18n_FONT_SETTINGS=(
 
 declare -A i18n_SET_LANGUAGE=(
   [NOTIFY_TITLE]="Dil"
-  [MSG_CHANGED]="Değiştirildi: {LANG}"
+  [MSG_CHANGED]="{LANG} olarak değiştirildi. Tüm uygulamalara uygulanması için oturumu kapatıp yeniden açın."
   [MSG_FAILED]="Dil değiştirilemedi: {LANG}"
-  [MSG_NO_LANG_DATA]="{LANG} için dil verisi bulunamadı. Arayüz için İngilizce veriler kullanılıyor, sistem yereli {LOCALE} olarak ayarlandı."
+  [MSG_PREPARING]="{LANG} için dil verisi hazırlanıyor..."
+  [MSG_NO_LOCALE_DATA]="Arayüz dili {LANG} olarak ayarlandı, ancak {LOCALE} sistem yerel verisi üretilmemiş. Bir yönetici üretebilir; biçimlendirme ve bazı uygulamalar sistem dilinde kalır. Değişikliğin uygulanması için oturumu kapatıp yeniden açın."
+  [MSG_NO_UI_DATA]="Kayra arayüzü için {LANG} çevirisi yok. İngilizce arayüz kullanılıyor; sistem yereli {LOCALE} olarak ayarlandı. Değişikliğin uygulanması için oturumu kapatıp yeniden açın."
+  [MSG_NO_UI_AND_LOCALE]="Kayra arayüzü için {LANG} çevirisi yok; İngilizce kullanılıyor. Ayrıca {LOCALE} sistem yerel verisi üretilmemiş; bir yönetici üretebilir. Değişikliğin uygulanması için oturumu kapatıp yeniden açın."
 )
 
 declare -A i18n_LANGUAGE_SETTINGS=(
-  [MSG_NO_LANGUAGES]="No language files were found."
+  [MSG_NO_LANGUAGES]="Dil veri dosyası bulunamadı."
   [NOTIFY_TITLE]="Dil"
   [MSG_FAILED]="Dil değiştirilemedi: {LANG}"
+  [MSG_SYSTEM_DATA_MISSING]="sistem verisi üretilmemiş"
+  [ADD_LANGUAGE]="Dil Ekle..."
+  [SYSTEM_ONLY]="Kayra çevirisi yok"
+  [MSG_ADD_UNAVAILABLE]="Dil ekleme yardımcısı bulunamadı."
+)
+
+declare -A i18n_LANGUAGE_ADD=(
+  [NOTIFY_TITLE]="Dil Ekle"
+  [MSG_NO_LOCALES]="Eklenecek yeni UTF-8 yereli bulunamadı."
+  [MSG_MISSING_TRANSLATION]="{CODE} için Kayra arayüz çevirisi yok. İngilizce arayüz kullanılacak. {LOCALE} dil menüsüne eklensin mi?"
+  [BUTTON_ADD]="Ekle"
+  [BUTTON_CANCEL]="Vazgeç"
+  [MSG_ADDED]="{LOCALE} dil menüsüne eklendi."
+  [MSG_EXISTS]="{LOCALE} zaten dil menüsünde."
+  [MSG_FAILED]="{LOCALE} eklenemedi."
+  [MSG_SERVICE_UNAVAILABLE]="Dil servisi kullanılamıyor."
+  [MSG_INVALID_LOCALE]="Geçersiz yerel: {LOCALE}"
+  [MSG_REGISTRY_MISSING]="Dil kayıt defteri bulunamadı."
+  [MSG_LOCALE_DB_MISSING]="Yerel veritabanı bulunamadı."
 )
 
 declare -A i18n_KEYBOARD_SETTINGS=(

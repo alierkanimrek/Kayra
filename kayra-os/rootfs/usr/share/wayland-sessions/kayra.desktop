@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Kayra
+Comment=Kayra OS desktop
+Exec=/usr/local/bin/kayra-session
+TryExec=/usr/local/bin/kayra-session
+Type=Application
+DesktopNames=sway
+Keywords=Kayra;Sway;Wayland;

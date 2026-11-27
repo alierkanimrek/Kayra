@@ -1,0 +1,139 @@
+#!/bin/sh
+#
+# kayra-session - login-manager-agnostic Kayra desktop session launcher.
+#
+# Started by /usr/share/wayland-sessions/kayra.desktop. It works with
+# greetd/ReGreet, GDM, SDDM, LightDM and a plain TTY because it only relies on
+# the XDG session environment and DBUS_SESSION_BUS_ADDRESS.
+#
+# Order:
+#   1. XDG session variables and log directory
+#   2. kayra-first-login.sh (one-time settings seed)
+#   3. ~/.profile (non-locale variables)
+#   4. kayra-session-env.sh (LANG, LANGUAGE, unset LC_ALL)
+#   5. the compositor, on the existing session bus or in dbus-run-session
+#
+# Logs:
+#   ~/.local/var/log/kayra-session.log   this launcher
+#   ~/.local/var/log/sway.log            compositor output
+#
+# KAYRA_COMPOSITOR selects the compositor (default: sway). Extra arguments are
+# passed to the compositor.
+#
+# Used commands: id, umask, mkdir, date, awk, command, timeout, dbus-send,
+#                dbus-run-session
+#
+set -u
+
+if [ "$(id -u)" -eq 0 ]; then
+    echo "kayra-session: refusing to run as root" >&2
+    exit 1
+fi
+
+if [ -z "${HOME:-}" ] || [ ! -d "$HOME" ]; then
+    echo "kayra-session: HOME is not set or missing" >&2
+    exit 1
+fi
+
+: "${PATH:=/usr/local/bin:/usr/bin:/bin}"
+export PATH
+
+LOG_DIR="$HOME/.local/var/log"
+SESSION_LOG="$LOG_DIR/kayra-session.log"
+SWAY_LOG="$LOG_DIR/sway.log"
+
+old_umask=$(umask)
+umask 077
+mkdir -p "$LOG_DIR" || {
+    echo "kayra-session: cannot create $LOG_DIR" >&2
+    exit 1
+}
+: >"$SESSION_LOG" 2>/dev/null || {
+    echo "kayra-session: cannot write $SESSION_LOG" >&2
+    exit 1
+}
+umask "$old_umask"
+
+log() { printf '%s %s\n' "$(date -u +%FT%TZ)" "$*"; }
+exec >>"$SESSION_LOG" 2>&1
+
+export XDG_SESSION_TYPE=wayland
+export XDG_CURRENT_DESKTOP=sway
+export XDG_SESSION_DESKTOP=sway
+export XDG_SESSION_CLASS=user
+: "${DESKTOP_SESSION:=sway}"
+: "${XDG_DATA_DIRS:=/usr/local/share:/usr/share}"
+: "${XDG_CONFIG_DIRS:=/etc/xdg}"
+export DESKTOP_SESSION XDG_DATA_DIRS XDG_CONFIG_DIRS
+
+log "starting (compositor=${KAYRA_COMPOSITOR:-sway})"
+
+# One-time graphical login setup. It only seeds settings.conf; it does not
+# generate locales. Run it before ~/.profile so an old profile LANG cannot be
+# mistaken for a language selected in the login manager.
+if [ -x /usr/local/bin/kayra-first-login.sh ]; then
+    /usr/local/bin/kayra-first-login.sh || log "warning: first-login failed"
+fi
+
+# User profile: non-locale variables only. Disable -u while sourcing because
+# user profiles may reference unset variables.
+set +u
+if [ -r "$HOME/.profile" ]; then
+    . "$HOME/.profile" || log "warning: .profile returned non-zero"
+fi
+set -u
+
+# Per-user locale and LANGUAGE. The helper prints shell assignments.
+if env_out=$(/usr/local/bin/kayra-session-env.sh 2>>"$SESSION_LOG"); then
+    eval "$env_out"
+else
+    log "warning: kayra-session-env.sh failed"
+fi
+
+# Last-resort LANG fallback. LC_ALL must never survive from the login manager
+# or an old ~/.profile.
+if [ -z "${LANG:-}" ]; then
+    LANG=$(awk -F= '/^LANG=/{print $2; exit}' /etc/locale.conf 2>/dev/null)
+    LANG=${LANG:-C.UTF-8}
+    export LANG
+fi
+unset LC_ALL
+
+if [ -z "${XDG_RUNTIME_DIR:-}" ] || [ ! -d "${XDG_RUNTIME_DIR:-}" ]; then
+    log "warning: XDG_RUNTIME_DIR is missing; the compositor may fail"
+fi
+
+COMPOSITOR=${KAYRA_COMPOSITOR:-sway}
+if ! command -v "$COMPOSITOR" >/dev/null 2>&1; then
+    log "error: compositor not found: $COMPOSITOR"
+    exit 1
+fi
+
+log "LANG=${LANG:-} LANGUAGE=${LANGUAGE:-} compositor=$COMPOSITOR"
+
+# GDM and other modern login managers already provide a session bus. Older
+# greetd setups do not, so a new bus is started only when none is usable.
+use_existing_bus=0
+if [ -n "${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
+    if ! command -v dbus-send >/dev/null 2>&1; then
+        use_existing_bus=1
+    elif timeout 2 dbus-send --session --dest=org.freedesktop.DBus \
+        --type=method_call --print-reply / org.freedesktop.DBus.GetId \
+        >/dev/null 2>&1; then
+        use_existing_bus=1
+    else
+        log "warning: DBUS_SESSION_BUS_ADDRESS is set but not reachable"
+    fi
+fi
+
+if [ "$use_existing_bus" -eq 1 ]; then
+    log "using the session bus provided by the login manager"
+    exec "$COMPOSITOR" "$@" >"$SWAY_LOG" 2>&1
+fi
+
+log "starting dbus-run-session"
+if ! command -v dbus-run-session >/dev/null 2>&1; then
+    log "error: dbus-run-session not found"
+    exit 1
+fi
+exec dbus-run-session -- "$COMPOSITOR" "$@" >"$SWAY_LOG" 2>&1

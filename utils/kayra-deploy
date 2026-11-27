@@ -20,16 +20,18 @@
 #              enable the service when it is not linked yet, then
 #              "sv restart <name>" for every service found
 #   core       etc/runit/core-services/  -> /etc/runit/core-services/ (0755)
+#   session    usr/share/wayland-sessions/ -> /usr/share/wayland-sessions/
+#              (0644) installs kayra.desktop
 #   system     etc/default/kayra.conf    -> /etc/default/kayra.conf  (0644)
 #   admin      create the kayra-admin group and add the deploy caller
-#   migrate    prune obsolete keys (required_groups, auto_group_management)
-#              from every user ~/.config/kayra/settings.conf, keeping owner
-#              and mode
-#   cleanup    remove the retired Kayra helpers and the kayra-check-groups
-#              line from the user sway configs
+#   migrate    seed the locale key of every user settings.conf, remove the
+#              legacy LANG/LC_ALL lines from ~/.profile and prune obsolete
+#              keys, keeping owner and mode
+#   cleanup    remove the retired Kayra helpers, the kayra-check-groups line
+#              and the old greetd session wrapper/desktop
 #   config     etc/skel/.config/         -> $HOME/.config/          (0644, user owned)
-#   all        scripts + lang + data + core + system + admin + migrate
-#              + cleanup + services (config is NOT included)
+#   all        scripts + lang + data + core + session + system + admin
+#              + migrate + cleanup + services (config is NOT included)
 #
 # Before anything is installed every shell file is checked with "bash -n"; on a
 # syntax error nothing is installed.
@@ -38,6 +40,7 @@
 #   sudo utils/kayra-deploy scripts
 #   sudo utils/kayra-deploy scripts data
 #   sudo utils/kayra-deploy services
+#   sudo utils/kayra-deploy session
 #   sudo utils/kayra-deploy admin
 #   sudo utils/kayra-deploy cleanup
 #   sudo utils/kayra-deploy config
@@ -121,6 +124,17 @@ task_core() {
   sync_dir etc/runit/core-services /etc/runit/core-services 0755
 }
 
+# session installs the standard Wayland session entry. Login managers other
+# than greetd (GDM, SDDM, LightDM) scan this standard path.
+task_session() {
+  local src=$SRC/usr/share/wayland-sessions/kayra.desktop
+  [[ -f $src ]] || die "missing session file: $src"
+  install -d -m 0755 -o root -g root /usr/share/wayland-sessions ||
+    die "cannot create: /usr/share/wayland-sessions"
+  install -m 0644 -o root -g root "$src" /usr/share/wayland-sessions/kayra.desktop ||
+    die "cannot install: /usr/share/wayland-sessions/kayra.desktop"
+}
+
 # system installs the system wide defaults file (required_groups,
 # protected_services).
 task_system() {
@@ -149,20 +163,99 @@ task_admin() {
     "$(getent group kayra-admin | cut -d: -f4)"
 }
 
-# migrate prunes keys that moved out of the user settings files
-# (required_groups, auto_group_management). sed -i replaces the file, so the
-# original owner and mode are restored afterwards.
+# conf_file_value <file> <key> -> value without surrounding quotes
+conf_file_value() {
+  local file=$1 key=$2
+  grep -m1 "^${key}=" "$file" 2>/dev/null | cut -d= -f2- | sed 's/^"//;s/"$//'
+}
+
+# set_conf_file_value <file> <key> <value>
+set_conf_file_value() {
+  local file=$1 key=$2 value=$3 esc
+  esc=$(printf '%s' "$value" | sed -e 's/[\/&\\]/\\&/g')
+  if grep -q "^${key}=" "$file" 2>/dev/null; then
+    sed -i "s/^${key}=.*/${key}=\"${esc}\"/" "$file"
+  else
+    printf '%s="%s"\n' "$key" "$value" >>"$file"
+  fi
+}
+
+# migrate seeds the session locale, removes the legacy LANG/LC_ALL lines from
+# the user profile and prunes keys that moved out of the settings files. sed -i
+# replaces files, so the original owner and mode are restored afterwards.
 task_migrate() {
-  local conf owner mode
-  for conf in /home/*/.config/kayra/settings.conf /root/.config/kayra/settings.conf; do
+  local home profile conf owner mode old_lang lang locale sys_lang changed
+  local registry=$SRC/usr/local/share/kayra/lang/languages.tsv
+  local -A REG_LOCALE=()
+
+  if [[ -r $registry ]]; then
+    while IFS=$'\t' read -r code loc rest; do
+      case $code in ''|'#'*) continue ;; esac
+      REG_LOCALE[$code]=$loc
+    done <"$registry"
+  fi
+
+  sys_lang=$(awk -F= '/^LANG=/{print $2; exit}' /etc/locale.conf 2>/dev/null)
+  sys_lang=$(printf '%s' "$sys_lang" | sed 's/^"//;s/"$//')
+  case "$sys_lang" in
+    ''|*[!A-Za-z0-9._@-]*) sys_lang=C.UTF-8 ;;
+  esac
+
+  for home in /home/* /root; do
+    [[ -d $home ]] || continue
+    profile=$home/.profile
+    conf=$home/.config/kayra/settings.conf
+    old_lang=""
+
+    if [[ -f $profile ]]; then
+      old_lang=$(grep -m1 '^export LANG=' "$profile" 2>/dev/null |
+        cut -d= -f2- | tr -d '"' | tr -d '[:space:]')
+      if grep -qE '^export (LANG|LC_ALL)=' "$profile" 2>/dev/null; then
+        owner=$(stat -c '%u:%g' "$profile")
+        mode=$(stat -c '%a' "$profile")
+        sed -i -E '/^export (LANG|LC_ALL)=/d' "$profile"
+        chown "$owner" "$profile"
+        chmod "$mode" "$profile"
+        printf 'kayra-deploy: removed legacy locale lines from %s\n' "$profile"
+      fi
+    fi
+
     [[ -f $conf ]] || continue
-    grep -qE '^(required_groups|auto_group_management)=' "$conf" || continue
     owner=$(stat -c '%u:%g' "$conf")
     mode=$(stat -c '%a' "$conf")
-    sed -i -E '/^(required_groups|auto_group_management)=/d' "$conf"
-    chown "$owner" "$conf"
-    chmod "$mode" "$conf"
-    printf 'kayra-deploy: removed obsolete group settings from %s\n' "$conf"
+    changed=0
+
+    if grep -qE '^(required_groups|auto_group_management)=' "$conf"; then
+      sed -i -E '/^(required_groups|auto_group_management)=/d' "$conf"
+      changed=1
+      printf 'kayra-deploy: removed obsolete group settings from %s\n' "$conf"
+    fi
+
+    lang=$(conf_file_value "$conf" lang)
+    locale=$(conf_file_value "$conf" locale)
+
+    if [[ -z $locale ]]; then
+      if [[ -n $lang && -n ${REG_LOCALE[$lang]:-} ]]; then
+        locale=${REG_LOCALE[$lang]}
+      elif [[ -n $old_lang ]]; then
+        locale=$old_lang
+      else
+        locale=$sys_lang
+      fi
+      case "$locale" in
+        ''|*[!A-Za-z0-9._@-]*) locale=$sys_lang ;;
+      esac
+      if [[ -n $locale ]]; then
+        set_conf_file_value "$conf" locale "$locale"
+        changed=1
+        printf 'kayra-deploy: set session locale to %s in %s\n' "$locale" "$conf"
+      fi
+    fi
+
+    if (( changed )); then
+      chown "$owner" "$conf"
+      chmod "$mode" "$conf"
+    fi
   done
 }
 
@@ -178,6 +271,20 @@ task_cleanup() {
     [[ -e $f ]] || continue
     rm -f "$f" && printf 'kayra-deploy: removed %s\n' "$f"
   done
+
+  # The greetd specific session wrapper and desktop are replaced by the
+  # login-manager independent kayra.desktop. Remove them only when the new
+  # session file is present, so the system is never left without a session.
+  if [[ -f /usr/share/wayland-sessions/kayra.desktop && -x /usr/local/bin/kayra-session ]]; then
+    for f in \
+      /etc/greetd/wayland-sessions/sway.wrapper \
+      /etc/greetd/wayland-sessions/sway.desktop; do
+      [[ -e $f ]] || continue
+      rm -f "$f" && printf 'kayra-deploy: removed %s\n' "$f"
+    done
+  else
+    printf 'kayra-deploy: warning: new session files missing; kept greetd session files\n' >&2
+  fi
 
   for f in /home/*/.config/sway/config /root/.config/sway/config; do
     [[ -f $f ]] || continue
@@ -214,6 +321,7 @@ task_all() {
   task_lang
   task_data
   task_core
+  task_session
   task_system
   task_admin
   task_migrate
@@ -241,7 +349,7 @@ syntax_check || die "syntax error(s) found; nothing installed"
 (($#)) || set -- all
 for task in "$@"; do
   case $task in
-    scripts|lang|data|services|core|system|admin|migrate|cleanup|config|all) "task_$task" ;;
+    scripts|lang|data|services|core|session|system|admin|migrate|cleanup|config|all) "task_$task" ;;
     *) die "unknown task: $task" ;;
   esac
 done

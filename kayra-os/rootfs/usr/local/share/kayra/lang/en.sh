@@ -232,15 +232,37 @@ declare -A i18n_FONT_SETTINGS=(
 
 declare -A i18n_SET_LANGUAGE=(
   [NOTIFY_TITLE]="Language"
-  [MSG_CHANGED]="Changed to: {LANG}"
+  [MSG_CHANGED]="Changed to: {LANG}. Log out and back in to apply it to all applications."
   [MSG_FAILED]="Failed to change language to: {LANG}"
-  [MSG_NO_LANG_DATA]="The language data for {LANG} was not found. The English data is used, the system locale is set to {LOCALE}."
+  [MSG_PREPARING]="Preparing the language data for {LANG}..."
+  [MSG_NO_LOCALE_DATA]="The interface language is set to {LANG}, but the system locale data {LOCALE} is not generated. An administrator can generate it; formatting and some applications stay in the system language. Log out and back in to apply the change."
+  [MSG_NO_UI_DATA]="The Kayra interface has no translation for {LANG}. English is used; the system locale is set to {LOCALE}. Log out and back in to apply the change."
+  [MSG_NO_UI_AND_LOCALE]="The Kayra interface has no translation for {LANG}; English is used. The system locale data {LOCALE} is not generated either; an administrator can generate it. Log out and back in to apply the change."
 )
 
 declare -A i18n_LANGUAGE_SETTINGS=(
-  [MSG_NO_LANGUAGES]="No language files were found."
+  [MSG_NO_LANGUAGES]="No language data files were found."
   [NOTIFY_TITLE]="Language"
   [MSG_FAILED]="Failed to change language to: {LANG}"
+  [MSG_SYSTEM_DATA_MISSING]="system data not generated"
+  [ADD_LANGUAGE]="Add Language..."
+  [SYSTEM_ONLY]="no Kayra translation"
+  [MSG_ADD_UNAVAILABLE]="The language add helper is missing."
+)
+
+declare -A i18n_LANGUAGE_ADD=(
+  [NOTIFY_TITLE]="Add Language"
+  [MSG_NO_LOCALES]="No new UTF-8 locales were found."
+  [MSG_MISSING_TRANSLATION]="There is no Kayra interface translation for {CODE}. The English interface will be used. Add {LOCALE} to the language menu?"
+  [BUTTON_ADD]="Add"
+  [BUTTON_CANCEL]="Cancel"
+  [MSG_ADDED]="{LOCALE} added to the language menu."
+  [MSG_EXISTS]="{LOCALE} is already in the language menu."
+  [MSG_FAILED]="Could not add {LOCALE}."
+  [MSG_SERVICE_UNAVAILABLE]="The language service is not available."
+  [MSG_INVALID_LOCALE]="Invalid locale: {LOCALE}"
+  [MSG_REGISTRY_MISSING]="The language registry is missing."
+  [MSG_LOCALE_DB_MISSING]="The locale database is missing."
 )
 
 declare -A i18n_KEYBOARD_SETTINGS=(

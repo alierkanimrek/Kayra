@@ -1,0 +1,9 @@
+# Kayra OS language registry.
+# Format: code<TAB>locale<TAB>LANGUAGE<TAB>native name<TAB>English name
+# code is the language data file (lang/<code>.sh) and the settings.conf key.
+# locale must exist in /etc/default/libc-locales.
+# LANGUAGE is the GNU gettext fallback list (colon separated, no spaces).
+# Runtime entries added by kayra-language-add.sh live here too. Mirror permanent
+# entries in the repository before running "kayra-deploy lang".
+en	en_US.UTF-8	en	English	English
+tr	tr_TR.UTF-8	tr:en	Türkçe	Turkish
